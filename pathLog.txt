@@ -1,0 +1,1 @@
+/srv/www/dev3.soobwa.ru/htdocs/bitrix/modules/sale/install/components/bitrix/sale.personal.order/templates/.default/bitrix//srv/www/dev3.soobwa.ru/htdocs/bitrix/components/bitrix/sale.personal.order/templates/.default/bitrix/

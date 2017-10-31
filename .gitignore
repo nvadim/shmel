@@ -1,0 +1,14 @@
+# files
+.DS_Store
+Thumbs.db
+.htaccess
+/.idea/
+
+# core
+/bitrix/
+/upload/
+
+/local/assets
+/local/test
+
+/nvadim/

@@ -730,4 +730,25 @@ function pp(){
     unset( $pp, $reflection, $val, $options );
 
 }
-?>
+
+// отладчик d
+function d($var, $title = '')
+{
+    print '<pre style="width:9000;background: #000; color: #0f0; border: 1px solid #0f0;">';
+    if ($title != '') {
+        $ret
+            = '<p style="margin-top:-0px;background-color:#DD0000;font-size:17px;padding:5px 5px 5px 5px; border:1px solid green;color:black;font-weight:bold">'
+            . $title . '</p>';
+    }
+    $trace = debug_backtrace();
+    $ret .= $trace[0]['file'] . ':' . $trace[0]['line'] . '</br></br>';
+
+    $ret .= print_r($var, true);
+    $ret = str_replace('=>', '<font color="#ffffff">=></font>', $ret);
+    $ret = str_replace('[', '[ <font color="#FFFF00">', $ret);
+    $ret = str_replace(']', '</font> ]', $ret);
+
+    print $ret;
+    print '</pre>';
+    print "<hr>";
+}

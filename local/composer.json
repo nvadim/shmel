@@ -1,0 +1,11 @@
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/sspat/shmel-api"
+    }
+  ],
+  "require": {
+    "sspat/shmel-api": "dev-master"
+  }
+}

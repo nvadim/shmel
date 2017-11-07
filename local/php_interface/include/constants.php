@@ -1,5 +1,7 @@
 <?
 define('FRONEND_BUILD_PATH', '/local/assets/build/');
+define('WS_LOGIN', 'WebService');
+define('WS_PASSWORD', 'WebService');
 
 //define("LOG_FILENAME", $_SERVER["DOCUMENT_ROOT"]."/bitrix/php_interface/log.txt");
 

@@ -23,9 +23,9 @@ function ShowTitleOrHeader()
     $res = "";
     if ($APPLICATION->GetPageProperty("not_show_h1") != 'Y') {
         if ($APPLICATION->GetPageProperty("ADDITIONAL_TITLE"))
-            $res = '<h1 class="title title-left">'.$APPLICATION->GetPageProperty("ADDITIONAL_TITLE").'</h1>';
+            $res = '<h1 class="title title-left title-not_before">'.$APPLICATION->GetPageProperty("ADDITIONAL_TITLE").'</h1>';
         else
-            $res = '<h1 class="title title-left">'.$APPLICATION->GetTitle(false).'</h1>';
+            $res = '<h1 class="title title-left title-not_before">'.$APPLICATION->GetTitle(false).'</h1>';
     }
     return $res;
 }

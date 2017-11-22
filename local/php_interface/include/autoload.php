@@ -6,12 +6,12 @@
  */
 
 spl_autoload_register(function ($class) {
-    if (substr($class, 0, 10) !== 'ReCaptcha\\') {
-      /* If the class does not lie under the "ReCaptcha" namespace,
-       * then we can exit immediately.
-       */
-      return;
-    }
+//    if (substr($class, 0, 10) !== 'ReCaptcha\\') {
+//      /* If the class does not lie under the "ReCaptcha" namespace,
+//       * then we can exit immediately.
+//       */
+//      return;
+//    }
 
     /* All of the classes have names like "ReCaptcha\Foo", so we need
      * to replace the backslashes with frontslashes if we want the

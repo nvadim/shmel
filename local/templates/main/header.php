@@ -4,16 +4,26 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/local/include/header.php';
 <main class="main main-inner">
     <div class="main__navigation navigation">
         <div class="navigation__wrap box">
-            <nav class="navigation__list">
-                <a href="/move/" class="navigation__link">Переезд</a>
-                <a href="/transport/" class="navigation__link">Транспортные услуги</a>
-                <a href="/loader/" class="navigation__link">Грузчики</a>
-                <a href="#" class="navigation__link">Упаковочный материал</a>
-            </nav>
+            <?$APPLICATION->IncludeComponent(
+                "bitrix:menu",
+                "main",
+                Array(
+                    "ALLOW_MULTI_SELECT" => "N",
+                    "CHILD_MENU_TYPE" => "left",
+                    "DELAY" => "N",
+                    "MAX_LEVEL" => "1",
+                    "MENU_CACHE_GET_VARS" => array(""),
+                    "MENU_CACHE_TIME" => "3600",
+                    "MENU_CACHE_TYPE" => "A",
+                    "MENU_CACHE_USE_GROUPS" => "N",
+                    "ROOT_MENU_TYPE" => "main",
+                    "USE_EXT" => "N"
+                )
+            );?>
         </div>
     </div>
 
-    <?if($_SERVER['REQUEST_URI']!='/') { ?>
+    <? if($curPageDefault!='/') { ?>
         <!--для главной скрывать-->
         <div class="main__breadcrumbs breadcrumbs">
             <div class="breadcrumbs__wrap box">

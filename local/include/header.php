@@ -6,6 +6,7 @@ Loc::loadLanguageFile($_SERVER["DOCUMENT_ROOT"] . "/local/templates/" . SITE_TEM
 \CJSCore::Init(array("ajax"));
 \CAjax::Init();
 $curPage = $APPLICATION->GetCurPage(true);
+$curPageDefault = $APPLICATION->GetCurPage();
 ?>
 <!DOCTYPE html>
 <html lang="<?=LANGUAGE_ID?>">
@@ -18,7 +19,7 @@ $curPage = $APPLICATION->GetCurPage(true);
     Asset::getInstance()->addCss(FRONEND_BUILD_PATH.'css/vendor.min.css');
     Asset::getInstance()->addCss(FRONEND_BUILD_PATH.'css/main.css');
     Asset::getInstance()->addJs(FRONEND_BUILD_PATH.'js/vendor.min.js');
-    Asset::getInstance()->addJs(FRONEND_BUILD_PATH.'js/main.min.js');
+    Asset::getInstance()->addJs(FRONEND_BUILD_PATH.'js/main.js');  // @TODO: поменять путь на main.min.js
     ?>
     <? $APPLICATION->ShowHead(); ?>
 </head>

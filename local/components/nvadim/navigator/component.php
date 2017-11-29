@@ -40,7 +40,7 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
 
 $arResult = $_SESSION['MOVE_FORM'];
 
-if ($this->StartResultCache(false, array($arParams['SESS_ID'], $arResult['VARIABLES'], ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
+if ($this->StartResultCache(false, array($arParams['SESS_ID'], $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
 
     $pageTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
     $arResult['page_route'] = str_replace('#PAGE#', 'route', $pageTemplate);
@@ -58,6 +58,6 @@ if ($this->StartResultCache(false, array($arParams['SESS_ID'], $arResult['VARIAB
         $arResult['pages_intrm'][$i] = str_replace('#PAGE#', 'intrm-'.$i, $pageTemplate);;
     }
 
-    $this->IncludeComponentTemplate();
-
 }
+
+$this->IncludeComponentTemplate();

@@ -16,7 +16,7 @@ $this->setFrameMode(true);
 <div class="navigator">
     <button class="navigator__printing" type="button">Печать</button>
     <p class="navigator__title sidebar__title">Навигатор</p>
-    <div class="navigator__list">
+    <div class="navigator__list"><!--navigator__item navigator__item-active-->
         <div class="navigator__item">
             <span class="navigator__icon"><i class="navigator__i"></i></span>
             <a href="<?= $arResult['page_route']?>" class="navigator__link">Маршрут</a>

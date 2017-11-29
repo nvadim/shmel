@@ -96,7 +96,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
         );
     } else {
         $APPLICATION->IncludeComponent(
-            "nvadim:calculator.navigator",
+            "nvadim:navigator",
             '',
             Array(
                 'CACHE_TIME' => 86400,

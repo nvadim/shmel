@@ -3,14 +3,46 @@
 
 class CShmelCalculatorComponent extends CBitrixComponent
 {
-    public $stepsProgress = array();
+    public $stepsProgress = array(
+        'route',
+        'depart',
+        'intermediate',
+        'dest',
+        'transport',
+    ); //«»
+    public $reqFields
+        = array(
+            'route' => [
+                'MOVE_TYPE' => 'Выберите тип переезда',
+                'FROM' => 'Укажите Пункт отправления',
+                'TO' => 'Укажите Пункт назначения'
+            ],
+            'depart' => [
+                'NUM_OF_ROOMS' => 'Укажите «Кол-во комнат»',
+                'CLASS' => 'Выберите «Класс помещения»',
+                'FILLING' => 'Выберите «Загруженность помещения»'
+            ],
+            'intermediate' => [
+                'NUM_OF_ROOMS' => 'Укажите «Кол-во комнат»',
+                'CLASS' => 'Выберите «Класс помещения»',
+                'FILLING' => 'Выберите «Загруженность помещения»'
+            ],
+            'dest' => [
+                'NUM_OF_ROOMS' => 'Укажите «Кол-во комнат»',
+                'CLASS' => 'Выберите «Класс помещения»',
+                'FILLING' => 'Выберите «Загруженность помещения»'
+            ],
+            /*'transport' => [
+
+            ],*/
+        );
     public $nextPageTemplate = '';
 
 
     /**
      * @param $postData
      *
-     * @return array - ���������� ������ ����������� ������ �� ���� �����
+     * @return array - возвращает массив сохраненных данных со всех шагов
      */
     public function save($postData) {
         if(!isset($_SESSION['MOVE_FORM'])) {
@@ -24,7 +56,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
     }
 
     /**
-     * ��������� ����� �����
+     * Валидация полей формы
      * @param $data
      * @param $step
      *
@@ -33,34 +65,42 @@ class CShmelCalculatorComponent extends CBitrixComponent
     public function jumpToPage()
     {
         $nextPageTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
-        $urlToRedirect = '';
+        $nextPage = '';
 
+        $data = $this->arResult['SAVED_DATA'];
         switch ($this->arParams['STEP']) {
         case 'route':
-            if (!empty($this->arResult['SAVED_DATA']['FROM'][0])
-                && !empty($this->arResult['SAVED_DATA']['TO']
-                && $_POST['submit_next'])
-            ) {
-                $urlToRedirect = str_replace('#PAGE#', 'depart', $nextPageTemplate);
+            if ($this->checkReqFields()) {
+                $nextPage = 'depart';
             }
             break;
 
         case 'depart':
-            if(empty($this->arResult['SAVED_DATA']['FROM'])) {
-                $urlToRedirect = str_replace('#PAGE#', 'route', $nextPageTemplate);
+        case 'intermediate':
+        case 'dest':
+            if(empty($this->arResult['SAVED_DATA']['FROM']))
+                $nextPage = 'route';
 
+            if(!$_POST['submit_next'] || !$this->checkReqFields())
                 break;
-            }
 
-            if(!$_POST['submit_next'])
-                break;
-
-            if (count($this->arResult['SAVED_DATA']['FROM']) > 1) {
-                $urlToRedirect = str_replace('#PAGE#', 'intrm-1', $nextPageTemplate);
+            $num = $this->arParams['VARIABLES']['intermediate_num'];
+            if (count($data['FROM']) > 1 && !$num) {
+                $nextPage = 'intrm-1';
+            } elseif($num && count($data['FROM']) > $num+1) {
+                $nextPage = 'intrm-' . ($num+1);
+            } elseif ($this->arParams['STEP']=='dest') {
+                $nextPage = 'transport';
             } else {
-                $urlToRedirect = str_replace('#PAGE#', 'dest', $nextPageTemplate);
+                $nextPage = 'dest';
             }
 
+            break;
+
+        case 'transport':
+            if ($this->checkReqFields()) {
+                $nextPage = 'loaders';
+            }
             break;
 
         default:
@@ -68,8 +108,39 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
 
 
-        if($urlToRedirect) {
+        if($nextPage) {
+            $urlToRedirect = str_replace('#PAGE#', $nextPage, $nextPageTemplate);
             LocalRedirect($urlToRedirect, true);
         }
+    }
+
+    public function checkReqFields()
+    {
+        if(!isset($_POST['submit_next']))
+            return false;
+
+        $isValid = false;
+        $step = $this->arParams['STEP'];
+
+        $curPage = ($_POST['CURRENT_PAGE'])? $_POST['CURRENT_PAGE']: '';
+        $data = ($curPage)? $this->arResult['SAVED_DATA'][$curPage]: $this->arResult['SAVED_DATA'];
+        $reqFields = $this->reqFields[$step];
+
+        if(!$reqFields) {
+            return true;
+        }
+
+        $arRequiredFields = array_diff(array_keys($reqFields), array_keys($data));
+        if (!$arRequiredFields) {
+            $isValid = true;
+        }
+
+        foreach ($arRequiredFields as $field) {
+            if($reqFields[$field]) {
+                $this->arResult['ERROR_MESSAGES'][] = $reqFields[$field];
+            }
+        }
+
+        return $isValid;
     }
 }

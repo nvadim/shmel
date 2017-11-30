@@ -14,6 +14,8 @@ class CShmelCalculatorComponent extends CBitrixComponent
         = array(
             'route' => [
                 'MOVE_TYPE' => 'Выберите тип переезда',
+                'DATE' => 'Укажите дату переезда',
+                'TIME' => 'Укажите время переезда',
                 'FROM' => 'Укажите Пункт отправления',
                 'TO' => 'Укажите Пункт назначения'
             ],
@@ -51,6 +53,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         $sessionMF = &$_SESSION['MOVE_FORM'];
         $sessionMF = array_merge($sessionMF, $postData);
+
+        if(!in_array($this->arParams['STEP'], $sessionMF['PAGES_SAVED'])) {
+            $sessionMF['PAGES_SAVED'][] = $this->arParams['STEP'];
+        }
 
         return $sessionMF;
     }
@@ -107,8 +113,8 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         }
 
-
         if($nextPage) {
+            $this->save($_POST);
             $urlToRedirect = str_replace('#PAGE#', $nextPage, $nextPageTemplate);
             LocalRedirect($urlToRedirect, true);
         }

@@ -41,7 +41,7 @@ if ($arParams['SEF_MODE'] == 'Y')
         $calcPage = $arVariables['page'];
     }
     if(isset($arVariables['intermediate_num'])) {
-        $calcPage = 'intermediate';
+        $calcPage = 'intrm-' . $arVariables['intermediate_num'];
         $componentPage = 'page';
     }
 

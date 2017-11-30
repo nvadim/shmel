@@ -39,23 +39,46 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  *************************************************************************/
 
 $arResult = $_SESSION['MOVE_FORM'];
+$arPages = [
+    'route' => 'Маршрут',
+    'depart' => 'Пункт отправления',
+    'dest' => 'Пункт назначения',
+    'transport' => 'Транспорт',
+    'loaders' => 'Грузчики',
+    'packaging' => 'Упаковка',
+    'rigging' => 'Такелажные работы',
+];
+$pageUrlTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
 
-if ($this->StartResultCache(false, array($arParams['SESS_ID'], $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
+if ($this->StartResultCache(false, array($arParams, $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
 
-    $pageTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
-    $arResult['page_route'] = str_replace('#PAGE#', 'route', $pageTemplate);
-    $arResult['page_depart'] = str_replace('#PAGE#', 'depart', $pageTemplate);
-    $arResult['page_dest'] = str_replace('#PAGE#', 'dest', $pageTemplate);
-    $arResult['page_transport'] = str_replace('#PAGE#', 'transport', $pageTemplate);
-    $arResult['page_loaders'] = str_replace('#PAGE#', 'loaders', $pageTemplate);
-    $arResult['page_packaging'] = str_replace('#PAGE#', 'packaging', $pageTemplate);
-    $arResult['page_rigging'] = str_replace('#PAGE#', 'rigging', $pageTemplate);
+    foreach ($arPages as $page => $arData) {
+        if($page=='dest') {
+            foreach ($arResult['FROM'] as $i => $item) {
+                if($i == 0)
+                    continue;
 
-    foreach ($arResult['FROM'] as $i => $item) {
-        if($i == 0)
-            continue;
+                $keyPage = 'intrm-'.$i;
+                $dataPage = [
+                    'URL' => str_replace('#PAGE#', $keyPage, $pageUrlTemplate),
+                    'TEXT' => "Промежуточный адрес {$i}",
+                    'IS_CURRENT' => ($keyPage == $arParams['STEP']) ? true : false
+                ];
+                $arResult['pages'][$keyPage] = $dataPage;
+            }
+        }
 
-        $arResult['pages_intrm'][$i] = str_replace('#PAGE#', 'intrm-'.$i, $pageTemplate);;
+        $dataPage = [
+            'URL' => str_replace('#PAGE#', $page, $pageUrlTemplate),
+            'TEXT' => $arData,
+            'IS_CURRENT' => ($page == $arParams['STEP']) ? true : false
+        ];
+        $arResult['pages'][$page] = $dataPage;
+
+
+        if(!in_array($page, $arResult['PAGES_SAVED'])) {
+            break;
+        }
     }
 
 }

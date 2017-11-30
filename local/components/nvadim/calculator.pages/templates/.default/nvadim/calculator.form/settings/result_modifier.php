@@ -11,21 +11,15 @@ case 'depart':
     $arResult['route_title'] = 'Пункт отправления';
     $arResult['address'] = $sData['FROM'][0];
 
-    $arResult['next_step'] = 'dest';
-    if(count($sData['FROM'])>1) {
-        $arResult['next_step'] = 'intrm-1';
-    }
     $prevPage = 'route';
 
     $arResult['num_bulavka'] = '1';
-    $arResult['current_page'] = 'DEPART';
     break;
 case 'dest':
     $arResult['route_title'] = 'Пункт назначения';
     $arResult['address'] = $sData['TO'];
 
     $arResult['num_bulavka'] = count($sData['FROM'])+1;
-    $arResult['next_step'] = 'transport';
 
     if($interMCount && isset($sData['FROM'][$interMCount])) {
         if($interMCount==1)
@@ -34,7 +28,6 @@ case 'dest':
             $prevPage = 'intrm-' . ($interMCount-1);
     }
 
-    $arResult['current_page'] = 'DEST';
     break;
 default:
     $arResult['route_title'] = 'Промежуточный адрес';
@@ -45,14 +38,6 @@ default:
     ) {
         $arResult['address'] = $sData['FROM'][$interMCount];
     }
-
-    if($interMCount && $countPlaceFrom > ($interMCount+1)){
-        $arResult['next_step'] = 'intrm-' . ($interMCount+1);
-    } else {
-        $arResult['next_step'] = 'dest';
-    }
-
-    $arResult['current_page'] = 'INTRM-' . $interMCount;
 }
 $arResult['prev_step'] = str_replace('#PAGE#', $prevPage, $arResult['prev_step']);
 

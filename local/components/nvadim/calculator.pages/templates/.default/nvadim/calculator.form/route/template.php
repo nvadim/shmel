@@ -20,7 +20,6 @@ $data = $arResult['SAVED_DATA'];
         <span class="page_steps__error">* <?= $er?></span>
     <? }?>
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
-        <input type="hidden" name="STEP" value="depart">
 
         <div class="move_step move_step-active move_step1">
             <div class="move_step1__service service">

@@ -7,7 +7,9 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
 
         <?
         $formTemplate = $arResult['CALC_PAGE'];
-        if(in_array($arResult['CALC_PAGE'], ['depart', 'dest', 'intermediate'])) {
+        if(in_array($arResult['CALC_PAGE'], ['depart', 'dest'])
+            || strpos($arResult['CALC_PAGE'], 'intrm-')!==false) {
+
             $formTemplate = 'settings';
         }
         $APPLICATION->IncludeComponent(

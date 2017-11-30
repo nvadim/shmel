@@ -16,7 +16,6 @@ $this->setFrameMode(true);
 
 <div class="move_calc">
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
-        <input type="hidden" name="STEP" value="<?= $arResult['next_step']?>">
 
         <div class="move_step move_step-active move_step3">
             <div class="move_step3__list">

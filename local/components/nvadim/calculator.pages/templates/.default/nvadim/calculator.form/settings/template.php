@@ -12,7 +12,7 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
-$data = $arResult['SAVED_DATA'][$arResult['current_page']];
+$data = $arResult['SAVED_DATA'][$arParams['STEP']];
 ?>
 
 <div class="move_calc">
@@ -22,8 +22,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
     <? }?>
 
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
-        <input type="hidden" name="STEP" value="<?= $arResult['next_step']?>">
-        <input type="hidden" name="CURRENT_PAGE" value="<?= $arResult['current_page']?>">
+        <input type="hidden" name="CURRENT_PAGE" value="<?= $arParams['STEP']?>">
 
         <div class="move_step move_step-active move_step3">
             <div class="move_step3__list">
@@ -50,21 +49,21 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                         <span class="rooms_info__text">Этаж</span>
                                         <span class="rooms_info__tooltip tooltip" title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur commodi, iure saepe soluta voluptatem voluptates?">?</span>
                                     </p>
-                                    <div class="min_input__one_box"><input name="<?= $arResult['current_page']?>[FLOOR]" type="number" value="<?= $data["FLOOR"]?>" class="min_input__input" onkeypress="return enterNumber(event);"></div>
+                                    <div class="min_input__one_box"><input name="<?= $arParams['STEP']?>[FLOOR]" type="number" value="<?= $data["FLOOR"]?>" class="min_input__input" onkeypress="return enterNumber(event);"></div>
                                 </div>
                                 <div class="min_input__one">
                                     <p class="rooms_info__title">
                                         <span class="rooms_info__text">Площадь, м²</span>
                                         <span class="rooms_info__tooltip tooltip" title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur commodi, iure saepe soluta voluptatem voluptates?">?</span>
                                     </p>
-                                    <div class="min_input__one_box"><input name="<?= $arResult['current_page']?>[AREA]" type="number" value="<?= $data["AREA"]?>" class="min_input__input" onkeypress="return enterNumber(event);"></div>
+                                    <div class="min_input__one_box"><input name="<?= $arParams['STEP']?>[AREA]" type="number" value="<?= $data["AREA"]?>" class="min_input__input" onkeypress="return enterNumber(event);"></div>
                                 </div>
                                 <div class="min_input__one">
                                     <p class="rooms_info__title">
                                         <span class="rooms_info__text">Кол-во комнат</span>
                                         <span class="rooms_info__tooltip tooltip" title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur commodi, iure saepe soluta voluptatem voluptates?">?</span>
                                     </p>
-                                    <div class="min_input__one_box"><input required name="<?= $arResult['current_page']?>[NUM_OF_ROOMS]" type="number" value="<?= $data["NUM_OF_ROOMS"]?>" class="min_input__input" onkeypress="return enterNumber(event);"></div>
+                                    <div class="min_input__one_box"><input required name="<?= $arParams['STEP']?>[NUM_OF_ROOMS]" type="number" value="<?= $data["NUM_OF_ROOMS"]?>" class="min_input__input" onkeypress="return enterNumber(event);"></div>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +77,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                     <div class="checked">
                                         <div class="checked__list checked__list-room">
                                             <div class="checked__item checked__item-room">
-                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arResult['current_page']?>[CLASS]" <?= ($data["CLASS"]=='Стандарт')?'checked':''?> value="Стандарт" id="move_step1__r1">
+                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arParams['STEP']?>[CLASS]" <?= ($data["CLASS"]=='Стандарт')?'checked':''?> value="Стандарт" id="move_step1__r1">
                                                 <label for="move_step1__r1" class="checked__label congestion__label congestion__label-room">
                                                     <svg width="22px" height="28px" viewBox="0 0 22 28" xmlns="http://www.w3.org/2000/svg" class="gray_pic">
                                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
@@ -96,7 +95,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                                 </label>
                                             </div>
                                             <div class="checked__item checked__item-room">
-                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arResult['current_page']?>[CLASS]" <?= ($data["CLASS"]=='Евро')?'checked':''?> value="Евро" id="move_step1__r2">
+                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arParams['STEP']?>[CLASS]" <?= ($data["CLASS"]=='Евро')?'checked':''?> value="Евро" id="move_step1__r2">
                                                 <label for="move_step1__r2" class="checked__label congestion__label congestion__label-room">
                                                     <svg width="24px" height="39px" viewBox="0 0 24 39" xmlns="http://www.w3.org/2000/svg" class="gray_pic">
                                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
@@ -114,7 +113,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                                 </label>
                                             </div>
                                             <div class="checked__item checked__item-room">
-                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arResult['current_page']?>[CLASS]" <?= ($data["CLASS"]=='VIP')?'checked':''?> value="VIP" id="move_step1__r3">
+                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arParams['STEP']?>[CLASS]" <?= ($data["CLASS"]=='VIP')?'checked':''?> value="VIP" id="move_step1__r3">
                                                 <label for="move_step1__r3" class="checked__label congestion__label congestion__label-room">
                                                     <svg width="45px" height="35px" viewBox="0 0 45 35" xmlns="http://www.w3.org/2000/svg" class="gray_pic">
                                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
@@ -144,7 +143,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                     <div class="checked">
                                         <div class="checked__list">
                                             <div class="checked__item checked__item-room">
-                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arResult['current_page']?>[FILLING]" <?= ($data["FILLING"]=='Мало')?'checked':''?> value="Мало" id="move_step1__t1">
+                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arParams['STEP']?>[FILLING]" <?= ($data["FILLING"]=='Мало')?'checked':''?> value="Мало" id="move_step1__t1">
                                                 <label for="move_step1__t1" class="checked__label congestion__label congestion__label-room">
                                                     <svg width="44px" height="38px" viewBox="0 0 44 38" xmlns="http://www.w3.org/2000/svg" class="gray_pic">
                                                         <g id="Шмель-новый" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
@@ -174,7 +173,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                                 </label>
                                             </div>
                                             <div class="checked__item checked__item-room">
-                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arResult['current_page']?>[FILLING]" <?= ($data["FILLING"]=='Средне')?'checked':''?> value="Средне" id="move_step1__t2">
+                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arParams['STEP']?>[FILLING]" <?= ($data["FILLING"]=='Средне')?'checked':''?> value="Средне" id="move_step1__t2">
                                                 <label for="move_step1__t2" class="checked__label congestion__label congestion__label-room">
                                                     <svg width="73px" height="37px" viewBox="0 0 73 37" xmlns="http://www.w3.org/2000/svg" class="gray_pic">
                                                         <g id="Шмель-новый" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
@@ -215,7 +214,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                                 </label>
                                             </div>
                                             <div class="checked__item checked__item-room">
-                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arResult['current_page']?>[FILLING]" <?= ($data["FILLING"]=='Много')?'checked':''?> value="Много" id="move_step1__t3">
+                                                <input type="radio" class="checked__radio congestion__radio" name="<?= $arParams['STEP']?>[FILLING]" <?= ($data["FILLING"]=='Много')?'checked':''?> value="Много" id="move_step1__t3">
                                                 <label for="move_step1__t3" class="checked__label congestion__label congestion__label-room">
                                                     <svg width="62px" height="47px" viewBox="0 0 62 47" xmlns="http://www.w3.org/2000/svg" class="gray_pic">
                                                         <g id="Шмель-новый" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
@@ -282,7 +281,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                     <div class="rigging">
                                         <div class="check_inline">
                                             <div class="rigging__title check_inline__one">
-                                                <input type="checkbox" class="rigger_checkbox_stage check_inline__input rigging__title_input" name="<?= $arResult['current_page']?>[IS_RIGGING]" <?= ($data["IS_RIGGING"]=='Y')?'checked':''?> value="Y" id="check_inline9" onchange="checkHiddenBox(this)" data-check-hidden="id0">
+                                                <input type="checkbox" class="rigger_checkbox_stage check_inline__input rigging__title_input" name="<?= $arParams['STEP']?>[IS_RIGGING]" <?= ($data["IS_RIGGING"]=='Y')?'checked':''?> value="Y" id="check_inline9" onchange="checkHiddenBox(this)" data-check-hidden="id0">
                                                 <label for="check_inline9" class="check_inline__label check_inline__label-big rigging__title_label">
                                                     <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox">
                                                         <rect class="checkbox__rect" width="100%" height="100%"></rect>
@@ -297,7 +296,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                                 <div class="checked__list checked__list-rigger">
                                                     <? foreach ($arResult['rigging_list'] as $rigging) {?>
                                                         <div class="checked__item checked__item-rigging">
-                                                            <input type="checkbox" class="checked__radio" name="<?= $arResult['current_page']?>[RIGGINGS][]" <?= (in_array($rigging->StructTermsOfRigging->ID, $data["RIGGINGS"]))?'checked':''?>  value="<?= $rigging->StructTermsOfRigging->ID?>" id="<?= $rigging->StructTermsOfRigging->ID ?>">
+                                                            <input type="checkbox" class="checked__radio" name="<?= $arParams['STEP']?>[RIGGINGS][]" <?= (in_array($rigging->StructTermsOfRigging->ID, $data["RIGGINGS"]))?'checked':''?>  value="<?= $rigging->StructTermsOfRigging->ID?>" id="<?= $rigging->StructTermsOfRigging->ID ?>">
                                                             <label for="<?= $rigging->StructTermsOfRigging->ID ?>" class="checked__label rigger__label">
                                                                 <span class="rigging__check_title"><?= $rigging->StructTermsOfRigging->ID ?></span>
                                                                 <span class="rigging__check_price"><?= number_format($rigging->StructTermsOfRigging->Price, 0, '', ' ')?><!-- ₽--></span>
@@ -317,7 +316,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                 <div class="additionally__content">
                                     <div class="check_inline">
                                         <div class="check_inline__one">
-                                            <input type="checkbox" class="check_inline__input" <?= (in_array('Пассажирский', $data['LIFT'])) ? 'checked':'' ?> name="<?= $arResult['current_page']?>[LIFT][]" value="Пассажирский">
+                                            <input type="checkbox" class="check_inline__input" <?= (in_array('Пассажирский', $data['LIFT'])) ? 'checked':'' ?> name="<?= $arParams['STEP']?>[LIFT][]" value="Пассажирский">
                                             <label for="check_inline1" class="check_inline__label">
                                                 <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox">
                                                     <rect class="checkbox__rect" width="100%" height="100%"></rect>
@@ -327,7 +326,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                             </label>
                                         </div>
                                         <div class="check_inline__one">
-                                            <input type="checkbox" class="check_inline__input" <?= (in_array('Грузовой', $data['LIFT'])) ? 'checked':'' ?> name="<?= $arResult['current_page']?>[LIFT][]" value="Грузовой">
+                                            <input type="checkbox" class="check_inline__input" <?= (in_array('Грузовой', $data['LIFT'])) ? 'checked':'' ?> name="<?= $arParams['STEP']?>[LIFT][]" value="Грузовой">
                                             <label for="check_inline2" class="check_inline__label">
                                                 <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox">
                                                     <rect class="checkbox__rect" width="100%" height="100%"></rect>
@@ -349,7 +348,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                             $name = ucfirst(mb_strtolower($service->Name));
                                             ?>
                                             <div class="check_inline__one">
-                                                <input type="checkbox" class="check_inline__input" <?= (in_array($service->ID, $data['SERVICES'])) ? 'checked':'' ?> name="<?= $arResult['current_page']?>[SERVICES][]" value="<?= $service->ID ?>">
+                                                <input type="checkbox" class="check_inline__input" <?= (in_array($service->ID, $data['SERVICES'])) ? 'checked':'' ?> name="<?= $arParams['STEP']?>[SERVICES][]" value="<?= $service->ID ?>">
                                                 <label for="check_inline3" class="check_inline__label check_inline__label-big">
                                                     <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox">
                                                         <rect class="checkbox__rect" width="100%" height="100%"></rect>
@@ -370,7 +369,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                         <div class="form__one form__one-w100">
                                             <label for="id14" class="form__label form__label-left">Комментарий</label>
                                             <div class="form__element_box">
-                                                <textarea class="form__element form__element-input" name="<?= $arResult['current_page']?>[COMMENT]" cols="30" rows="5"><?= $arResult['SAVED_DATA'][$arResult['current_page']]['COMMENT']?></textarea>
+                                                <textarea class="form__element form__element-input" name="<?= $arParams['STEP']?>[COMMENT]" cols="30" rows="5"><?= $arResult['SAVED_DATA'][$arParams['STEP']]['COMMENT']?></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -379,7 +378,7 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                             <hr class="separator">
                             <div class="check_inline contacts_all-pb">
                                 <div class="check_inline__one rigging__title">
-                                    <input type="checkbox" class="check_inline__input" name="<?= $arResult['current_page']?>[USE_CONTACT_DEFAULT]" value="Y" id="radio_0" checked onchange="uncheckHiddenBox(this, document.querySelector('[data-personal-hidden='+this.dataset.checkHidden+']'));" data-check-hidden="id100">
+                                    <input type="checkbox" class="check_inline__input" name="<?= $arParams['STEP']?>[USE_CONTACT_DEFAULT]" value="Y" id="radio_0" checked onchange="uncheckHiddenBox(this, document.querySelector('[data-personal-hidden='+this.dataset.checkHidden+']'));" data-check-hidden="id100">
                                     <label for="radio_0" class="check_inline__label check_inline__label-wide">
                                         <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox">
                                             <rect class="checkbox__rect" width="100%" height="100%"></rect>
@@ -401,13 +400,13 @@ $data = $arResult['SAVED_DATA'][$arResult['current_page']];
                                             <div class="form__one form__one-w50">
                                                 <label for="id14" class="form__label form__label-left">Имя</label>
                                                 <div class="form__element_box">
-                                                    <input type="text" name="<?= $arResult['current_page']?>[CONTACT_NAME]" value="<?= $arResult[$arResult['current_page']]['CONTACT_NAME']?>" class="form__element form__element-input">
+                                                    <input type="text" name="<?= $arParams['STEP']?>[CONTACT_NAME]" value="<?= $arResult[$arParams['STEP']]['CONTACT_NAME']?>" class="form__element form__element-input">
                                                 </div>
                                             </div>
                                             <div class="form__one form__one-w50">
                                                 <label for="id24" class="form__label form__label-left">Телефон</label>
                                                 <div class="form__element_box">
-                                                    <input type="tel" name="<?= $arResult['current_page']?>[CONTACT_PHONE]" value="<?= $arResult[$arResult['current_page']]['CONTACT_PHONE']?>" class="form__element form__element-input">
+                                                    <input type="tel" name="<?= $arParams['STEP']?>[CONTACT_PHONE]" value="<?= $arResult[$arParams['STEP']]['CONTACT_PHONE']?>" class="form__element form__element-input">
                                                 </div>
                                             </div>
                                         </div>

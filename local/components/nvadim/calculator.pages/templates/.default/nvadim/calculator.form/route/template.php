@@ -264,14 +264,6 @@ $data = $arResult['SAVED_DATA'];
                                             class="mapping__point_box"><span
                                                 class="mapping__point"><?= $index+1?></span></span>
                                     <div class="form__element_box mapping__input">
-                                        <ymaps style="z-index: 40000; display: none; position: absolute; width: 696px; top: 46px; left: 0px;">
-                                            <ymaps>
-                                                <ymaps class="ymaps-2-1-56-search__suggest ymaps-2-1-56-popup ymaps-2-1-56-popup_theme_ffffff ymaps-2-1-56-i-custom-scroll"
-                                                       data-suggest="true">
-                                                    <ymaps id="id_151133175479374022465"></ymaps>
-                                                </ymaps>
-                                            </ymaps>
-                                        </ymaps>
                                         <input name="FROM[]" type="text"
                                                class="form__element form__element-input route_item__map"
                                                value="<?= $item?>" autocomplete="off">
@@ -308,7 +300,7 @@ $data = $arResult['SAVED_DATA'];
                     </div>
                 </div>
                 <div class="button_map">
-                    <button class="button_map__btn" type="button" data-modal="#auth" data-url="<?= FRONEND_BUILD_PATH?>/map.html">
+                    <button class="button_map__btn" type="button" data-modal="#auth" data-route-url="<?= FRONEND_BUILD_PATH?>/map.html">
                         <span class="button_map__ico"><img src="<?= FRONEND_BUILD_PATH?>img/gps.svg" class="button_map__img"></span>
                         <span class="button_map__text">Посмотреть маршрут на карте</span>
                     </button>

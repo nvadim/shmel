@@ -82,7 +82,7 @@ $data = $arResult['SAVED_DATA'];
                                                 </svg>
                                                 <span class="check_address__name"><?= $route?></span>
                                                 <span class="check_address__select">
-                                                    <select class="form__select" name="" id="id1_9" disabled>
+                                                    <select class="form__select" name="" id="id1_<?= $k?>" disabled>
                                                         <option value="">Загрузка</option>
                                                         <option value="">Выгрузка</option>
                                                         <option value="">Загрузка/Выгрузка</option>

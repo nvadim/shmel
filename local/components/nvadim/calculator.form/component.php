@@ -39,11 +39,9 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  * Work with cache
  *************************************************************************/
 
-$arResult['SAVED_DATA'] = ($_POST) ? $_POST : $_SESSION['MOVE_FORM'];
+$arResult['SAVED_DATA'] = array_merge($_SESSION['MOVE_FORM'], $_POST);
 
-d($arResult['SAVED_DATA']);
 $this->jumpToPage();
-
 
 if ($this->StartResultCache(false, array($arParams['SESS_ID'], $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
 

@@ -1,6 +1,6 @@
 <?
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
-/** @var CBitrixComponent $this */
+/** @var CShmelNavigatorComponent $this */
 /** @var array $arParams */
 /** @var array $arResult */
 /** @var string $componentPath */
@@ -39,48 +39,11 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  *************************************************************************/
 
 $arResult = $_SESSION['MOVE_FORM'];
-$arPages = [
-    'route' => 'Маршрут',
-    'depart' => 'Пункт отправления',
-    'dest' => 'Пункт назначения',
-    'transport' => 'Транспорт',
-    'loaders' => 'Грузчики',
-    'packaging' => 'Упаковка',
-    'rigging' => 'Такелажные работы',
-];
-$pageUrlTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
 
 if ($this->StartResultCache(false, array($arParams, $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
 
-    foreach ($arPages as $page => $arData) {
-        if($page=='dest') {
-            foreach ($arResult['FROM'] as $i => $item) {
-                if($i == 0)
-                    continue;
-
-                $keyPage = 'intrm-'.$i;
-                $dataPage = [
-                    'URL' => str_replace('#PAGE#', $keyPage, $pageUrlTemplate),
-                    'TEXT' => "Промежуточный адрес {$i}",
-                    'IS_CURRENT' => ($keyPage == $arParams['STEP']) ? true : false
-                ];
-                $arResult['pages'][$keyPage] = $dataPage;
-            }
-        }
-
-        $dataPage = [
-            'URL' => str_replace('#PAGE#', $page, $pageUrlTemplate),
-            'TEXT' => $arData,
-            'IS_CURRENT' => ($page == $arParams['STEP']) ? true : false
-        ];
-        $arResult['pages'][$page] = $dataPage;
-
-
-        if(!in_array($page, $arResult['PAGES_SAVED'])) {
-            break;
-        }
-    }
 
 }
+$this->preparePages();
 
 $this->IncludeComponentTemplate();

@@ -12,7 +12,6 @@ $arDefaultUrlTemplates404 = array(
 $arPages = [
     'route',
     'depart',
-    'intermediate',
     'dest',
     'transport',
     'loaders',

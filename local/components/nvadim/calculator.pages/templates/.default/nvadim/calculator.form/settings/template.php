@@ -369,7 +369,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                                         <div class="form__one form__one-w100">
                                             <label for="id14" class="form__label form__label-left">Комментарий</label>
                                             <div class="form__element_box">
-                                                <textarea class="form__element form__element-input" name="<?= $arParams['STEP']?>[COMMENT]" cols="30" rows="5"><?= $arResult['SAVED_DATA'][$arParams['STEP']]['COMMENT']?></textarea>
+                                                <textarea class="form__element form__element-input" name="<?= $arParams['STEP']?>[COMMENT]" cols="30" rows="5"><?= $data['COMMENT']?></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -378,21 +378,35 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                             <hr class="separator">
                             <div class="check_inline contacts_all-pb">
                                 <div class="check_inline__one rigging__title">
-                                    <input type="checkbox" class="check_inline__input" name="<?= $arParams['STEP']?>[USE_CONTACT_DEFAULT]" value="Y" id="radio_0" checked onchange="uncheckHiddenBox(this, document.querySelector('[data-personal-hidden='+this.dataset.checkHidden+']'));" data-check-hidden="id100">
-                                    <label for="radio_0" class="check_inline__label check_inline__label-wide">
-                                        <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox">
-                                            <rect class="checkbox__rect" width="100%" height="100%"></rect>
-                                            <polyline class="checkbox__checked" points="11,20.053 16.964,26.018 30.385,12.598"></polyline>
+                                    <input type="checkbox"
+                                           class="check_inline__input"
+                                           name="<?= $arParams['STEP'] ?>[USE_CONTACT_DEFAULT]"
+                                           value="Y"
+                                           id="radio_0" <?= ($data['USE_CONTACT_DEFAULT'])
+                                        ? 'checked' : '' ?>
+                                           onchange="uncheckHiddenBox(this, document.querySelector('[data-personal-hidden='+this.dataset.checkHidden+']'));"
+                                           data-check-hidden="id100">
+                                    <label for="radio_0"
+                                           class="check_inline__label check_inline__label-wide">
+                                        <svg width="24px" height="24px"
+                                             viewBox="0 0 40 40"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             class="check_inline__icon checkbox">
+                                            <rect class="checkbox__rect"
+                                                  width="100%"
+                                                  height="100%"></rect>
+                                            <polyline class="checkbox__checked"
+                                                      points="11,20.053 16.964,26.018 30.385,12.598"></polyline>
                                         </svg>
                                         <span class="check_inline__text">Использовать контактные данные по умолчанию</span>
                                     </label>
                                 </div>
                             </div>
-                            <div class="personal_default_data" data-personal-hidden="id100">
+                            <div class="personal_default_data <?= (!$data['USE_CONTACT_DEFAULT'])?'rigging__hidden':''?>" data-personal-hidden="id100">
                                 <p class="personal_default_data__one"><?= $arResult['SAVED_DATA']['CONTACT']['NAME']?>   </p>
                                 <p class="personal_default_data__one"><?= $arResult['SAVED_DATA']['CONTACT']['PHONE']?></p>
                             </div>
-                            <div class="additionally__one rigging__hidden" data-check-input="id100">
+                            <div class="additionally__one <?= ($data['USE_CONTACT_DEFAULT'])?'rigging__hidden':''?>" data-check-input="id100">
                                 <p class="additionally__title">Контакты по данному адресу:</p>
                                 <div class="additionally__content">
                                     <div class="form">
@@ -400,13 +414,13 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                                             <div class="form__one form__one-w50">
                                                 <label for="id14" class="form__label form__label-left">Имя</label>
                                                 <div class="form__element_box">
-                                                    <input type="text" name="<?= $arParams['STEP']?>[CONTACT_NAME]" value="<?= $arResult[$arParams['STEP']]['CONTACT_NAME']?>" class="form__element form__element-input">
+                                                    <input type="text" name="<?= $arParams['STEP']?>[CONTACT_NAME]" value="<?= $data['CONTACT_NAME']?>" class="form__element form__element-input">
                                                 </div>
                                             </div>
                                             <div class="form__one form__one-w50">
                                                 <label for="id24" class="form__label form__label-left">Телефон</label>
                                                 <div class="form__element_box">
-                                                    <input type="tel" name="<?= $arParams['STEP']?>[CONTACT_PHONE]" value="<?= $arResult[$arParams['STEP']]['CONTACT_PHONE']?>" class="form__element form__element-input">
+                                                    <input type="tel" name="<?= $arParams['STEP']?>[CONTACT_PHONE]" value="<?= $data['CONTACT_PHONE']?>" class="form__element form__element-input">
                                                 </div>
                                             </div>
                                         </div>

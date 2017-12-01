@@ -3,13 +3,13 @@
 
 class CShmelCalculatorComponent extends CBitrixComponent
 {
-    public $stepsProgress = array(
-        'route',
-        'depart',
-        'intermediate',
-        'dest',
-        'transport',
-    ); //«»
+//    public $stepsProgress = array(
+//        'route',
+//        'depart',
+//        'intermediate',
+//        'dest',
+//        'transport',
+//    ); //«»
     public $reqFields
         = array(
             'route' => [
@@ -47,6 +47,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
      * @return array - возвращает массив сохраненных данных со всех шагов
      */
     public function save($postData) {
+//d($postData, $this->arParams['STEP']);
         if(!isset($_SESSION['MOVE_FORM'])) {
             $_SESSION['MOVE_FORM'] = array();
         }
@@ -74,7 +75,12 @@ class CShmelCalculatorComponent extends CBitrixComponent
         $nextPage = '';
 
         $data = $this->arResult['SAVED_DATA'];
-        switch ($this->arParams['STEP']) {
+        $step = $this->arParams['STEP'];
+        if(strpos($step, 'intrm')!==false) {
+            $step = 'intermediate';
+        }
+
+        switch ($step) {
         case 'route':
             if ($this->checkReqFields()) {
                 $nextPage = 'depart';
@@ -84,19 +90,20 @@ class CShmelCalculatorComponent extends CBitrixComponent
         case 'depart':
         case 'intermediate':
         case 'dest':
-            if(empty($this->arResult['SAVED_DATA']['FROM']))
+            if(empty($data['FROM']))
                 $nextPage = 'route';
 
             if(!$_POST['submit_next'] || !$this->checkReqFields())
                 break;
 
             $num = $this->arParams['VARIABLES']['intermediate_num'];
-            if (count($data['FROM']) > 1 && !$num) {
+
+            if ($step=='dest') {
+                $nextPage = 'transport';
+            } elseif (count($data['FROM']) > 1 && !$num) {
                 $nextPage = 'intrm-1';
             } elseif($num && count($data['FROM']) > $num+1) {
                 $nextPage = 'intrm-' . ($num+1);
-            } elseif ($this->arParams['STEP']=='dest') {
-                $nextPage = 'transport';
             } else {
                 $nextPage = 'dest';
             }
@@ -127,6 +134,9 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         $isValid = false;
         $step = $this->arParams['STEP'];
+        if(strpos($step, 'intrm')!==false) {
+            $step = 'intermediate';
+        }
 
         $curPage = ($_POST['CURRENT_PAGE'])? $_POST['CURRENT_PAGE']: '';
         $data = ($curPage)? $this->arResult['SAVED_DATA'][$curPage]: $this->arResult['SAVED_DATA'];

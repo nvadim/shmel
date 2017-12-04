@@ -39,6 +39,9 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  * Work with cache
  *************************************************************************/
 
+if(!isset($_SESSION['MOVE_FORM'])) {
+    $_SESSION['MOVE_FORM'] = [];
+}
 $arResult['SAVED_DATA'] = array_merge($_SESSION['MOVE_FORM'], $_POST);
 
 $this->jumpToPage();

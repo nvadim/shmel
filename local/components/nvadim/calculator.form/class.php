@@ -3,13 +3,6 @@
 
 class CShmelCalculatorComponent extends CBitrixComponent
 {
-//    public $stepsProgress = array(
-//        'route',
-//        'depart',
-//        'intermediate',
-//        'dest',
-//        'transport',
-//    ); //«»
     public $reqFields
         = array(
             'route' => [
@@ -47,7 +40,6 @@ class CShmelCalculatorComponent extends CBitrixComponent
      * @return array - возвращает массив сохраненных данных со всех шагов
      */
     public function save($postData) {
-//d($postData, $this->arParams['STEP']);
         if(!isset($_SESSION['MOVE_FORM'])) {
             $_SESSION['MOVE_FORM'] = array();
         }
@@ -61,6 +53,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         return $sessionMF;
     }
+
 
     /**
      * Валидация полей формы
@@ -80,22 +73,27 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $step = 'intermediate';
         }
 
+        if (empty($data['FROM']) && $step != 'route') {
+            $urlToRedirect = str_replace('#PAGE#', 'route', $nextPageTemplate);
+            LocalRedirect($urlToRedirect, true);
+        }
+
+
+        if (!isset($_POST['submit_next']) || !$this->checkReqFields()) {
+            return true;
+        }
+
+
+        // редирект на след. шаги
+        // в случае успешной валидации данных
         switch ($step) {
         case 'route':
-            if ($this->checkReqFields()) {
-                $nextPage = 'depart';
-            }
+            $nextPage = 'depart';
             break;
 
         case 'depart':
         case 'intermediate':
         case 'dest':
-            if(empty($data['FROM']))
-                $nextPage = 'route';
-
-            if(!$_POST['submit_next'] || !$this->checkReqFields())
-                break;
-
             $num = $this->arParams['VARIABLES']['intermediate_num'];
 
             if ($step=='dest') {
@@ -111,27 +109,30 @@ class CShmelCalculatorComponent extends CBitrixComponent
             break;
 
         case 'transport':
-            if ($this->checkReqFields()) {
-                $nextPage = 'loaders';
-            }
+        case 'transport-edit':
+            $nextPage = 'loaders';
+            break;
+
+        case 'loaders':
+        case 'loaders-edit':
+            $nextPage = 'packaging';
             break;
 
         default:
 
         }
 
+d($nextPage);
         if($nextPage) {
             $this->save($_POST);
             $urlToRedirect = str_replace('#PAGE#', $nextPage, $nextPageTemplate);
+d($urlToRedirect,'$urlToRedirect');
             LocalRedirect($urlToRedirect, true);
         }
     }
 
     public function checkReqFields()
     {
-        if(!isset($_POST['submit_next']))
-            return false;
-
         $isValid = false;
         $step = $this->arParams['STEP'];
         if(strpos($step, 'intrm')!==false) {

@@ -14,7 +14,9 @@ $arPages = [
     'depart',
     'dest',
     'transport',
+    'transport-edit',
     'loaders',
+    'loaders-edit',
     'packaging',
     'rigging',
 ];

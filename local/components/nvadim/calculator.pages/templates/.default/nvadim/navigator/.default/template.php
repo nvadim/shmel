@@ -27,7 +27,7 @@ $this->setFrameMode(true);
     <p class="navigator__total_default">Рекомендованая цена: <span class="navigator__total_price"><!--39 985 ₽--></span></p>
     <p class="navigator__total">Итого: <span class="navigator__total_price"><!--39 985 ₽--></span></p>
     <div class="navigator__buttons">
-        <button class="navigator__btn btn" type="button">Оформить заказ</button>
+        <button class="navigator__btn btn" disabled type="button">Оформить заказ</button>
     </div>
 </div>
 

@@ -18,8 +18,12 @@ $curPageDefault = $APPLICATION->GetCurPage();
     <?
     Asset::getInstance()->addCss(FRONEND_BUILD_PATH.'css/vendor.min.css');
     Asset::getInstance()->addCss(FRONEND_BUILD_PATH.'css/main.css');
+
+    Asset::getInstance()->addCss('//cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.css', true);
+    Asset::getInstance()->addJs('//cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.js', true);
+
     Asset::getInstance()->addJs(FRONEND_BUILD_PATH.'js/vendor.min.js');
-    Asset::getInstance()->addJs(FRONEND_BUILD_PATH.'js/main.js');  // @TODO: поменять путь на main.min.js
+    Asset::getInstance()->addJs(FRONEND_BUILD_PATH.'js/main.min.js');
     ?>
     <? $APPLICATION->ShowHead(); ?>
 </head>

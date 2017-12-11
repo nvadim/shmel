@@ -43,7 +43,8 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
 if(!isset($_SESSION['MOVE_FORM'])) {
     $_SESSION['MOVE_FORM'] = [];
 }
-$arResult['SAVED_DATA'] = array_merge($_SESSION['MOVE_FORM'], $_POST);
+$arResult['SAVED_DATA'] = array_merge($_SESSION['MOVE_FORM'], (is_array($_POST))?$_POST:[]);
+
 
 $this->jumpToPage();
 

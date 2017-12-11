@@ -39,7 +39,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
      *
      * @return array - возвращает массив сохраненных данных со всех шагов
      */
-    public function save($postData) {
+    public function save($postData = array()) {
         if(!isset($_SESSION['MOVE_FORM'])) {
             $_SESSION['MOVE_FORM'] = array();
         }
@@ -122,11 +122,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         }
 
-d($nextPage);
         if($nextPage) {
             $this->save($_POST);
             $urlToRedirect = str_replace('#PAGE#', $nextPage, $nextPageTemplate);
-d($urlToRedirect,'$urlToRedirect');
+
             LocalRedirect($urlToRedirect, true);
         }
     }

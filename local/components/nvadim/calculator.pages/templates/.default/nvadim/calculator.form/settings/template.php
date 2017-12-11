@@ -382,8 +382,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                                            class="check_inline__input"
                                            name="<?= $arParams['STEP'] ?>[USE_CONTACT_DEFAULT]"
                                            value="Y"
-                                           id="radio_0" <?= ($data['USE_CONTACT_DEFAULT'])
-                                        ? 'checked' : '' ?>
+                                           id="radio_0" <?= (!$data['use_contact_not_checked']) ? 'checked' : '' ?>
                                            onchange="uncheckHiddenBox(this, document.querySelector('[data-personal-hidden='+this.dataset.checkHidden+']'));"
                                            data-check-hidden="id100">
                                     <label for="radio_0"
@@ -402,11 +401,11 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                                     </label>
                                 </div>
                             </div>
-                            <div class="personal_default_data <?= (!$data['USE_CONTACT_DEFAULT'])?'rigging__hidden':''?>" data-personal-hidden="id100">
+                            <div class="personal_default_data <?= ($data['use_contact_not_checked'])?'rigging__hidden':''?>" data-personal-hidden="id100">
                                 <p class="personal_default_data__one"><?= $arResult['SAVED_DATA']['CONTACT']['NAME']?>   </p>
                                 <p class="personal_default_data__one"><?= $arResult['SAVED_DATA']['CONTACT']['PHONE']?></p>
                             </div>
-                            <div class="additionally__one <?= ($data['USE_CONTACT_DEFAULT'])?'rigging__hidden':''?>" data-check-input="id100">
+                            <div class="additionally__one <?= (!$data['use_contact_not_checked'])?'rigging__hidden':''?>" data-check-input="id100">
                                 <p class="additionally__title">Контакты по данному адресу:</p>
                                 <div class="additionally__content">
                                     <div class="form">

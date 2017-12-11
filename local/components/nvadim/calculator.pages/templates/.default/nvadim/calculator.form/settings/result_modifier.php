@@ -1,7 +1,9 @@
 <? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 
-$sData = &$arResult['SAVED_DATA'];
+$sData = $arResult['SAVED_DATA'];
+$currentStep = &$arResult['SAVED_DATA'][$arParams['STEP']];
+
 $arResult['prev_step'] = $arParams['SEF_FOLDER'] . '#PAGE#/';
 $countPlaceFrom = count($sData['FROM']);
 $interMCount = $arParams['VARIABLES']['intermediate_num'];
@@ -41,7 +43,10 @@ default:
 }
 $arResult['prev_step'] = str_replace('#PAGE#', $prevPage, $arResult['prev_step']);
 
-$sData[$arParams['STEP']]['USE_CONTACT_DEFAULT'] = !$sData[$arParams['STEP']]['USE_CONTACT_DEFAULT'] && $sData['USE_CONTACT_FOR_ALL'];
+$currentStep['use_contact_not_checked'] = (!$currentStep['USE_CONTACT_DEFAULT']
+        && $currentStep['CONTACT_NAME']
+        && $currentStep['CONTACT_PHONE'])
+    || !$sData['USE_CONTACT_FOR_ALL'];
 
 $arResult['rigging_list'] = ShmelAPI\ApiWrapper::getInstance()->getData('rigging');
 $arResult['services_list'] = ShmelAPI\ApiWrapper::getInstance()->getData('services');

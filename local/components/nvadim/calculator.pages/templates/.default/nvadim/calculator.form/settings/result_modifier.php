@@ -41,6 +41,7 @@ default:
         $arResult['address'] = $sData['FROM'][$interMCount];
     }
 }
+//d($prevPage,'prevPage');
 $arResult['prev_step'] = str_replace('#PAGE#', $prevPage, $arResult['prev_step']);
 
 $currentStep['use_contact_not_checked'] = (!$currentStep['USE_CONTACT_DEFAULT']

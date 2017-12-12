@@ -32,6 +32,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
             ],*/
         );
     public $nextPageTemplate = '';
+    public $stPage = 'route';
 
 
     /**
@@ -43,12 +44,19 @@ class CShmelCalculatorComponent extends CBitrixComponent
         if(!isset($_SESSION['MOVE_FORM'])) {
             $_SESSION['MOVE_FORM'] = array();
         }
+        $step = $this->arParams['STEP'];
 
         $sessionMF = &$_SESSION['MOVE_FORM'];
         $sessionMF = array_merge($sessionMF, $postData);
 
+        foreach ($sessionMF[$step] as $sKey => $sess_item) {
+            if(!isset($postData[$step][$sKey])) {
+                unset($sessionMF[$step][$sKey]);
+            }
+        }
+
         if(!in_array($this->arParams['STEP'], $sessionMF['PAGES_SAVED'])) {
-            $sessionMF['PAGES_SAVED'][] = $this->arParams['STEP'];
+            $sessionMF['PAGES_SAVED'][] = $step;
         }
 
         return $sessionMF;
@@ -73,8 +81,8 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $step = 'intermediate';
         }
 
-        if (empty($data['FROM']) && $step != 'route') {
-            $urlToRedirect = str_replace('#PAGE#', 'route', $nextPageTemplate);
+        if (empty($data[$this->stPage]['FROM']) && $step != $this->stPage) {
+            $urlToRedirect = str_replace('#PAGE#', $this->stPage, $nextPageTemplate);
             LocalRedirect($urlToRedirect, true);
         }
 
@@ -98,9 +106,9 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
             if ($step=='dest') {
                 $nextPage = 'transport';
-            } elseif (count($data['FROM']) > 1 && !$num) {
+            } elseif (count($data[$this->stPage]['FROM']) > 1 && !$num) {
                 $nextPage = 'intrm-1';
-            } elseif($num && count($data['FROM']) > $num+1) {
+            } elseif($num && count($data[$this->stPage]['FROM']) > $num+1) {
                 $nextPage = 'intrm-' . ($num+1);
             } else {
                 $nextPage = 'dest';
@@ -138,8 +146,8 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $step = 'intermediate';
         }
 
-        $curPage = ($_POST['CURRENT_PAGE'])? $_POST['CURRENT_PAGE']: '';
-        $data = ($curPage)? $this->arResult['SAVED_DATA'][$curPage]: $this->arResult['SAVED_DATA'];
+        $curPage = $_POST['CURRENT_PAGE'];
+        $data = $this->arResult['SAVED_DATA'][$curPage];
         $reqFields = $this->reqFields[$step];
 
         if(!$reqFields) {

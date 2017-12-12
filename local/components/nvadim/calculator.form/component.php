@@ -45,11 +45,9 @@ if(!isset($_SESSION['MOVE_FORM'])) {
 }
 $arResult['SAVED_DATA'] = array_merge($_SESSION['MOVE_FORM'], (is_array($_POST))?$_POST:[]);
 
-
 $this->jumpToPage();
 
 if ($this->StartResultCache(false, array($arParams['SESS_ID'], $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
-
     $this->endResultCache();
 }
 

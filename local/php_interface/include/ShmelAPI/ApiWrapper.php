@@ -8,6 +8,7 @@ use sspat\ShmelAPI\Requests\ListAndTermsOfKitsRequest;
 use sspat\ShmelAPI\Requests\TermsOfRatesForCarsRequest;
 use sspat\ShmelAPI\Requests\TermsOfRatesForLoadersRequest;
 use sspat\ShmelAPI\Requests\TermsOfRiggingRequest;
+use sspat\ShmelAPI\Requests\CarsCategoriesRequest;
 
 
 class ApiWrapper {
@@ -30,7 +31,7 @@ class ApiWrapper {
 
         try {
             $api = new APIClient(
-                APIClient::TEST_ENDPOINT,
+                APIClient::PRODUCTION_ENDPOINT,
                 [
                     'login' => WS_LOGIN,
                     'password' => WS_PASSWORD
@@ -56,6 +57,9 @@ class ApiWrapper {
                 break;
             case 'rigging':
                 $request = new TermsOfRiggingRequest();
+                break;
+            case 'carscategories':
+                $request = new CarsCategoriesRequest();
                 break;
             }
 

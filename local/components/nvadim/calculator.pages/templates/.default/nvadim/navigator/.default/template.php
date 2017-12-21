@@ -16,7 +16,7 @@ $this->setFrameMode(true);
 <div class="navigator">
     <button class="navigator__printing" type="button">Печать</button>
     <p class="navigator__title sidebar__title">Навигатор</p>
-    <div class="navigator__list"><!--navigator__item navigator__item-active-->
+    <div class="navigator__list">
         <? foreach ($arResult['pages'] as $key => $page) {?>
             <div class="navigator__item<?= ($page['IS_CURRENT'])? ' navigator__item-active':''?>">
                 <span class="navigator__icon"><i class="navigator__i"></i></span>
@@ -24,7 +24,7 @@ $this->setFrameMode(true);
             </div>
         <? }?>
     </div>
-    <p class="navigator__total_default">Рекомендованая цена: <span class="navigator__total_price"><!--39 985 ₽--></span></p>
+    <p class="navigator__total_default">Рекомендованая цена: <span class="navigator__total_price"><!--39 985 &#8381;--></span></p>
     <p class="navigator__total">Итого: <span class="navigator__total_price"><!--39 985 ₽--></span></p>
     <div class="navigator__buttons">
         <button class="navigator__btn btn" disabled type="button">Оформить заказ</button>

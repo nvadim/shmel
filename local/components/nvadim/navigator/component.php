@@ -40,10 +40,8 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
 
 $arResult = $_SESSION['MOVE_FORM'];
 
+$this->preparePages();
 if ($this->StartResultCache(false, array($arParams, $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
 
-
+    $this->IncludeComponentTemplate();
 }
-$this->preparePages();
-
-$this->IncludeComponentTemplate();

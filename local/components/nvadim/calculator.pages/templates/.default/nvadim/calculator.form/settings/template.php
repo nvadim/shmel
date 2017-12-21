@@ -13,6 +13,7 @@
 $this->setFrameMode(true);
 
 $data = $arResult['SAVED_DATA'][$arParams['STEP']];
+$routePage = $arResult['SAVED_DATA']['route'];
 ?>
 
 <div class="move_calc">
@@ -402,8 +403,8 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                                 </div>
                             </div>
                             <div class="personal_default_data <?= ($data['use_contact_not_checked'])?'rigging__hidden':''?>" data-personal-hidden="id100">
-                                <p class="personal_default_data__one"><?= $arResult['SAVED_DATA']['CONTACT']['NAME']?>   </p>
-                                <p class="personal_default_data__one"><?= $arResult['SAVED_DATA']['CONTACT']['PHONE']?></p>
+                                <p class="personal_default_data__one"><?= $routePage['CONTACT_NAME']?>   </p>
+                                <p class="personal_default_data__one"><?= $routePage['CONTACT_PHONE']?></p>
                             </div>
                             <div class="additionally__one <?= (!$data['use_contact_not_checked'])?'rigging__hidden':''?>" data-check-input="id100">
                                 <p class="additionally__title">Контакты по данному адресу:</p>

@@ -9,5 +9,5 @@ $data = $arResult['SAVED_DATA'];
 //
 //    $arResult['select_route'][$key] = $data['FROM'][$i];
 //}
-$arResult['select_route'] = $data['FROM'];
-$arResult['select_route']['to'] = $data['TO'];
+$arResult['select_route'] = $data['route']['FROM'];
+$arResult['select_route']['to'] = $data['route']['TO'];

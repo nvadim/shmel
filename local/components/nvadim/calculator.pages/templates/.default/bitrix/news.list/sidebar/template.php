@@ -31,7 +31,7 @@ $this->setFrameMode(true);
                     упаковка
                 </li>
             </ul>
-            <p class="ready_item__price">от 2 999 ?</p>
+            <p class="ready_item__price">от 2 999 ₽</p>
             <div class="ready_item__btn"><a href=""
                                             class="btn btn-white">Подробнее</a>
             </div>
@@ -53,7 +53,7 @@ $this->setFrameMode(true);
                     загруженность
                 </li>
             </ul>
-            <p class="ready_item__price">от 2 999 ?</p>
+            <p class="ready_item__price">от 2 999 ₽</p>
             <div class="ready_item__btn"><a href="" class="btn btn-white">Подробнее</a></div>
         </div>
         <div class="ready_made__item ready_item">
@@ -67,7 +67,7 @@ $this->setFrameMode(true);
                     упаковка
                 </li>
             </ul>
-            <p class="ready_item__price">от 2 999 ?</p>
+            <p class="ready_item__price">от 2 999 ₽</p>
             <div class="ready_item__btn"><a href="" class="btn btn-white">Подробнее</a></div>
         </div>
     </div>

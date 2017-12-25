@@ -233,7 +233,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                 <input type="text"
                        name="<?= $arParams['STEP']?>[TIME]"
                        value="<?= ($data['TIME'])? $data['TIME']: ''?>"
-                       class="move_step2__date_input move_step2__date_input-time set_time input_time"
+                       class="move_step2__date_input move_step2__date_input-time set_time input_time j-input_time"
                        placeholder="чч:мм"/>
             </div>
             <div class="move_step2__mapping ">

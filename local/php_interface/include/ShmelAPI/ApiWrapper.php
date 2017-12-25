@@ -38,7 +38,7 @@ class ApiWrapper {
                 ]
             );
 
-            // goods, services, kits, cars, loaders, rigging
+            // goods, services, kits, cars, loaders, rigging, carscategories
             switch ($method) {
             case 'goods':
                 $request = new ListAndCostOfGoodsRequest();

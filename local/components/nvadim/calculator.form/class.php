@@ -34,6 +34,8 @@ class CShmelCalculatorComponent extends CBitrixComponent
     public $nextPageTemplate = '';
     public $stPage = 'route';
 
+    private $timeRegion = [];
+
 
     /**
      * @param $postData
@@ -48,6 +50,12 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         $sessionMF = &$_SESSION['MOVE_FORM'];
         $sessionMF = array_merge($sessionMF, $postData);
+        if(!isset($sessionMF['timeRegion'])) {
+            $sessionMF['timeRegion'] = $this->timeRegion;
+        }
+//        if(!isset($sessionMF['mkadRegion'])) {
+//            $sessionMF['mkadRegion'] = $this->timeRegion;
+//        }
 
         foreach ($sessionMF[$step] as $sKey => $sess_item) {
             if(!isset($postData[$step][$sKey])) {
@@ -65,13 +73,13 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
     /**
      * Валидация полей формы
-     * @param $data
-     * @param $step
      *
      * @return bool
      */
     public function jumpToPage()
     {
+        $this->getDataDev();
+
         $nextPageTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
         $nextPage = '';
 
@@ -97,6 +105,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
         switch ($step) {
         case 'route':
             $nextPage = 'depart';
+            $this->calcRegionTime();
             break;
 
         case 'depart':
@@ -166,5 +175,40 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
 
         return $isValid;
+    }
+
+
+    private function calcRegionTime()
+    {
+        $data = $this->arResult['SAVED_DATA'][$this->stPage];
+        $hours = explode(':', $data['TIME']);
+
+        $hours[0] = intval($hours[0]);
+        $hours[1] = intval($hours[1]);
+        $this->timeRegion = ((9 <= $hours[0] && $hours[0] < 18)
+            || ($hours[0] == 18 && $hours[1] == 0)) ? ['день', 'дневное']
+            : ['ночь', 'ночное'];
+    }
+
+
+    /**
+     * @TODO возможно удалить по завершению
+     *
+     * метод для удобное разработки
+     */
+    private function getDataDev()
+    {
+        $sessionMF = &$_SESSION['MOVE_FORM'];
+
+        if(empty($sessionMF)) {
+            $data = file_get_contents($_SERVER['DOCUMENT_ROOT'] . $this->getPath() . "/data.json");
+            $data = json_decode($data, true);
+
+            $sessionMF = $data;
+        } else {
+            $fp = fopen($_SERVER['DOCUMENT_ROOT'] . $this->getPath() . '/data.json', 'w');
+            fwrite($fp, json_encode($sessionMF));
+            fclose($fp);
+        }
     }
 }

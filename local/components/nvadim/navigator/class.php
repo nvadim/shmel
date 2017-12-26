@@ -45,7 +45,7 @@ class CShmelNavigatorComponent extends CBitrixComponent
             $dataPage = [
                 'URL' => str_replace('#PAGE#', $page, $pageUrlTemplate),
                 'TEXT' => $text,
-                'IS_CURRENT' => ($page == $this->arParams['STEP']) ? true : false
+                'IS_CURRENT' => (strpos($this->arParams['STEP'], $page)!==false) ? true : false
             ];
             $this->arResult['pages'][$page] = $dataPage;
 

@@ -27,9 +27,9 @@ class CShmelCalculatorComponent extends CBitrixComponent
                 'CLASS' => 'Выберите «Класс помещения»',
                 'FILLING' => 'Выберите «Загруженность помещения»'
             ],
-            /*'transport' => [
-
-            ],*/
+//            'transport' => [
+//
+//            ],
         );
     public $nextPageTemplate = '';
     public $stPage = 'route';
@@ -186,8 +186,8 @@ class CShmelCalculatorComponent extends CBitrixComponent
         $hours[0] = intval($hours[0]);
         $hours[1] = intval($hours[1]);
         $this->timeRegion = ((9 <= $hours[0] && $hours[0] < 18)
-            || ($hours[0] == 18 && $hours[1] == 0)) ? ['день', 'дневное']
-            : ['ночь', 'ночное'];
+            || ($hours[0] == 18 && $hours[1] == 0)) ? ['день', 'дневное', 'днём', 'днем']
+            : ['ночь', 'ночное', 'вечер', 'вечером'];
     }
 
 
@@ -204,7 +204,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $data = file_get_contents($_SERVER['DOCUMENT_ROOT'] . $this->getPath() . "/data.json");
             $data = json_decode($data, true);
 
-            $sessionMF = $data;
+            $this->arResult['SAVED_DATA'] = $sessionMF = $data;
         } else {
             $fp = fopen($_SERVER['DOCUMENT_ROOT'] . $this->getPath() . '/data.json', 'w');
             fwrite($fp, json_encode($sessionMF));

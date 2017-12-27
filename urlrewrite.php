@@ -19,10 +19,10 @@ $arUrlRewrite = array(
 		"PATH" => "/bitrix/services/ymarket/index.php",
 	),
 	array(
-		"CONDITION" => "#^/nvadim/#",
+		"CONDITION" => "#^/loaders/#",
 		"RULE" => "",
 		"ID" => "nvadim:calculator.pages",
-		"PATH" => "/nvadim/index.php",
+		"PATH" => "/loaders/index.php",
 	),
 	array(
 		"CONDITION" => "#^/move/#",

@@ -3,34 +3,6 @@
 
 class CShmelCalculatorComponent extends CBitrixComponent
 {
-    public $reqFields
-        = array(
-            'route' => [
-                'MOVE_TYPE' => 'Выберите тип переезда',
-                'DATE' => 'Укажите дату переезда',
-                'TIME' => 'Укажите время переезда',
-                'FROM' => 'Укажите Пункт отправления',
-                'TO' => 'Укажите Пункт назначения'
-            ],
-            'depart' => [
-                'NUM_OF_ROOMS' => 'Укажите «Кол-во комнат»',
-                'CLASS' => 'Выберите «Класс помещения»',
-                'FILLING' => 'Выберите «Загруженность помещения»'
-            ],
-            'intermediate' => [
-                'NUM_OF_ROOMS' => 'Укажите «Кол-во комнат»',
-                'CLASS' => 'Выберите «Класс помещения»',
-                'FILLING' => 'Выберите «Загруженность помещения»'
-            ],
-            'dest' => [
-                'NUM_OF_ROOMS' => 'Укажите «Кол-во комнат»',
-                'CLASS' => 'Выберите «Класс помещения»',
-                'FILLING' => 'Выберите «Загруженность помещения»'
-            ],
-//            'transport' => [
-//
-//            ],
-        );
     public $nextPageTemplate = '';
     public $stPage = 'route';
 
@@ -40,15 +12,19 @@ class CShmelCalculatorComponent extends CBitrixComponent
     /**
      * @param $postData
      *
-     * @return array - возвращает массив сохраненных данных со всех шагов
+     * @return mixed - возвращает массив сохраненных данных со всех шагов
      */
     public function save($postData = array()) {
-        if(!isset($_SESSION['MOVE_FORM'])) {
-            $_SESSION['MOVE_FORM'] = array();
+        if($this->arParams['FORM_CODE'])
+            return false;
+
+        $formCode = $this->arParams['FORM_CODE'];
+        if(!isset($_SESSION[$formCode])) {
+            $_SESSION[$formCode] = array();
         }
         $step = $this->arParams['STEP'];
 
-        $sessionMF = &$_SESSION['MOVE_FORM'];
+        $sessionMF = &$_SESSION[$formCode];
         $sessionMF = array_merge($sessionMF, $postData);
         if(!isset($sessionMF['timeRegion'])) {
             $sessionMF['timeRegion'] = $this->timeRegion;
@@ -99,51 +75,13 @@ class CShmelCalculatorComponent extends CBitrixComponent
             return true;
         }
 
-
-        // редирект на след. шаги
-        // в случае успешной валидации данных
-        switch ($step) {
-        case 'route':
-            $nextPage = 'depart';
-            $this->calcRegionTime();
-            break;
-
-        case 'depart':
-        case 'intermediate':
-        case 'dest':
-            $num = $this->arParams['VARIABLES']['intermediate_num'];
-
-            if ($step=='dest') {
-                $nextPage = 'transport';
-            } elseif (count($data[$this->stPage]['FROM']) > 1 && !$num) {
-                $nextPage = 'intrm-1';
-            } elseif($num && count($data[$this->stPage]['FROM']) > $num+1) {
-                $nextPage = 'intrm-' . ($num+1);
-            } else {
-                $nextPage = 'dest';
-            }
-
-            break;
-
-        case 'transport':
-        case 'transport-edit':
-            $nextPage = 'loaders';
-            break;
-
-        case 'loaders':
-        case 'loaders-edit':
-            $nextPage = 'packaging';
-            break;
-
-        default:
-
-        }
-
+        include("include/{$this->arParams['SECTION']}.php");
+d($nextPage,'$nextPage');
         if($nextPage) {
             $this->save($_POST);
             $urlToRedirect = str_replace('#PAGE#', $nextPage, $nextPageTemplate);
 
-            LocalRedirect($urlToRedirect, true);
+//            LocalRedirect($urlToRedirect, true);
         }
     }
 
@@ -157,7 +95,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         $curPage = $_POST['CURRENT_PAGE'];
         $data = $this->arResult['SAVED_DATA'][$curPage];
-        $reqFields = $this->reqFields[$step];
+        $reqFields = $this->arParams['REQUIRED'][$step];
 
         if(!$reqFields) {
             return true;
@@ -198,7 +136,11 @@ class CShmelCalculatorComponent extends CBitrixComponent
      */
     private function getDataDev()
     {
-        $sessionMF = &$_SESSION['MOVE_FORM'];
+        if(!$this->arParams['FORM_CODE'])
+            return;
+
+        $formCode = $this->arParams['FORM_CODE'];
+        $sessionMF = &$_SESSION[$formCode];
 
         if(empty($sessionMF)) {
             $data = file_get_contents($_SERVER['DOCUMENT_ROOT'] . $this->getPath() . "/data.json");

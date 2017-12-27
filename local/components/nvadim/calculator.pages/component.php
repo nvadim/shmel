@@ -9,17 +9,7 @@ $arDefaultUrlTemplates404 = array(
     'page' => '#page#',
 );
 
-$arPages = [
-    'route',
-    'depart',
-    'dest',
-    'transport',
-    'transport-edit',
-    'loaders',
-    'loaders-edit',
-    'packaging',
-    'rigging',
-];
+$arPages = $arParams["PAGES"];
 
 $calcPage = '';
 if ($arParams['SEF_MODE'] == 'Y')

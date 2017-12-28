@@ -38,12 +38,12 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  * Work with cache
  *************************************************************************/
 
-$arResult = $_SESSION['MOVE_FORM'];
+$sess_code = $arParams['SESSION_CODE'];
+$arResult = $_SESSION[$sess_code];
 $kits = ShmelAPI\ApiWrapper::getInstance()->getData('kits');
 
 $this->preparePages();
 if ($this->StartResultCache(false, array($arParams, $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
-
 
     foreach ($arResult['pages'] as $k => &$page) {
         if($k=='route')

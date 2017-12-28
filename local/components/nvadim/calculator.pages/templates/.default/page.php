@@ -24,7 +24,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
                         'SEF_FOLDER' => $arParams['SEF_FOLDER'],
                         'STEP' => $arResult['CALC_PAGE'],
                         'SECTION' => $arParams['SECTION'],
-                        'FORM_CODE' => $arParams['FORM_CODE'],
+                        'SESSION_CODE' => $arParams['SESSION_CODE'],
                         'SESS_ID' => $_SESSION['fixed_session_id'],
                         'REQUIRED' => $arParams['REQUIRED'],
                     ), $component
@@ -111,6 +111,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
                         'VARIABLES' => $arResult['VARIABLES'],
                         'SEF_FOLDER' => $arParams['SEF_FOLDER'],
                         'STEP' => $arResult['CALC_PAGE'],
+                        'SESSION_CODE' => $arParams['SESSION_CODE'],
                         'SESS_ID' => $_SESSION['fixed_session_id'],
                     ), $component
                 );

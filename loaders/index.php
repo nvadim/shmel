@@ -16,7 +16,7 @@ $APPLICATION->SetTitle("Грузчики");
                 "page" => "#page#/",
                 "intermediate" => "intrm-#intermediate_num#/",
             ),
-            'FORM_CODE' => 'LOADERS',
+            'SESSION_CODE' => 'LOADERS',
             'SECTION' => 'loaders',
             "PAGES" => array(
                 'route',

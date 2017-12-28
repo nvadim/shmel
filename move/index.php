@@ -16,9 +16,9 @@ $APPLICATION->SetTitle("Переезды");
                 "page" => "#page#/",
                 "intermediate" => "intrm-#intermediate_num#/",
             ),
-            'FORM_CODE' => 'MOVE_FORM',
+            'SESSION_CODE' => 'MOVE_FORM',
             'SECTION' => 'move',
-            "PAGES" => array(
+            'PAGES' => array(
                 'route',
                 'depart',
                 'dest',

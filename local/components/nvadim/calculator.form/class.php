@@ -15,10 +15,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
      * @return mixed - возвращает массив сохраненных данных со всех шагов
      */
     public function save($postData = array()) {
-        if($this->arParams['FORM_CODE'])
+        if($this->arParams['SESSION_CODE'])
             return false;
 
-        $formCode = $this->arParams['FORM_CODE'];
+        $formCode = $this->arParams['SESSION_CODE'];
         if(!isset($_SESSION[$formCode])) {
             $_SESSION[$formCode] = array();
         }
@@ -70,13 +70,12 @@ class CShmelCalculatorComponent extends CBitrixComponent
             LocalRedirect($urlToRedirect, true);
         }
 
-
         if (!isset($_POST['submit_next']) || !$this->checkReqFields()) {
             return true;
         }
 
         include("include/{$this->arParams['SECTION']}.php");
-d($nextPage,'$nextPage');
+
         if($nextPage) {
             $this->save($_POST);
             $urlToRedirect = str_replace('#PAGE#', $nextPage, $nextPageTemplate);
@@ -136,10 +135,10 @@ d($nextPage,'$nextPage');
      */
     private function getDataDev()
     {
-        if(!$this->arParams['FORM_CODE'])
+        if(!$this->arParams['SESSION_CODE'])
             return;
 
-        $formCode = $this->arParams['FORM_CODE'];
+        $formCode = $this->arParams['SESSION_CODE'];
         $sessionMF = &$_SESSION[$formCode];
 
         if(empty($sessionMF)) {

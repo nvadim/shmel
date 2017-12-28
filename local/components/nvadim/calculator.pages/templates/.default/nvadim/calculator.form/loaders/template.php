@@ -11,7 +11,7 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
-
+d('loaders');
 ?>
 
 <div class="move_calc">
@@ -27,13 +27,13 @@ $this->setFrameMode(true);
                             <p class="move_config__spoiler_title">Грузчики <span class="move_config__spoiler_gray">— Наши рекомендации:</span></p>
                         </div>
                         <div class="move_config__right">
-                            <button class="btn btn-white" type="button" onClick='location.href="./move_step3_2s.html"'>Откорректировать вручную</button>
+                            <a href="<?= $arParams['SEF_FOLDER'] . 'loaders-edit/'?>" class="btn btn-white" type="button">Откорректировать вручную</a>
                         </div>
                     </div>
                     <div class="move_config__content">
                         <div class="default_content">
                             <div class="default_content__left">
-                                <div class="default_content__pic"><img src="img/deliveryboy4.svg" alt="" class="default_content__img"></div>
+                                <div class="default_content__pic"><img src="<?= FRONEND_BUILD_PATH?>img/deliveryboy4.svg" alt="" class="default_content__img"></div>
                                 <div class="default_content__desc">
                                     <p class="default_content__text">Наши специалисты могут вытащить и затащить любой предмет из вашей квартиры, офиса или дома.</p>
                                 </div>

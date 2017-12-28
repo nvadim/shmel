@@ -80,7 +80,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $this->save($_POST);
             $urlToRedirect = str_replace('#PAGE#', $nextPage, $nextPageTemplate);
 
-//            LocalRedirect($urlToRedirect, true);
+            LocalRedirect($urlToRedirect, true);
         }
     }
 

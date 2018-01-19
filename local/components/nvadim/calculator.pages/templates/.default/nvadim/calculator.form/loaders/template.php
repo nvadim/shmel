@@ -11,12 +11,14 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
-d('loaders');
+
+$currentStep = $arParams['STEP'];
+$data = $arResult['SAVED_DATA'][$currentStep];
 ?>
 
 <div class="move_calc">
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
-        <input type="hidden" name="CURRENT_PAGE" value="<?= $arParams['STEP']?>">
+        <input type="hidden" name="CURRENT_PAGE" value="<?= $currentStep ?>">
 
         <div class="move_step move_step-active move_step3">
             <div class="move_step3__list">
@@ -62,57 +64,26 @@ d('loaders');
                                 <hr class="separator">
                                 <div class="one_default">
                                     <p class="one_default__title one_default__title-big">Выбор маршрута: <span class="one_default__tooltip tooltip" title="srgdsf">?</span></p>
-                                    <div class="check_inline__one">
-                                        <input type="checkbox" class="check_inline__input" name="rigging_one__config" value="rigging_one__config3" id="rigging_one__config3" onchange="checkDisabledLabel(this)" data-check-disabled="id1_9">
-                                        <label for="rigging_one__config3" class="check_inline__label check_address">
-                                            <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox check_address__icon">
-                                                <rect class="checkbox__rect" width="100%" height="100%"></rect>
-                                                <polyline class="checkbox__checked" points="11,20.053 16.964,26.018 30.385,12.598"></polyline>
-                                            </svg>
-                                            <span class="check_address__name">Москва, ул. Яблочкова д.18 к.3</span>
-                                            <span class="check_address__select">
-                                                                            <select class="form__select" name="" id="id1_9" disabled>
-                                                                                <option value="">Загрузка</option>
-                                                                                <option value="">Выгрузка</option>
-                                                                                <option value="">Загрузка/Выгрузка</option>
-                                                                            </select>
-                                                                        </span>
-                                        </label>
-                                    </div>
-                                    <div class="check_inline__one">
-                                        <input type="checkbox" class="check_inline__input" name="rigging_one__config" value="rigging_one__config4" id="rigging_one__config4" onchange="checkDisabledLabel(this)" data-check-disabled="id1_4">
-                                        <label for="rigging_one__config4" class="check_inline__label check_address">
-                                            <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox check_address__icon">
-                                                <rect class="checkbox__rect" width="100%" height="100%"></rect>
-                                                <polyline class="checkbox__checked" points="11,20.053 16.964,26.018 30.385,12.598"></polyline>
-                                            </svg>
-                                            <span class="check_address__name">Москва, ул. Яблочкова д.18 к.3</span>
-                                            <span class="check_address__select">
-                                                                            <select class="form__select" name="" id="id1_4" disabled>
-                                                                                <option value="">Загрузка</option>
-                                                                                <option value="">Выгрузка</option>
-                                                                                <option value="">Загрузка/Выгрузка</option>
-                                                                            </select>
-                                                                        </span>
-                                        </label>
-                                    </div>
-                                    <div class="check_inline__one">
-                                        <input type="checkbox" class="check_inline__input" name="rigging_one__config" value="rigging_one__config5" id="rigging_one__config5" onchange="checkDisabledLabel(this)" data-check-disabled="id1_5">
-                                        <label for="rigging_one__config5" class="check_inline__label check_address">
-                                            <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox check_address__icon">
-                                                <rect class="checkbox__rect" width="100%" height="100%"></rect>
-                                                <polyline class="checkbox__checked" points="11,20.053 16.964,26.018 30.385,12.598"></polyline>
-                                            </svg>
-                                            <span class="check_address__name">Москва, ул. Яблочкова д.18 к.3</span>
-                                            <span class="check_address__select">
-                                                                            <select class="form__select" name="" id="id1_5" disabled>
-                                                                                <option value="">Загрузка</option>
-                                                                                <option value="">Выгрузка</option>
-                                                                                <option value="">Загрузка/Выгрузка</option>
-                                                                            </select>
-                                                                        </span>
-                                        </label>
-                                    </div>
+
+                                    <? foreach ($arResult['select_route'] as $k => $route) {?>
+                                        <div class="check_inline__one">
+                                            <input <?= (isset($data['POINT_CHECK']['_'.$k]))?'checked':''?> name="<?= $currentStep?>[POINT_CHECK][_<?= $k?>]" value="<?= $k?>" type="checkbox" class="check_inline__input" id="rigging_one__config<?= $k?>" onchange="checkDisabledLabel(this)" data-check-disabled="id1_<?= $k?>">
+                                            <label for="rigging_one__config3" class="check_inline__label check_address">
+                                                <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox check_address__icon">
+                                                    <rect class="checkbox__rect" width="100%" height="100%"></rect>
+                                                    <polyline class="checkbox__checked" points="11,20.053 16.964,26.018 30.385,12.598"></polyline>
+                                                </svg>
+                                                <span class="check_address__name"><?= $route?></span>
+                                                <span class="check_address__select">
+                                                    <select class="form__select" name="<?= $currentStep?>[POINT_TYPE][_<?= $k?>]" id="id1_<?= $k?>" <?= (isset($data['POINT_CHECK']['_'.$k]))?'':'disabled'?>>
+                                                        <? foreach ($arResult['select_list_value'] as $key => $val) {?>
+                                                            <option value="<?= $key?>" <?= ($key==$data['POINT_TYPE']['_'.$k])?'selected':''?>><?= $val?></option>
+                                                        <? }?>
+                                                    </select>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    <? }?>
                                 </div>
                             </div>
                         </div>
@@ -127,7 +98,7 @@ d('loaders');
 
             </div>
             <div class="move_step__buttons move_step1__buttons">
-                <button class="move_step__btn btn btn-white" type="button" <!--onClick='location.href="./move_step3_1.html"'-->>Предыдущий шаг</button>
+                <button class="move_step__btn btn btn-white" type="button">Предыдущий шаг</button>
                 <input class="move_step__btn btn" type="submit" value="Далее" name="submit_next">
             </div>
         </div>

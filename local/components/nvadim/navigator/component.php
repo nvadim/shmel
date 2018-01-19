@@ -38,9 +38,8 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  * Work with cache
  *************************************************************************/
 
-$sess_code = $arParams['SESSION_CODE'];
+$sess_code = $arParams['SESSION_FORM_CODE'];
 $arResult = $_SESSION[$sess_code];
-$kits = ShmelAPI\ApiWrapper::getInstance()->getData('kits');
 
 $this->preparePages();
 if ($this->StartResultCache(false, array($arParams, $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
@@ -49,8 +48,7 @@ if ($this->StartResultCache(false, array($arParams, $arResult, ($arParams["CACHE
         if($k=='route')
             continue;
 
-//        $arResult[$k]
-        // CLASS, FILLING, NUM_OF_ROOMS,
+
     }
 
     $this->IncludeComponentTemplate();

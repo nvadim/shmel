@@ -3,4 +3,4 @@
 $arResult['move_type'] = (isset($_POST[$arParams['STEP']]['MOVE_TYPE']))
     ? $_POST[$arParams['STEP']]['MOVE_TYPE']
     : (isset($_GET['move_type']) ? trim($_GET['move_type'])
-        : $_SESSION[$arParams['SESSION_CODE']][$arParams['STEP']]['MOVE_TYPE']);
+        : $_SESSION[$arParams['SESSION_FORM_CODE']][$arParams['STEP']]['MOVE_TYPE']);

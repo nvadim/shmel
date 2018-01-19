@@ -40,36 +40,36 @@ class ApiWrapper {
 
             // goods, services, kits, cars, loaders, rigging, carscategories
             switch ($method) {
-            case 'goods':
-                $request = new ListAndCostOfGoodsRequest();
-                break;
-            case 'services':
-                $request = new ListAndCostOfServicesRequest();
-                break;
-            case 'kits': // ïåğå÷åíü è óñëîâèÿ ïàêåòîâ íà ïåğååçä
-                $request = new ListAndTermsOfKitsRequest();
-                break;
-            case 'cars': // óñëîâèÿ òàğèôà íà òğàíñïîğòíûå ñğåäñòâà
-                $request = new TermsOfRatesForCarsRequest();
-                break;
-            case 'loaders':
-                $request = new TermsOfRatesForLoadersRequest();
-                break;
-            case 'rigging':
-                $request = new TermsOfRiggingRequest();
-                break;
-            case 'carscategories':
-                $request = new CarsCategoriesRequest();
-                break;
+                case 'goods':
+                    $request = new ListAndCostOfGoodsRequest();
+                    break;
+                case 'services':
+                    $request = new ListAndCostOfServicesRequest();
+                    break;
+                case 'kits': // Ğ¿ĞµÑ€ĞµÑ‡ĞµĞ½ÑŒ Ğ¸ ÑƒÑĞ»Ğ¾Ğ²Ğ¸Ñ Ğ¿Ğ°ĞºĞµÑ‚Ğ¾Ğ² Ğ½Ğ° Ğ¿ĞµÑ€ĞµĞµĞ·Ğ´
+                    $request = new ListAndTermsOfKitsRequest();
+                    break;
+                case 'cars': // ÑƒÑĞ»Ğ¾Ğ²Ğ¸Ñ Ñ‚Ğ°Ñ€Ğ¸Ñ„Ğ° Ğ½Ğ° Ñ‚Ñ€Ğ°Ğ½ÑĞ¿Ğ¾Ñ€Ñ‚Ğ½Ñ‹Ğµ ÑÑ€ĞµĞ´ÑÑ‚Ğ²Ğ°
+                    $request = new TermsOfRatesForCarsRequest();
+                    break;
+                case 'loaders':
+                    $request = new TermsOfRatesForLoadersRequest();
+                    break;
+                case 'rigging':
+                    $request = new TermsOfRiggingRequest();
+                    break;
+                case 'carscategories':
+                    $request = new CarsCategoriesRequest();
+                    break;
             }
 
             $response = $api->sendRequest($request);
         } catch (ShmelAPIConfigException $e) {
-            // Îáğàáîòêà îøèáêè êîíôèãóğàöèè
+            // ĞĞ±Ñ€Ğ°Ğ±Ğ¾Ñ‚ĞºĞ° Ğ¾ÑˆĞ¸Ğ±ĞºĞ¸ ĞºĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ğ¸
         } catch (ShmelAPISoapException $e) {
-            // Îáğàáîòêà îøèáêè óğîâíÿ SOAP
+            // ĞĞ±Ñ€Ğ°Ğ±Ğ¾Ñ‚ĞºĞ° Ğ¾ÑˆĞ¸Ğ±ĞºĞ¸ ÑƒÑ€Ğ¾Ğ²Ğ½Ñ SOAP
         } catch (ShmelAPICacheException $e) {
-            // Îáğàáîòêà îøèáêè óğîâíÿ êåøèğîâàíèÿ
+            // ĞĞ±Ñ€Ğ°Ğ±Ğ¾Ñ‚ĞºĞ° Ğ¾ÑˆĞ¸Ğ±ĞºĞ¸ ÑƒÑ€Ğ¾Ğ²Ğ½Ñ ĞºĞµÑˆĞ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ
         }
 
         $data = $response->getData();

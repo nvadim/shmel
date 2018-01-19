@@ -1,12 +1,19 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-/** @var CBitrixComponent $this */
+<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
+/** @var CBitrixComponent $this */
 class CShmelCalculatorComponent extends CBitrixComponent
 {
     public $nextPageTemplate = '';
     public $stPage = 'route';
 
     private $timeRegion = [];
+    private $apiInstance = null;
+
+    public function __construct(CBitrixComponent $component = null)
+    {
+        parent::__construct($component);
+        $this->apiInstance = ShmelAPI\ApiWrapper::getInstance();
+    }
 
 
     /**
@@ -14,19 +21,20 @@ class CShmelCalculatorComponent extends CBitrixComponent
      *
      * @return mixed - возвращает массив сохраненных данных со всех шагов
      */
-    public function save($postData = array()) {
-        if($this->arParams['SESSION_CODE'])
+    public function save($postData = array())
+    {
+        if (!$this->arParams['SESSION_FORM_CODE'])
             return false;
 
-        $formCode = $this->arParams['SESSION_CODE'];
-        if(!isset($_SESSION[$formCode])) {
+        $formCode = $this->arParams['SESSION_FORM_CODE'];
+        if (!isset($_SESSION[$formCode])) {
             $_SESSION[$formCode] = array();
         }
         $step = $this->arParams['STEP'];
 
         $sessionMF = &$_SESSION[$formCode];
         $sessionMF = array_merge($sessionMF, $postData);
-        if(!isset($sessionMF['timeRegion'])) {
+        if (!isset($sessionMF['timeRegion'])) {
             $sessionMF['timeRegion'] = $this->timeRegion;
         }
 //        if(!isset($sessionMF['mkadRegion'])) {
@@ -34,12 +42,14 @@ class CShmelCalculatorComponent extends CBitrixComponent
 //        }
 
         foreach ($sessionMF[$step] as $sKey => $sess_item) {
-            if(!isset($postData[$step][$sKey])) {
+            if (!isset($postData[$step][$sKey])) {
                 unset($sessionMF[$step][$sKey]);
             }
         }
 
-        if(!in_array($this->arParams['STEP'], $sessionMF['PAGES_SAVED'])) {
+        $this->selectKit($sessionMF);
+
+        if (!in_array($this->arParams['STEP'], $sessionMF['PAGES_SAVED'])) {
             $sessionMF['PAGES_SAVED'][] = $step;
         }
 
@@ -61,7 +71,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         $data = $this->arResult['SAVED_DATA'];
         $step = $this->arParams['STEP'];
-        if(strpos($step, 'intrm')!==false) {
+        if (strpos($step, 'intrm') !== false) {
             $step = 'intermediate';
         }
 
@@ -74,9 +84,9 @@ class CShmelCalculatorComponent extends CBitrixComponent
             return true;
         }
 
-        include("include/{$this->arParams['SECTION']}.php");
+        include("def_next_page/{$this->arParams['SECTION']}.php");
 
-        if($nextPage) {
+        if ($nextPage) {
             $this->save($_POST);
             $urlToRedirect = str_replace('#PAGE#', $nextPage, $nextPageTemplate);
 
@@ -88,7 +98,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
     {
         $isValid = false;
         $step = $this->arParams['STEP'];
-        if(strpos($step, 'intrm')!==false) {
+        if (strpos($step, 'intrm') !== false) {
             $step = 'intermediate';
         }
 
@@ -96,7 +106,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
         $data = $this->arResult['SAVED_DATA'][$curPage];
         $reqFields = $this->arParams['REQUIRED'][$step];
 
-        if(!$reqFields) {
+        if (!$reqFields) {
             return true;
         }
 
@@ -106,12 +116,42 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
 
         foreach ($arRequiredFields as $field) {
-            if($reqFields[$field]) {
+            if ($reqFields[$field]) {
                 $this->arResult['ERROR_MESSAGES'][] = $reqFields[$field];
             }
         }
 
         return $isValid;
+    }
+
+    public function selectKit(&$saved_data)
+    {
+        $step = $this->arParams['STEP'];
+
+        if (!$saved_data[$step])
+            return false;
+
+        $data = &$saved_data[$step];
+        $kits = $this->apiInstance->getData('kits');
+
+        if (strpos($step, 'intrm-') !== false || in_array($step, ['depart', 'dest'])) {
+            $numRooms = $data['NUM_OF_ROOMS'];
+            $class = $data['CLASS'];
+            $filling = $data['FILLING'];
+
+            for ($i = 0; $i < count($kits); $i++) {
+                $kitId = $kits[$i]->ID;
+                $strData = $kits[$i]->StructBasicData;
+
+                if ($strData->NumberOfRooms == $numRooms
+                    && $strData->ClassOfRoom == $class
+                    && $strData->Filling == $filling
+                    && !in_array($kitId, array_keys($data['suitable_kits']))) {
+
+                    $data['suitable_kits'][$kitId] = $strData;
+                }
+            }
+        }
     }
 
 
@@ -135,13 +175,13 @@ class CShmelCalculatorComponent extends CBitrixComponent
      */
     private function getDataDev()
     {
-        if(!$this->arParams['SESSION_CODE'])
+        if (!$this->arParams['SESSION_FORM_CODE'])
             return;
 
-        $formCode = $this->arParams['SESSION_CODE'];
+        $formCode = $this->arParams['SESSION_FORM_CODE'];
         $sessionMF = &$_SESSION[$formCode];
 
-        if(empty($sessionMF)) {
+        if (empty($sessionMF)) {
             $data = file_get_contents($_SERVER['DOCUMENT_ROOT'] . $this->getPath() . "/data.json");
             $data = json_decode($data, true);
 

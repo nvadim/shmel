@@ -40,10 +40,11 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  * Work with cache
  *************************************************************************/
 
-$sess_code = $arParams['SESSION_CODE'];
+$sess_code = $arParams['SESSION_FORM_CODE'];
 if(!isset($_SESSION[$sess_code])) {
     $_SESSION[$sess_code] = [];
 }
+
 $arResult['SAVED_DATA'] = array_merge($_SESSION[$sess_code], (is_array($_POST))?$_POST:[]);
 
 $this->jumpToPage();

@@ -16,7 +16,7 @@ $APPLICATION->SetTitle("Переезды");
                 "page" => "#page#/",
                 "intermediate" => "intrm-#intermediate_num#/",
             ),
-            'SESSION_CODE' => 'MOVE_FORM',
+            'SESSION_FORM_CODE' => 'MOVE_FORM',
             'SECTION' => 'move',
             'PAGES' => array(
                 'route',
@@ -27,6 +27,7 @@ $APPLICATION->SetTitle("Переезды");
                 'loaders',
                 'loaders-edit',
                 'packaging',
+                'packaging-edit',
                 'rigging',
             ),
             'REQUIRED' => array(
@@ -52,9 +53,15 @@ $APPLICATION->SetTitle("Переезды");
                     'CLASS' => 'Выберите «Класс помещения»',
                     'FILLING' => 'Выберите «Загруженность помещения»'
                 ],
-                //                    'transport' => [
-                //
-                //                    ],
+                'transport' => [
+                    'POINT_CHECK' => 'Выберите маршрут для транспорта'
+                ],
+                'loaders' => [
+                    'POINT_CHECK' => 'Выберите маршрут для транспорта'
+                ],
+                'packaging' => [
+                    'POINT_CHECK' => 'Выберите маршрут для транспорта'
+                ],
             )
         ),
         false

@@ -76,7 +76,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
 
                                     <? foreach ($arResult['select_route'] as $k => $route) {?>
                                         <div class="check_inline__one">
-                                            <input type="checkbox" class="check_inline__input" name="<?= $currentStep?>[POINT_CHECK][_<?= $k?>]" value="<?= $k?>" id="rigging_one__config<?= $k?>" onchange="checkDisabledLabel(this)" data-check-disabled="id1_<?= $k?>">
+                                            <input <?= (isset($data['POINT_CHECK']['_'.$k]))?'checked':''?> name="<?= $currentStep?>[POINT_CHECK][_<?= $k?>]" value="<?= $k?>" type="checkbox" class="check_inline__input" id="rigging_one__config<?= $k?>" onchange="checkDisabledLabel(this)" data-check-disabled="id1_<?= $k?>">
                                             <label for="rigging_one__config3" class="check_inline__label check_address">
                                                 <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox check_address__icon">
                                                     <rect class="checkbox__rect" width="100%" height="100%"></rect>
@@ -84,7 +84,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                                 </svg>
                                                 <span class="check_address__name"><?= $route?></span>
                                                 <span class="check_address__select">
-                                                    <select class="form__select" name="<?= $currentStep?>[POINT_TYPE][_<?= $k?>]" id="id1_<?= $k?>" <?= ($data['POINT_CHECK']['_'.$k])?'':'disabled'?>>
+                                                    <select class="form__select" name="<?= $currentStep?>[POINT_TYPE][_<?= $k?>]" id="id1_<?= $k?>" <?= (isset($data['POINT_CHECK']['_'.$k]))?'':'disabled'?>>
                                                         <? foreach ($arResult['select_list_value'] as $key => $val) {?>
                                                             <option value="<?= $key?>" <?= ($key==$data['POINT_TYPE']['_'.$k])?'selected':''?>><?= $val?></option>
                                                         <? }?>

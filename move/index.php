@@ -29,6 +29,8 @@ $APPLICATION->SetTitle("Переезды");
                 'packaging',
                 'packaging-edit',
                 'rigging',
+                'confirm',
+                'success',
             ),
             'REQUIRED' => array(
                 'route' => [

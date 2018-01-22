@@ -6,7 +6,8 @@ $arComponentVariables = array('intermediate_num', 'page');
 
 $arDefaultUrlTemplates404 = array(
     'intermediate' => 'intrm-#intermediate_num#/',
-    'page' => '#page#',
+    'page' => '#page#/',
+    'success' => 'success/',
 );
 
 $arPages = $arParams["PAGES"];

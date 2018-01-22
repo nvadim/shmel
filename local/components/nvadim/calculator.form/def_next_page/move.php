@@ -38,7 +38,12 @@ case 'packaging':
 case 'packaging-edit':
     $nextPage = 'rigging';
     break;
-
+case 'rigging':
+    $nextPage = 'confirm';
+    break;
+case 'confirm':
+    $nextPage = 'success';
+    break;
 default:
 
 }

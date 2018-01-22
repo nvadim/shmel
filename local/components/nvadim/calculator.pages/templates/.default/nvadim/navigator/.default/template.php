@@ -20,14 +20,14 @@ $this->setFrameMode(true);
         <? foreach ($arResult['pages'] as $key => $page) {?>
             <div class="navigator__item<?= ($page['IS_CURRENT'])? ' navigator__item-active':''?>">
                 <span class="navigator__icon"><i class="navigator__i"></i></span>
-                <a href="<?= $page['URL']?>" class="navigator__link"><?= $page['TEXT']?> <span class="navigator__price"><?= ($key!='route')? "0 ₽": ''?></span></a>
+                <a href="<?= $page['URL']?>" class="navigator__link"><?= $page['TEXT']?> <span class="navigator__price"><?= ($key!='route' && $page['PRICE']!=0)? "{$page['PRICE']} ₽": ''?></span></a>
             </div>
         <? }?>
     </div>
-    <p class="navigator__total_default">Рекомендованая цена: <span class="navigator__total_price"><!--39 985 &#8381;--></span></p>
-    <p class="navigator__total">Итого: <span class="navigator__total_price"><!--39 985 ₽--></span></p>
+    <p class="navigator__total_default">Рекомендованая цена: <span class="navigator__total_price"><?= $arResult['PRICE_RECOM']?> ₽</span></p>
+    <p class="navigator__total">Итого: <span class="navigator__total_price"><?= $arResult['PRICE_RESULT']?> ₽</span></p>
     <div class="navigator__buttons">
-        <button class="navigator__btn btn" disabled type="button">Оформить заказ</button>
+        <button class="navigator__btn btn" <?= (count($arResult['pages'])<7)?'disabled' :''?> type="button">Оформить заказ</button>
     </div>
 </div>
 

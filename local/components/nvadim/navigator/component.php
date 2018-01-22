@@ -39,17 +39,9 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  *************************************************************************/
 
 $sess_code = $arParams['SESSION_FORM_CODE'];
-$arResult = $_SESSION[$sess_code];
 
 $this->preparePages();
 if ($this->StartResultCache(false, array($arParams, $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
-
-    foreach ($arResult['pages'] as $k => &$page) {
-        if($k=='route')
-            continue;
-
-
-    }
 
     $this->IncludeComponentTemplate();
 }

@@ -134,6 +134,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
         $data = &$saved_data[$step];
         $kits = $this->apiInstance->getData('kits');
 
+        // подбор пакета в локациях
         if (strpos($step, 'intrm-') !== false || in_array($step, ['depart', 'dest'])) {
             $numRooms = $data['NUM_OF_ROOMS'];
             $class = $data['CLASS'];

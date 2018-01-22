@@ -14,9 +14,18 @@ class CShmelNavigatorComponent extends CBitrixComponent
     ];
 
     public $isBreak = false;
+    public $sess_data = false;
+
+    public function __construct(?CBitrixComponent $component = null)
+    {
+        parent::__construct($component);
+
+        $this->arResult['PRICE_RECOM'] = $this->arResult['PRICE_RESULT'] = 0;
+    }
 
     function preparePages($pages = false)
     {
+        $sess_data = $_SESSION[$this->arParams['SESSION_FORM_CODE']];
         $pageUrlTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
 
         $items = $this->arPages;
@@ -45,19 +54,53 @@ class CShmelNavigatorComponent extends CBitrixComponent
             $dataPage = [
                 'URL' => str_replace('#PAGE#', $page, $pageUrlTemplate),
                 'TEXT' => $text,
+                'PRICE' => 0,
                 'IS_CURRENT' => (strpos($this->arParams['STEP'], $page)!==false) ? true : false
             ];
             $this->arResult['pages'][$page] = $dataPage;
 
-            if (!in_array($page, $this->arResult['PAGES_SAVED'])) {
+            if (!in_array($page, $sess_data['PAGES_SAVED'])) {
                 $this->isBreak = true;
                 break;
             }
 
             if (!$pages && $iPage == 'depart') {
-                $this->preparePages($this->arResult['route']['FROM']);
+                $this->preparePages($sess_data['route']['FROM']);
             }
         }
+
+        $this->setPrice();
+    }
+
+    public function setPrice()
+    {
+        $sess_data = $_SESSION[$this->arParams['SESSION_FORM_CODE']];
+/*
+        foreach($this->arResult['pages'] as $kPage => &$pageData) {
+            if($kPage=='route')
+                continue;
+
+            switch ($kPage) {
+                case 'loaders':
+
+                    break;
+                case 'transport':
+
+                    break;
+                case 'rigging':
+
+                    break;
+                case 'packaging':
+
+                    break;
+                default:
+                    if($sess_data[$kPage]['suitable_kits']) {
+
+                    }
+                    break;
+            }
+        }
+*/
 
     }
 }

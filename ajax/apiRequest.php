@@ -19,4 +19,6 @@ if($_REQUEST['debug']) {
     d($data);
     die();
 }
+
+header('Content-Type: application/json');
 echo json_encode($data, JSON_UNESCAPED_UNICODE);

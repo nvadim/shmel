@@ -64,7 +64,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
      */
     public function jumpToPage()
     {
-        $this->getDataDev();
+//        $this->getDataDev();
 
         $nextPageTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
         $nextPage = '';
@@ -140,6 +140,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $class = $data['CLASS'];
             $filling = $data['FILLING'];
 
+            unset($data['suitable_kits']);
             for ($i = 0; $i < count($kits); $i++) {
                 $kitId = $kits[$i]->ID;
                 $strData = $kits[$i]->StructBasicData;
@@ -149,13 +150,36 @@ class CShmelCalculatorComponent extends CBitrixComponent
                     && $strData->Filling == $filling
                     && !in_array($kitId, array_keys($data['suitable_kits']))) {
 
-                    $data['suitable_kits'][$kitId] = $strData;
+                    $data['suitable_kits'][$kitId] = $kits[$i];
+                    $this->saveTransport2Loc($saved_data, $kits[$i]->StructTransports);
                 }
             }
         }
     }
 
 
+    private function saveTransport2Loc(&$p_saved_data, $transport)
+    {
+        $step = $this->arParams['STEP'];
+        if($p_saved_data['transport_list'][$step]) {
+            unset($p_saved_data['transport_list'][$step]);
+        }
+
+        if(!$transport)
+            return false;
+
+        $cars = $this->apiInstance->getData('carscategories');
+
+        for($i = 0; $i<count($cars); $i++) {
+            if($cars[$i]->ID == $transport->ID) {
+                $p_saved_data['transport_list'][$step] = array_merge((array) $cars[$i], (array) $transport);
+            }
+        }
+    }
+
+
+    // используется в отдельном подключаемом файле
+    // в контексте компонента
     private function calcRegionTime()
     {
         $data = $this->arResult['SAVED_DATA'][$this->stPage];

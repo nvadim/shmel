@@ -16,7 +16,7 @@ class CShmelNavigatorComponent extends CBitrixComponent
     public $isBreak = false;
     public $sess_data = false;
 
-    public function __construct(?CBitrixComponent $component = null)
+    public function __construct(CBitrixComponent $component = null)
     {
         parent::__construct($component);
 
@@ -69,13 +69,15 @@ class CShmelNavigatorComponent extends CBitrixComponent
             }
         }
 
-        $this->setPrice();
+        if(!$pages)
+            $this->setPrice();
     }
 
     public function setPrice()
     {
         $sess_data = $_SESSION[$this->arParams['SESSION_FORM_CODE']];
-/*
+        $services = ShmelAPI\ApiWrapper::getInstance()->getData('services');
+
         foreach($this->arResult['pages'] as $kPage => &$pageData) {
             if($kPage=='route')
                 continue;
@@ -94,13 +96,23 @@ class CShmelNavigatorComponent extends CBitrixComponent
 
                     break;
                 default:
-                    if($sess_data[$kPage]['suitable_kits']) {
-
+                    //расчёт услуг
+                    //@TODO добавить расчёт такелажных работ
+                    if(!$sess_data[$kPage]['SERVICES']) {
+                        continue;
                     }
+
+                    for ($i = 0; $i < count($services); $i++) {
+                        $sid = $services[$i]->ID;
+                        if (in_array($sid, $sess_data[$kPage]['SERVICES'])) {
+                            $pageData['PRICE'] += $services[$i]->Price;
+                        }
+                    }
+
                     break;
             }
         }
-*/
+
 
     }
 }

@@ -219,7 +219,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                     </div>
                 </div>
                 <div class="button_map">
-                    <button class="button_map__btn" type="button" data-modal="#auth" data-route-url="<?= FRONEND_BUILD_PATH?>/map.html">
+                    <button class="button_map__btn" type="button" data-modal="#auth" data-route-url="<?= FRONEND_BUILD_PATH?>map.html">
                         <span class="button_map__ico"><img src="<?= FRONEND_BUILD_PATH?>img/gps.svg" class="button_map__img"></span>
                         <span class="button_map__text">Посмотреть маршрут на карте</span>
                     </button>

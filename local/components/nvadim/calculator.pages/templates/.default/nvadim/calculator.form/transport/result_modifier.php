@@ -2,13 +2,28 @@
 
 $data = $arResult['SAVED_DATA'];
 
-//$key = 'from';
-//for($i = 0; $i<count($data['FROM']); $i++) {
-//    if($i>0)
-//        $i = 'intrm-' . $i;
-//
-//    $arResult['select_route'][$key] = $data['FROM'][$i];
-//}
+$transports = &$arResult['SAVED_DATA']['transport_list'];
+$cars = ShmelAPI\ApiWrapper::getInstance()->getData('cars');
+
+foreach ($cars as $car) {
+    if($car->StructRate->Rate != 'Переезд Без НДС')
+        continue;
+
+    foreach ($transports as $st => &$trItem) {
+        if($car->StructCathegory->ID != $trItem['ID'])
+            continue;
+
+        if (strpos($car->StructRateCondition->RateCondition, $trItem['TypeOfLease']) === false)
+            continue;
+
+        $arStr = explode(' ', $car->StructRateCondition->RateCondition);
+        if(array_intersect($arResult['SAVED_DATA']['timeRegion'] , $arStr)) {
+            $trItem['PRICE'] = $car->Price;
+        }
+    }
+
+}
+
 $arResult['select_route'] = $data['route']['FROM'];
 $arResult['select_route']['to'] = $data['route']['TO'];
 

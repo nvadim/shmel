@@ -297,10 +297,14 @@ $routePage = $arResult['SAVED_DATA']['route'];
                                                 <div class="checked__list checked__list-rigger">
                                                     <? foreach ($arResult['rigging_list'] as $rigging) {?>
                                                         <div class="checked__item checked__item-rigging">
-                                                            <input type="checkbox" class="checked__radio" name="<?= $arParams['STEP']?>[RIGGINGS][]" <?= (in_array($rigging->StructTermsOfRigging->ID, $data["RIGGINGS"]))?'checked':''?>  value="<?= $rigging->StructTermsOfRigging->ID?>" id="<?= $rigging->StructTermsOfRigging->ID ?>">
-                                                            <label for="<?= $rigging->StructTermsOfRigging->ID ?>" class="checked__label rigger__label">
-                                                                <span class="rigging__check_title"><?= $rigging->StructTermsOfRigging->ID ?></span>
-                                                                <span class="rigging__check_price"><?= number_format($rigging->StructTermsOfRigging->Price, 0, '', ' ')?><!-- ₽--></span>
+                                                            <input type="checkbox"
+                                                                   class="checked__radio"
+                                                                   name="<?= $arParams['STEP']?>[RIGGINGS][]"
+                                                                   value="<?= $rigging['ID']?>"
+                                                                   <?= (in_array($rigging['ID'], $data["RIGGINGS"]))?'checked':''?>
+                                                                   id="<?= $rigging['ID'] ?>">
+                                                            <label for="<?= $rigging['ID'] ?>" class="checked__label rigger__label">
+                                                                <span class="rigging__check_title"><?= $rigging['NAME'] ?></span>
                                                             </label>
                                                         </div>
                                                     <? } ?>

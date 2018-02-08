@@ -48,7 +48,6 @@ if($interMCount && isset($data['route']['FROM'][$interMCount])) {
     }
 }
 
-//d($prevPage,'prevPage');
 $arResult['prev_step'] = str_replace('#PAGE#', $prevPage, $arResult['prev_step']);
 
 $currentStep['use_contact_not_checked'] = (!$currentStep['USE_CONTACT_DEFAULT']
@@ -56,6 +55,11 @@ $currentStep['use_contact_not_checked'] = (!$currentStep['USE_CONTACT_DEFAULT']
         && $currentStep['CONTACT_PHONE'])
     || !$data['route']['USE_CONTACT_FOR_ALL'];
 
-$arResult['rigging_list'] = ShmelAPI\ApiWrapper::getInstance()->getData('rigging');
+$arResult['rigging_list'] = [
+    ['ID' => 'rigging_pianino', 'NAME' => 'Пианино'],
+    ['ID' => 'rigging_aqua', 'NAME' => 'Аквариум'],
+    ['ID' => 'rigging_service', 'NAME' => 'Вывоз мусора'],
+    ['ID' => 'rigging_other', 'NAME' => 'Другое'],
+];
 $arResult['services_list'] = ShmelAPI\ApiWrapper::getInstance()->getData('services');
 

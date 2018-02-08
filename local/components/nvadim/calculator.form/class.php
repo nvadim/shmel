@@ -47,7 +47,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
             }
         }
 
-        $this->selectKit($sessionMF);
+        // пакет подбирается только для точки А
+        if($step=='depart') {
+            $this->selectKit($sessionMF);
+        }
 
         if (!in_array($this->arParams['STEP'], $sessionMF['PAGES_SAVED'])) {
             $sessionMF['PAGES_SAVED'][] = $step;
@@ -141,6 +144,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $filling = $data['FILLING'];
 
             unset($data['suitable_kits']);
+            unset($saved_data['transport_list'][$step]);
             for ($i = 0; $i < count($kits); $i++) {
                 $kitId = $kits[$i]->ID;
                 $strData = $kits[$i]->StructBasicData;
@@ -160,20 +164,17 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
     private function saveTransport2Loc(&$p_saved_data, $transport)
     {
-        $step = $this->arParams['STEP'];
-        if($p_saved_data['transport_list'][$step]) {
-            unset($p_saved_data['transport_list'][$step]);
-        }
-
         if(!$transport)
             return false;
 
         $cars = $this->apiInstance->getData('carscategories');
-
         for($i = 0; $i<count($cars); $i++) {
-            if($cars[$i]->ID == $transport->ID) {
-                $p_saved_data['transport_list'][$step] = array_merge((array) $cars[$i], (array) $transport);
+            if($cars[$i]->ID != $transport->ID
+                || $p_saved_data['transport_list'][$transport->ID]) {
+                continue;
             }
+
+            $p_saved_data['transport_list'][$transport->ID] = array_merge((array) $cars[$i], (array) $transport);
         }
     }
 

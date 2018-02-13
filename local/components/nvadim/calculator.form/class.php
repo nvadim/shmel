@@ -5,9 +5,14 @@ class CShmelCalculatorComponent extends CBitrixComponent
 {
     public $nextPageTemplate = '';
     public $stPage = 'route';
+    public $arDayTime = ['день', 'дневное', 'днём', 'днем'];
+    public $arNightTime = ['ночь', 'ночное', 'вечер', 'вечером'];
 
     private $timeRegion = [];
     private $apiInstance = null;
+    private $timeThreshold = 16; // пороговый час, разделяющий днемное и вечернее время
+
+    private $carsCategories = false;
 
     public function __construct(CBitrixComponent $component = null)
     {
@@ -34,11 +39,9 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         $sessionMF = &$_SESSION[$formCode];
         $sessionMF = array_merge($sessionMF, $postData);
-        if (!isset($sessionMF['timeRegion'])) {
-            $sessionMF['timeRegion'] = $this->timeRegion;
-        }
+
 //        if(!isset($sessionMF['mkadRegion'])) {
-//            $sessionMF['mkadRegion'] = $this->timeRegion;
+//            $sessionMF['mkadRegion'] = $this->;
 //        }
 
         foreach ($sessionMF[$step] as $sKey => $sess_item) {
@@ -48,8 +51,11 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
 
         // пакет подбирается только для точки А
-        if($step=='depart') {
+        if ($step == 'depart') {
             $this->selectKit($sessionMF);
+        }
+        if ($step == 'route' && $sessionMF['suitable_kits']) {
+            $this->setTransportPrices();
         }
 
         if (!in_array($this->arParams['STEP'], $sessionMF['PAGES_SAVED'])) {
@@ -61,7 +67,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
 
     /**
-     * Валидация полей формы
+     * Редирект на след стр
      *
      * @return bool
      */
@@ -127,6 +133,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
         return $isValid;
     }
 
+    /**
+     * Отбор подходящих пакетов
+     *
+     */
     public function selectKit(&$saved_data)
     {
         $step = $this->arParams['STEP'];
@@ -134,47 +144,94 @@ class CShmelCalculatorComponent extends CBitrixComponent
         if (!$saved_data[$step])
             return false;
 
-        $data = &$saved_data[$step];
-        $kits = $this->apiInstance->getData('kits');
+        $currentStepData = $saved_data[$step];
+        $KITS = $this->apiInstance->getData('kits');
+        $this->carsCategories = $this->apiInstance->getData('carscategories');
 
-        // подбор пакета в локациях
-        if (strpos($step, 'intrm-') !== false || in_array($step, ['depart', 'dest'])) {
-            $numRooms = $data['NUM_OF_ROOMS'];
-            $class = $data['CLASS'];
-            $filling = $data['FILLING'];
+        $numRooms = $currentStepData['NUM_OF_ROOMS'];
+        $class = $currentStepData['CLASS'];
+        $filling = $currentStepData['FILLING'];
 
-            unset($data['suitable_kits']);
-            unset($saved_data['transport_list'][$step]);
-            for ($i = 0; $i < count($kits); $i++) {
-                $kitId = $kits[$i]->ID;
-                $strData = $kits[$i]->StructBasicData;
+        unset($saved_data['suitable_kits']);
+        unset($saved_data['transport_recomm']);
+        for ($i = 0; $i < count($KITS); $i++) {
+            $kitId = $KITS[$i]->ID;
+            $strData = $KITS[$i]->StructBasicData;
 
-                if ($strData->NumberOfRooms == $numRooms
-                    && $strData->ClassOfRoom == $class
-                    && $strData->Filling == $filling
-                    && !in_array($kitId, array_keys($data['suitable_kits']))) {
+            if ($strData->NumberOfRooms == $numRooms
+                && $strData->ClassOfRoom == $class
+                && $strData->Filling == $filling
+                && !in_array($kitId, array_keys($saved_data['suitable_kits']))) {
 
-                    $data['suitable_kits'][$kitId] = $kits[$i];
-                    $this->saveTransport2Loc($saved_data, $kits[$i]->StructTransports);
-                }
+                $saved_data['suitable_kits'][$kitId] = $KITS[$i];
+                $this->saveTransport2Loc($saved_data, $KITS[$i]->StructTransports);
+
+                break;
             }
+        }
+
+        // установим цены согласно тарифам ТС-в
+        if (!empty($saved_data['transport_recomm'])) {
+            $this->setTransportPrices();
         }
     }
 
-
+    // объединяет общую информацию
     private function saveTransport2Loc(&$p_saved_data, $transport)
     {
-        if(!$transport)
+        if (!$transport || !$this->carsCategories)
             return false;
 
-        $cars = $this->apiInstance->getData('carscategories');
-        for($i = 0; $i<count($cars); $i++) {
-            if($cars[$i]->ID != $transport->ID
-                || $p_saved_data['transport_list'][$transport->ID]) {
+        for ($i = 0; $i < count($this->carsCategories); $i++) {
+            if ($this->carsCategories[$i]->ID != $transport->ID
+                || $p_saved_data['transport_recomm'][$transport->ID]) {
+
                 continue;
             }
 
-            $p_saved_data['transport_list'][$transport->ID] = array_merge((array) $cars[$i], (array) $transport);
+            $p_saved_data['transport_recomm'][$transport->ID] = array_merge((array)$this->carsCategories[$i], (array)$transport);
+        }
+    }
+
+    // цены на транспортные средства
+    private function setTransportPrices()
+    {
+        $formCode = $this->arParams['SESSION_FORM_CODE'];
+        $sessionMF = &$_SESSION[$formCode];
+
+        if (!$sessionMF['timeRegion'])
+            return false;
+
+        $cars = ShmelTools\Transport1C::getTransport();
+        $sessionMF['transport']['PRICE'] = 0;
+
+        for($i = 0; $i<count($cars); $i++) {
+            if(!$cars[$i])
+                continue;
+
+            $car = $cars[$i];
+            $carId = $car['StructCathegory']['ID'];
+            if ($car['StructRate']['Rate'] != 'Переезд Без НДС')
+                continue;
+
+            $arCarCondintion = explode(' ', $car['StructRateCondition']['RateCondition']);
+            foreach ($sessionMF['transport_recomm'] as $catId => &$trItem) {
+                if ($carId != $trItem['ID'])
+                    continue;
+
+                if ($car['StructRateCondition']['RateCondition'] == 'Стоимость 1 часа работы автомобиля') {
+                    $trItem['ADDITIONAL_PRICE'] = $car['Price'];
+                    continue;
+                }
+
+                if (strpos($car['StructRateCondition']['RateCondition'], $trItem['TypeOfLease']) === false)
+                    continue;
+
+                if (array_intersect($sessionMF['timeRegion'], $arCarCondintion)) {
+                    $trItem['PRICE'] = $car['Price'];
+                    $sessionMF['transport']['PRICE'] += $car['Price'];
+                }
+            }
         }
     }
 
@@ -188,9 +245,13 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         $hours[0] = intval($hours[0]);
         $hours[1] = intval($hours[1]);
-        $this->timeRegion = ((9 <= $hours[0] && $hours[0] < 18)
-            || ($hours[0] == 18 && $hours[1] == 0)) ? ['день', 'дневное', 'днём', 'днем']
-            : ['ночь', 'ночное', 'вечер', 'вечером'];
+
+        $formCode = $this->arParams['SESSION_FORM_CODE'];
+        $sessionMF = &$_SESSION[$formCode];
+
+        $sessionMF['timeRegion'] = ((9 <= $hours[0] && $hours[0] < $this->timeThreshold)
+            || ($hours[0] == $this->timeThreshold && $hours[1] == 0)) ? $this->arDayTime
+            : $this->arNightTime;
     }
 
 

@@ -24,11 +24,15 @@ $data = $arResult['SAVED_DATA'][$currentStep];
 
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
         <input type="hidden" name="CURRENT_PAGE" value="<?= $currentStep?>">
+        <input type="hidden" name="<?= $currentStep?>[PRICE]" value="<?= $data['PRICE']?>">
 
         <div class="move_step move_step-active move_step3">
             <div class="move_step3__list">
 
-                <? foreach ($arResult['SAVED_DATA']['transport_list'] as $step => $transport) {?>
+                <?
+                foreach ($arResult['SAVED_DATA']['transport_recomm'] as $id => $transport) {
+                    $curTransport = $arResult['categoriesTransport'][$id];
+                    ?>
                     <div class="move_step3__item move_config">
                         <div class="move_config__head">
                             <div class="move_config__left">
@@ -41,21 +45,23 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                         <div class="move_config__content">
                             <div class="default_content">
                                 <div class="default_content__left">
-                                    <div class="default_content__pic"><img src="<?= FRONEND_BUILD_PATH?>img/1-cat-1.svg" alt="" class="default_content__img"></div>
+                                    <div class="default_content__pic"><img src="<?= $curTransport['img']?>" alt="" class="default_content__img"></div>
                                     <div class="default_content__desc">
-                                        <p class="default_content__text">Грузоподъёмность, т: <span><?= $transport['LiftingCapacity_2']?></span></p>
-                                        <p class="default_content__text">Полезный объем, м³: <span><?= $transport['UsefilSize_2']?></span></p>
-                                        <div class="default_content__pass pass">
-                                            <img src="#<?/*= FRONEND_BUILD_PATH*/?><!--img/propusk.svg-->" alt="" class="pass__img">
-                                            <!--<span class="pass__text">Пропуск в центр</span>-->
-                                        </div>
+                                        <p class="default_content__text">Грузоподъёмность, т: <span><?= $curTransport['weight']?></span></p>
+                                        <p class="default_content__text">Полезный объем, м³: <span><?= $curTransport['volume']?></span></p>
+                                        <? if($curTransport['pass']) {?>
+                                            <div class="default_content__pass pass">
+                                                <img src="<?= FRONEND_BUILD_PATH?>img/propusk.svg" alt="" class="pass__img">
+                                                <span class="pass__text">Пропуск в центр</span>
+                                            </div>
+                                        <? }?>
                                     </div>
                                 </div>
                                 <div class="default_content__right">
                                     <div class="one_default">
                                         <p class="one_default__title">Автомобиль:</p>
                                         <div class="one_default__text_box one_default__text_box-flex">
-                                            <p class="one_default__text"><?= "{$transport['Cathegory']} (до {$transport['LiftingCapacity_2']} тонн, до {$transport['UsefilSize_2']} м³)"?></p>
+                                            <p class="one_default__text"><?= "{$curTransport['name']} (до {$curTransport['weight']} тонн, до {$curTransport['volume']} м³)"?></p>
                                         </div>
                                     </div>
                                     <div class="one_default">
@@ -106,7 +112,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                 <div class="move_config__no_hidden move_config__no_hidden-green">
                     <div class="total_green">
                         <span class="total_green__text">Итого, стоимость аренды транспорта:</span>
-                        <span class="total_green__price">9 000 ₽</span>
+                        <span class="total_green__price"><?= number_format($data['PRICE'], 0, '', ' ')?> ₽</span>
                     </div>
                 </div>
             </div>

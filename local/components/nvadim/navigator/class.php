@@ -87,7 +87,7 @@ class CShmelNavigatorComponent extends CBitrixComponent
 
                     break;
                 case 'transport':
-
+                    $pageData['PRICE'] = $sess_data['transport']['PRICE'];
                     break;
                 case 'rigging':
 
@@ -97,7 +97,6 @@ class CShmelNavigatorComponent extends CBitrixComponent
                     break;
                 default:
                     //расчёт услуг
-                    //@TODO добавить расчёт такелажных работ
                     if(!$sess_data[$kPage]['SERVICES']) {
                         continue;
                     }
@@ -111,8 +110,10 @@ class CShmelNavigatorComponent extends CBitrixComponent
 
                     break;
             }
-        }
 
+            $this->arResult['PRICE_RECOM'] += $pageData['PRICE'];
+            $this->arResult['PRICE_RESULT'] += $pageData['PRICE'];
+        }
 
     }
 }

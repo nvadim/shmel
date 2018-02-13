@@ -47,3 +47,14 @@ function declOfNum($number, $titles) {
     $cases = array (2, 0, 1, 1, 1, 2);
     return $titles[ ($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)] ];
 }
+
+// категории транспорта
+// стат. значения картинок, параметров
+ShmelTools\Options::getInstance()->setProperty('catTransport', [
+    '000000001' => ['img' => '/local/assets/src/img/1cat.svg', 'pass' => 1, 'name' => '1-я категория', 'weight' => 1.5, 'volume' => 9],
+    '000000002' => ['img' => '/local/assets/src/img/2cat.svg', 'pass' => 1, 'name' => '2-я категория', 'weight' => 1.5, 'volume' => 16],
+    '000000003' => ['img' => '/local/assets/src/img/3cat.svg', 'pass' => 1, 'name' => '3-я категория', 'weight' => 3, 'volume' => 18],
+    '000000005' => ['img' => '/local/assets/src/img/5cat.svg', 'pass' => 0, 'name' => '5-я категория', 'weight' => 5, 'volume' => 36],
+    '000000006' => ['img' => '/local/assets/src/img/6cat.svg', 'pass' => 0, 'name' => '6-я категория', 'weight' => 10, 'volume' => 43],
+    '000000007' => ['img' => '/local/assets/src/img/7cat.svg', 'pass' => 0, 'name' => '7-я категория', 'weight' => 20, 'volume' => 90],
+]);

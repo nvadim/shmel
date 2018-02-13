@@ -50,7 +50,5 @@ $arResult['SAVED_DATA'] = array_merge($_SESSION[$sess_code], (is_array($_POST))?
 $this->jumpToPage();
 
 if ($this->StartResultCache(false, array($arParams['SESS_ID'], $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
-    $this->endResultCache();
+    $this->IncludeComponentTemplate();
 }
-
-$this->IncludeComponentTemplate();

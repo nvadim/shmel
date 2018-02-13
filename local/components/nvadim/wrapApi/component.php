@@ -41,9 +41,10 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  *************************************************************************/
 
 if ($this->startResultCache(false, array($arrFilter, $arParams))) {
+    $arResult['data'] = ShmelAPI\ApiWrapper::getInstance()->getData($arParams['TYPE']);
 
-    $data = ShmelAPI\ApiWrapper::getInstance()->getData($arParams['TYPE']);
-
-    return $data;
-
+    $this->setResultCacheKeys(array(
+        "data",
+    ));
+    return $arResult['data'];
 }

@@ -298,9 +298,11 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                 <button class="move_step__btn btn btn-white"
                         type="button">Вызвать замерщика
                 </button>
-                <input class="move_step__btn btn" type="submit" value="Далее" name="submit_next">
+                <input class="move_step__btn btn j-next" data-form-code="<?= $arParams['SESSION_FORM_CODE']?>" type="submit" value="Далее" name="submit_next">
             </div>
         </div>
 
     </form>
 </div>
+
+<div class="maps__map b-intersect_map" id="intersect_map"></div>

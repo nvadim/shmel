@@ -67,7 +67,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                     <div class="one_default">
                                         <p class="one_default__title">Основное время:</p>
                                         <div class="one_default__text_box one_default__text_box-flex">
-                                            <p class="one_default__text"><?=$transport['TypeOfLease']?> – <?= $transport['PRICE']?> ₽</p>
+                                            <p class="one_default__text"><?=$transport['TypeOfLease']?> – <?= $transport['PRICES']['CAR_PRICE']?> ₽</p>
                                             <span class="one_default__tooltip tooltip" title="srgdsf">?</span>
                                         </div>
                                     </div>
@@ -117,7 +117,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                 </div>
             </div>
             <div class="move_step__buttons move_step1__buttons">
-                <button class="move_step__btn btn btn-white" type="button">Предыдущий шаг</button>
+                <a class="move_step__btn btn btn-white" href="<?= $arResult['prev_step'] ?>">Предыдущий шаг</a>
                 <input class="move_step__btn btn" type="submit" value="Далее" name="submit_next">
             </div>
         </div>

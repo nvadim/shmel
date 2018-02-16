@@ -13,3 +13,5 @@ $arResult['select_list_value'] = [
 ];
 
 $arResult['categories'] = ShmelTools\Options::getInstance()->getProperty('catTransport');
+
+$arResult['prev_step'] = $arParams['SEF_FOLDER'] . 'dest/';

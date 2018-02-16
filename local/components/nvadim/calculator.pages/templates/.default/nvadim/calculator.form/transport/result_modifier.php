@@ -3,7 +3,6 @@
 $arResult['categoriesTransport'] = ShmelTools\Options::getInstance()->getProperty('catTransport');
 
 $data = $arResult['SAVED_DATA'];
-
 $arResult['select_route'] = $data['route']['FROM'];
 $arResult['select_route']['to'] = $data['route']['TO'];
 
@@ -12,3 +11,5 @@ $arResult['select_list_value'] = [
     'upload' => 'Выгрузка',
     'both_load' => 'Загрузка/Выгрузка',
 ];
+
+$arResult['prev_step'] = $arParams['SEF_FOLDER'] . 'dest/';

@@ -11,6 +11,11 @@ class CShmelCalculatorComponent extends CBitrixComponent
     private $timeRegion = [];
     private $apiInstance = null;
     private $timeThreshold = 16; // пороговый час, разделяющий днемное и вечернее время
+//    private $arPassValue = [
+//        'IS_MKAD' => 'МКАД',
+//        'IS_TTK' => 'ТТК',
+//        'IS_SK' => 'СК',
+//    ];
 
     private $carsCategories = false;
 
@@ -214,23 +219,62 @@ class CShmelCalculatorComponent extends CBitrixComponent
             if ($car['StructRate']['Rate'] != 'Переезд Без НДС')
                 continue;
 
-            $arCarCondintion = explode(' ', $car['StructRateCondition']['RateCondition']);
+            $rateCondition = $car['StructRateCondition']['RateCondition'];
+            $arCarCondintion = explode(' ', $rateCondition);
             foreach ($sessionMF['transport_recomm'] as $catId => &$trItem) {
                 if ($carId != $trItem['ID'])
                     continue;
 
-                if ($car['StructRateCondition']['RateCondition'] == 'Стоимость 1 часа работы автомобиля') {
-                    $trItem['ADDITIONAL_PRICE'] = $car['Price'];
+                if ($rateCondition == 'Стоимость 1 часа работы автомобиля') {
+
+                    $trItem['PRICES'][1] = $car['Price'];
                     continue;
                 }
 
-                if (strpos($car['StructRateCondition']['RateCondition'], $trItem['TypeOfLease']) === false)
-                    continue;
+                // оплата пропуска МКАД
+                if ($sessionMF['IS_MKAD']
+                    && $rateCondition == 'Оплата пропускного режима МКАД') {
 
-                if (array_intersect($sessionMF['timeRegion'], $arCarCondintion)) {
-                    $trItem['PRICE'] = $car['Price'];
+                    $trItem['PRICES']['MKAD'] = $car['Price'];
                     $sessionMF['transport']['PRICE'] += $car['Price'];
                 }
+
+                // оплата пропуска ТТК
+                if ($sessionMF['IS_TTK']
+                    && strpos($rateCondition,'Оплата пропускного режима ТТК')!==false) {
+
+                    $trItem['PRICES']['TTK'] = $car['Price'];
+                    $sessionMF['transport']['PRICE'] += $car['Price'];
+                }
+
+                // оплата пропуска СК
+                if ($sessionMF['IS_SK']
+                    && strpos($rateCondition, 'Оплата пропускного режима СК')!==false) {
+
+                    $trItem['PRICES']['SK'] = $car['Price'];
+                    $sessionMF['transport']['PRICE'] += $car['Price'];
+                }
+
+                if (!array_intersect($sessionMF['timeRegion'], $arCarCondintion))
+                    continue;
+
+                if (strpos($rateCondition, 'Стоимость аренды автомобиля на') !== false) {
+                    $hours = $arCarCondintion[4];
+                    $trItem['PRICES'][$hours] = $car['Price'];
+                }
+
+                if (strpos($rateCondition, $trItem['TypeOfLease']) !== false) {
+                    $trItem['PRICES']['CAR_PRICE'] = $car['Price'];
+
+                    $sessionMF['transport']['PRICE'] += $car['Price']; // результирующая стоимость страницы Транспорта
+                }
+            }
+        }
+
+        // Аренда вечером 8ми часовой отсутствует. Поэтому 4 часа вечером + добираем 1 доп часами расчет
+        if (in_array('вечер', $sessionMF['timeRegion'])) {
+            foreach ($sessionMF['transport_recomm'] as $catId => &$trItem) {
+                $trItem['PRICES'][8] = $trItem['PRICES'][4] + $trItem['PRICES'][1] * 4;
             }
         }
     }

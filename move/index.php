@@ -1,6 +1,13 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Переезды");
+
+// выпадающий список выгрузки/загрузки
+ShmelTools\Options::getInstance()->setProperty('selectList', [
+    'load' => 'Загрузка',
+    'upload' => 'Выгрузка',
+    'both_load' => 'Загрузка/Выгрузка',
+]);
 ?>
 <div class="main__content">
     <?
@@ -58,11 +65,14 @@ $APPLICATION->SetTitle("Переезды");
                 'transport' => [
                     'POINT_CHECK' => 'Выберите маршрут для транспорта'
                 ],
-                'loaders' => [
+                'transport-edit' => [
                     'POINT_CHECK' => 'Выберите маршрут для транспорта'
                 ],
+                'loaders' => [
+                    'POINT_CHECK' => 'Выберите маршрут для грузчиков'
+                ],
                 'packaging' => [
-                    'POINT_CHECK' => 'Выберите маршрут для транспорта'
+                    'POINT_CHECK' => 'Выберите маршрут для упаковки'
                 ],
             )
         ),

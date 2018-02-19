@@ -274,7 +274,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
         // Аренда вечером 8ми часовой отсутствует. Поэтому 4 часа вечером + добираем 1 доп часами расчет
         if (in_array('вечер', $sessionMF['timeRegion'])) {
             foreach ($sessionMF['transport_recomm'] as $catId => &$trItem) {
-                $trItem['PRICES'][8] = $trItem['PRICES'][4] + $trItem['PRICES'][1] * 4;
+                $trItem['PRICES'][8] = $trItem['PRICES'][4] + $trItem['PRICES'][1];
             }
         }
     }

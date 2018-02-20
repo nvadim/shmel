@@ -8,14 +8,12 @@ class CShmelCalculatorComponent extends CBitrixComponent
     public $arDayTime = ['день', 'дневное', 'днём', 'днем'];
     public $arNightTime = ['ночь', 'ночное', 'вечер', 'вечером'];
 
-    private $timeRegion = [];
+    private $arTypeLoaders = ['Только грузчик', 'Сборщик/разборщик'];
+//    private $loaders = ['Только грузчик', 'Сборщик/разборщик'];
+
+    private $_sessData = '';
     private $apiInstance = null;
     private $timeThreshold = 16; // пороговый час, разделяющий днемное и вечернее время
-//    private $arPassValue = [
-//        'IS_MKAD' => 'МКАД',
-//        'IS_TTK' => 'ТТК',
-//        'IS_SK' => 'СК',
-//    ];
 
     private $carsCategories = false;
 
@@ -25,6 +23,20 @@ class CShmelCalculatorComponent extends CBitrixComponent
         $this->apiInstance = ShmelAPI\ApiWrapper::getInstance();
     }
 
+    private function init()
+    {
+        $sessCode = $this->arParams['SESSION_FORM_CODE'];
+        if (!$sessCode)
+            die('Не задан сессионный код в параметрах компонента');
+
+        if(!isset($_SESSION[$sessCode])) {
+            $_SESSION[$sessCode] = [];
+        }
+
+        $this->_sessData = &$_SESSION[$sessCode];
+
+        $this->arResult['SAVED_DATA'] = array_merge($this->_sessData, (is_array($_POST))?$_POST:[]);
+    }
 
     /**
      * @param $postData
@@ -33,21 +45,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
      */
     public function save($postData = array())
     {
-        if (!$this->arParams['SESSION_FORM_CODE'])
-            return false;
-
-        $formCode = $this->arParams['SESSION_FORM_CODE'];
-        if (!isset($_SESSION[$formCode])) {
-            $_SESSION[$formCode] = array();
-        }
         $step = $this->arParams['STEP'];
 
-        $sessionMF = &$_SESSION[$formCode];
+        $sessionMF = &$this->_sessData;
         $sessionMF = array_merge($sessionMF, $postData);
-
-//        if(!isset($sessionMF['mkadRegion'])) {
-//            $sessionMF['mkadRegion'] = $this->;
-//        }
 
         foreach ($sessionMF[$step] as $sKey => $sess_item) {
             if (!isset($postData[$step][$sKey])) {
@@ -78,10 +79,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
      */
     public function jumpToPage()
     {
-//        $this->getDataDev();
-
         $nextPageTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
         $nextPage = '';
+
+        $this->init();
 
         $data = $this->arResult['SAVED_DATA'];
         $step = $this->arParams['STEP'];
@@ -94,7 +95,9 @@ class CShmelCalculatorComponent extends CBitrixComponent
             LocalRedirect($urlToRedirect, true);
         }
 
+        // for save data...
         if (!isset($_POST['submit_next']) || !$this->checkReqFields()) {
+            $this->preparePage();
             return true;
         }
 
@@ -106,6 +109,142 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
             LocalRedirect($urlToRedirect, true);
         }
+    }
+
+    /**
+     * Load pages data
+     *
+     */
+    private function preparePage()
+    {
+        $step = $this->arParams['STEP'];
+
+        switch ($step) {
+            case 'loaders':
+            case 'loaders-edit':
+                $this->pageLoaders();
+                break;
+        }
+    }
+
+    /**
+     * Loaders PAGE
+     */
+    private function pageLoaders()
+    {
+        $data = $this->arResult['SAVED_DATA'];
+        $_loaders = &$this->arResult['SAVED_DATA']['loaders'];
+        if(!$_loaders) {
+            $_loaders['TIME'] = intval($data['route']['TIME']);
+            $LOADERS_DATA = $this->apiInstance->getData('loaders');
+            foreach ($LOADERS_DATA as $loader) {
+                // расчёт границ времени
+                $curCategory = $loader->StructCathegory->Cathegory;
+                $curCondition = $loader->StructRateCondition->RateCondition;
+                if($curCategory == 'Вне категории') {
+                    if($curCondition=='Начало дневного времени') {
+                        $_loaders['DAY'] = $loader->Price;
+                    }
+
+                    if($curCondition=='Начало вечернего времени') {
+                        $_loaders['NIGHT'] = $loader->Price;
+                    }
+                    continue;
+                }
+
+                if(!in_array($curCategory, $this->arTypeLoaders)) {
+                    continue;
+                }
+
+                if(!$_loaders[$curCategory]['DAY_PRICE'] && $curCondition=='Стоимость 1 часа работы грузчика (по категории)') {
+                    $_loaders[$curCategory]['DAY_PRICE'] = $loader->Price;
+                    continue;
+                }
+
+                if(!$_loaders[$curCategory]['EVENING_PRICE'] && $curCondition=='Стоимость 1 часа работы грузчика (по категории) вечером') {
+                    $_loaders[$curCategory]['EVENING_PRICE'] = $loader->Price;
+                    continue;
+                }
+
+            }
+
+
+            // подсчёт по пакету
+            foreach ($data['suitable_kits'] as $kid => $kitItem) {
+                for($c = 0; $c < count($kitItem->StructLoaders); $c++) {
+                    // $curLoader->Number - кол-во часов работы - loaderTime
+                    // $_loaders['TIME'] - время подачи
+                    // $_loaders['DAY']- утр. время
+                    // $_loaders['NIGHT']- вечер. время
+
+                    $curLoader = $kitItem->StructLoaders[$c];
+                    $loaderTime = $curLoader->Number;
+
+                    $resPrice = 0;
+                    if($_loaders[$curCategory]['DAY_PRICE'] && $_loaders[$curCategory]['EVENING_PRICE']) {
+                        $resPrice = $this->setLoadersPrice(
+                            $loaderTime,
+                            $_loaders[$curCategory]['DAY_PRICE'],
+                            $_loaders[$curCategory]['EVENING_PRICE']
+                        );
+                    }
+                    $_loaders['ITEMS'][$curLoader->Cathegory]['COUNTS']++;
+                    $_loaders['ITEMS'][$curLoader->Cathegory]['HOURS'][] = $curLoader->Number;
+                    $_loaders['ITEMS'][$curLoader->Cathegory]['PRICE'][] = $resPrice;
+                    $_loaders['ITEMS'][$curLoader->Cathegory]['RESULT_HOURS'] += $curLoader->Number;
+                    $_loaders['ITEMS'][$curLoader->Cathegory]['RESULT_PRICE'] += $resPrice;
+                }
+            }
+
+        }
+    }
+
+    /**
+     * Цена для каждого грузчика
+     *
+     * @param $loaderTime
+     * @param $dayPrice
+     * @param $eveningPrice
+     */
+    private function setLoadersPrice($loaderTime, $dayPrice, $eveningPrice)
+    {
+        $resultPrice = 0;
+        $loadersData = &$this->arResult['SAVED_DATA']['loaders'];
+        if(!$loadersData['TIME']
+            || !$loadersData['DAY']
+            || !$loadersData['NIGHT']) {
+
+            return -1;
+        }
+
+        if ($loadersData['TIME'] < $loadersData['NIGHT']
+            && $loadersData['TIME'] > $loadersData['DAY']) { // утро
+
+            if (($loadersData['TIME'] + $loaderTime) < $loadersData['NIGHT'])
+            {
+                $resultPrice = $loaderTime * $dayPrice;
+            } else { // с учётом того, что время работы не может быть > 12
+                $partDayTime = ($loadersData['NIGHT'] - $loadersData['TIME']);
+                $partEvTime = $loaderTime - $partDayTime;
+
+                $resultPrice = $partDayTime * $dayPrice + $partEvTime * $eveningPrice;
+            }
+        } else {// вечер = (24+$loadersData['DAY'])
+
+            $evЕThreshold = 24 + $loadersData['DAY'];
+            if (($loadersData['TIME'] + $loaderTime) <= $evЕThreshold)
+            {
+                $resultPrice = $loaderTime * $eveningPrice;
+            } else {
+                $partDayTime = ($loadersData['TIME'] + $loaderTime) - $evЕThreshold;
+                $partEvTime = $loaderTime - $partDayTime;
+
+                $resultPrice = $partDayTime * $dayPrice + $partEvTime * $eveningPrice;
+            }
+        }
+
+        $loadersData['RESULT_PRICE'] += $resultPrice;
+        return $resultPrice;
     }
 
     public function checkReqFields()
@@ -181,6 +320,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
     }
 
+
     // объединяет общую информацию
     private function saveTransport2Loc(&$p_saved_data, $transport)
     {
@@ -201,8 +341,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
     // цены на транспортные средства
     private function setTransportPrices()
     {
-        $formCode = $this->arParams['SESSION_FORM_CODE'];
-        $sessionMF = &$_SESSION[$formCode];
+        $sessionMF = &$this->_sessData;
 
         if (!$sessionMF['timeRegion'])
             return false;
@@ -219,13 +358,13 @@ class CShmelCalculatorComponent extends CBitrixComponent
             if ($car['StructRate']['Rate'] != 'Переезд Без НДС')
                 continue;
 
-            $rateCondition = $car['StructRateCondition']['RateCondition'];
-            $arCarCondintion = explode(' ', $rateCondition);
+            $carRateCondition = $car['StructRateCondition']['RateCondition'];
+            $arCarRateCondintion = explode(' ', $carRateCondition);
             foreach ($sessionMF['transport_recomm'] as $catId => &$trItem) {
                 if ($carId != $trItem['ID'])
                     continue;
 
-                if ($rateCondition == 'Стоимость 1 часа работы автомобиля') {
+                if ($carRateCondition == 'Стоимость 1 часа работы автомобиля') {
 
                     $trItem['PRICES'][1] = $car['Price'];
                     continue;
@@ -233,7 +372,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
                 // оплата пропуска МКАД
                 if ($sessionMF['IS_MKAD']
-                    && $rateCondition == 'Оплата пропускного режима МКАД') {
+                    && $carRateCondition == 'Оплата пропускного режима МКАД') {
 
                     $trItem['PRICES']['MKAD'] = $car['Price'];
                     $sessionMF['transport']['PRICE'] += $car['Price'];
@@ -241,7 +380,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
                 // оплата пропуска ТТК
                 if ($sessionMF['IS_TTK']
-                    && strpos($rateCondition,'Оплата пропускного режима ТТК')!==false) {
+                    && strpos($carRateCondition,'Оплата пропускного режима ТТК')!==false) {
 
                     $trItem['PRICES']['TTK'] = $car['Price'];
                     $sessionMF['transport']['PRICE'] += $car['Price'];
@@ -249,21 +388,21 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
                 // оплата пропуска СК
                 if ($sessionMF['IS_SK']
-                    && strpos($rateCondition, 'Оплата пропускного режима СК')!==false) {
+                    && strpos($carRateCondition, 'Оплата пропускного режима СК')!==false) {
 
                     $trItem['PRICES']['SK'] = $car['Price'];
                     $sessionMF['transport']['PRICE'] += $car['Price'];
                 }
 
-                if (!array_intersect($sessionMF['timeRegion'], $arCarCondintion))
+                if (!array_intersect($sessionMF['timeRegion'], $arCarRateCondintion))
                     continue;
 
-                if (strpos($rateCondition, 'Стоимость аренды автомобиля на') !== false) {
-                    $hours = $arCarCondintion[4];
+                if (strpos($carRateCondition, 'Стоимость аренды автомобиля на') !== false) {
+                    $hours = $arCarRateCondintion[4];
                     $trItem['PRICES'][$hours] = $car['Price'];
                 }
 
-                if (strpos($rateCondition, $trItem['TypeOfLease']) !== false) {
+                if (strpos($carRateCondition, $trItem['TypeOfLease']) !== false) {
                     $trItem['PRICES']['CAR_PRICE'] = $car['Price'];
 
                     $sessionMF['transport']['PRICE'] += $car['Price']; // результирующая стоимость страницы Транспорта
@@ -274,7 +413,11 @@ class CShmelCalculatorComponent extends CBitrixComponent
         // Аренда вечером 8ми часовой отсутствует. Поэтому 4 часа вечером + добираем 1 доп часами расчет
         if (in_array('вечер', $sessionMF['timeRegion'])) {
             foreach ($sessionMF['transport_recomm'] as $catId => &$trItem) {
-                $trItem['PRICES'][8] = $trItem['PRICES'][4] + $trItem['PRICES'][1];
+                $eightH = $trItem['PRICES'][8] = $trItem['PRICES'][4] + $trItem['PRICES'][1] * 4;
+                if($trItem['TypeOfLease']=='8 часов') {
+                    $trItem['PRICES']['CAR_PRICE'] = $eightH;
+                    $sessionMF['transport']['PRICE'] += $eightH;
+                }
             }
         }
     }
@@ -290,8 +433,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
         $hours[0] = intval($hours[0]);
         $hours[1] = intval($hours[1]);
 
-        $formCode = $this->arParams['SESSION_FORM_CODE'];
-        $sessionMF = &$_SESSION[$formCode];
+        $sessionMF = &$this->_sessData;
 
         $sessionMF['timeRegion'] = ((9 <= $hours[0] && $hours[0] < $this->timeThreshold)
             || ($hours[0] == $this->timeThreshold && $hours[1] == 0)) ? $this->arDayTime
@@ -309,8 +451,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
         if (!$this->arParams['SESSION_FORM_CODE'])
             return;
 
-        $formCode = $this->arParams['SESSION_FORM_CODE'];
-        $sessionMF = &$_SESSION[$formCode];
+        $sessionMF = &$this->_sessData;
 
         if (empty($sessionMF)) {
             $data = file_get_contents($_SERVER['DOCUMENT_ROOT'] . $this->getPath() . "/data.json");

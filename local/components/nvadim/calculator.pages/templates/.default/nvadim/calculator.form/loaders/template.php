@@ -19,6 +19,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
 <div class="move_calc">
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
         <input type="hidden" name="CURRENT_PAGE" value="<?= $currentStep ?>">
+        <input type="hidden" name="RESULT_PRICE" value="<?= $data['RESULT_PRICE'] ?>">
 
         <div class="move_step move_step-active move_step3">
             <div class="move_step3__list">
@@ -32,6 +33,8 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                             <a href="<?= $arParams['SEF_FOLDER'] . 'loaders-edit/'?>" class="btn btn-white" type="button">Откорректировать вручную</a>
                         </div>
                     </div>
+
+                    <? foreach ($data['ITEMS'] as $type => $loader) {?>
                     <div class="move_config__content">
                         <div class="default_content">
                             <div class="default_content__left">
@@ -42,25 +45,27 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                             </div>
                             <div class="default_content__right">
                                 <div class="one_default">
-                                    <p class="one_default__title">Грузчик-специалист:</p>
+                                    <p class="one_default__title"><?= $type?>:</p>
                                     <div class="one_default__text_box one_default__text_box-flex">
-                                        <p class="one_default__text">2 грузчика</p>
+                                        <p class="one_default__text"><?= $loader['COUNTS']?> грузчика</p>
                                     </div>
                                 </div>
                                 <div class="one_default">
                                     <p class="one_default__title">Основное время:</p>
                                     <div class="one_default__text_box one_default__text_box-flex">
-                                        <p class="one_default__text">6 часов – 6000 ₽</p>
+                                            <p class="one_default__text"><?= $loader['RESULT_HOURS']?> часов – <?= $loader['RESULT_PRICE']?> ₽</p>
                                         <span class="one_default__tooltip tooltip" title="srgdsf">?</span>
                                     </div>
                                 </div>
-                                <div class="one_default">
-                                    <p class="one_default__title">Дополнительное время:</p>
-                                    <div class="one_default__text_box one_default__text_box-flex">
-                                        <p class="one_default__text">2 часа – 2000 ₽</p>
-                                        <span class="one_default__tooltip tooltip" title="srgdsf">?</span>
+                                <? if($loader['ADDITIONAL']) { ?>
+                                    <div class="one_default">
+                                        <p class="one_default__title">Дополнительное время:</p>
+                                        <div class="one_default__text_box one_default__text_box-flex">
+                                            <p class="one_default__text">2 часа – 2000 ₽</p>
+                                            <span class="one_default__tooltip tooltip" title="srgdsf">?</span>
+                                        </div>
                                     </div>
-                                </div>
+                                <? } ?>
                                 <hr class="separator">
                                 <div class="one_default">
                                     <p class="one_default__title one_default__title-big">Выбор маршрута: <span class="one_default__tooltip tooltip" title="srgdsf">?</span></p>
@@ -88,11 +93,12 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                             </div>
                         </div>
                     </div>
+                    <? }?>
                 </div>
                 <div class="move_config__no_hidden move_config__no_hidden-green">
                     <div class="total_green">
                         <span class="total_green__text">Итого, стоимость работы грузчиков:</span>
-                        <span class="total_green__price">8 000 ₽</span>
+                        <span class="total_green__price"><?= $data['RESULT_PRICE'] ?> ₽</span>
                     </div>
                 </div>
 

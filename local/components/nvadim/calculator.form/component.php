@@ -40,13 +40,6 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  * Work with cache
  *************************************************************************/
 
-$sess_code = $arParams['SESSION_FORM_CODE'];
-if(!isset($_SESSION[$sess_code])) {
-    $_SESSION[$sess_code] = [];
-}
-
-$arResult['SAVED_DATA'] = array_merge($_SESSION[$sess_code], (is_array($_POST))?$_POST:[]);
-
 $this->jumpToPage();
 
 if ($this->StartResultCache(false, array($arParams['SESS_ID'], $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {

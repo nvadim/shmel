@@ -48,6 +48,11 @@ function declOfNum($number, $titles) {
     return $titles[ ($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)] ];
 }
 
+function SaleFormatCurrencyDev($price)
+{
+    return number_format($price, 0, '',' ');
+}
+
 // категории транспорта
 // стат. значения картинок, параметров
 ShmelTools\Options::getInstance()->setProperty('catTransport', [

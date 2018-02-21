@@ -8,8 +8,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
     public $arDayTime = ['день', 'дневное', 'днём', 'днем'];
     public $arNightTime = ['ночь', 'ночное', 'вечер', 'вечером'];
 
-    private $arTypeLoaders = ['Только грузчик', 'Сборщик/разборщик'];
-//    private $loaders = ['Только грузчик', 'Сборщик/разборщик'];
+    private $arTypeLoaders = [
+        '000000001'=>'Сборщик/разборщик',
+        '000000002' => 'Только грузчик'
+    ];
 
     private $_sessData = '';
     private $_savedData = [];
@@ -36,7 +38,6 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
 
         $this->_sessData = &$_SESSION[$sessCode];
-
         $this->_savedData = $this->arResult['SAVED_DATA'] = array_merge($this->_sessData, (is_array($_POST)) ? $_POST : []);
     }
 
@@ -49,18 +50,21 @@ class CShmelCalculatorComponent extends CBitrixComponent
     {
         $step = $this->arParams['STEP'];
 
+        if(!$this->_sessData[$step])
+            $this->_sessData[$step] = [];
+
         $sessionMF = &$this->_sessData;
-        $sessionMF = array_merge($sessionMF, $postData);
+        $sessionMF[$step] = array_merge($sessionMF[$step], $postData);
 
         foreach ($sessionMF[$step] as $sKey => $sess_item) {
-            if (!isset($postData[$step][$sKey])) {
+            if (!isset($postData[$sKey])) {
                 unset($sessionMF[$step][$sKey]);
             }
         }
 
         // пакет подбирается только для точки А
         if ($step == 'depart') {
-            $this->selectKit($sessionMF);
+            $this->selectKit();
         }
         if ($step == 'route' && $sessionMF['suitable_kits']) {
             $this->setTransportPrices();
@@ -86,7 +90,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         $this->init();
 
-        $data = $this->arResult['SAVED_DATA'];
+        $data = $this->_savedData;
         $step = $this->arParams['STEP'];
         if (strpos($step, 'intrm') !== false) {
             $step = 'intermediate';
@@ -187,13 +191,14 @@ class CShmelCalculatorComponent extends CBitrixComponent
     private function pageLoaders()
     {
         $data = $this->_savedData;
-        $_loaders = &$this->arResult['SAVED_DATA']['loaders'];
-        if (!$_loaders['ITEMS']) {
+        $_loaders = &$this->arResult;
+        if (!$data['loaders']['ITEMS']) {
             $_loaders['RESULT_PRICE'] = 0;
             $_loaders['TIME'] = intval($data['route']['TIME']);
             $LOADERS_DATA = $this->apiInstance->getData('loaders');
             foreach ($LOADERS_DATA as $loader) {
                 // расчёт границ времени
+                $curID = $loader->StructCathegory->ID;
                 $curCategory = $loader->StructCathegory->Cathegory;
                 $curCondition = $loader->StructRateCondition->RateCondition;
                 if ($curCategory == 'Вне категории') {
@@ -207,23 +212,29 @@ class CShmelCalculatorComponent extends CBitrixComponent
                     continue;
                 }
 
-                if (!in_array($curCategory, $this->arTypeLoaders)) {
+                if (!in_array($curID, array_keys($this->arTypeLoaders))) {
                     continue;
                 }
 
-                if (!$_loaders[$curCategory]['DAY_PRICES'] && $curCondition == 'Стоимость 1 часа работы грузчика (по категории)') {
-                    $_loaders[$curCategory]['DAY_PRICES'][1] = $loader->Price;
-                    $_loaders[$curCategory]['DAY_PRICES'][4] = $loader->Price * 4;
-                    $_loaders[$curCategory]['DAY_PRICES'][6] = $loader->Price * 6;
-                    $_loaders[$curCategory]['DAY_PRICES'][8] = $loader->Price * 8;
+                if(!$_loaders['ITEMS'][$curID]) {
+                    $_loaders['ITEMS'][$curID] = [
+                        'ID' => $curID,
+                        'NAME' => $curCategory,
+                    ];
+                }
+                if (!$_loaders['ITEMS'][$curID]['DAY_PRICES'] && $curCondition == 'Стоимость 1 часа работы грузчика (по категории)') {
+                    $_loaders['ITEMS'][$curID]['DAY_PRICES'][1] = $loader->Price;
+                    $_loaders['ITEMS'][$curID]['DAY_PRICES'][4] = $loader->Price * 4;
+                    $_loaders['ITEMS'][$curID]['DAY_PRICES'][6] = $loader->Price * 6;
+                    $_loaders['ITEMS'][$curID]['DAY_PRICES'][8] = $loader->Price * 8;
                     continue;
                 }
 
-                if (!$_loaders[$curCategory]['NIGHT_PRICES'] && $curCondition == 'Стоимость 1 часа работы грузчика (по категории) вечером') {
-                    $_loaders[$curCategory]['NIGHT_PRICES'][1] = $loader->Price;
-                    $_loaders[$curCategory]['NIGHT_PRICES'][4] = $loader->Price * 4;
-                    $_loaders[$curCategory]['NIGHT_PRICES'][6] = $loader->Price * 6;
-                    $_loaders[$curCategory]['NIGHT_PRICES'][8] = $loader->Price * 8;
+                if (!$_loaders['ITEMS'][$curID]['NIGHT_PRICES'] && $curCondition == 'Стоимость 1 часа работы грузчика (по категории) вечером') {
+                    $_loaders['ITEMS'][$curID]['NIGHT_PRICES'][1] = $loader->Price;
+                    $_loaders['ITEMS'][$curID]['NIGHT_PRICES'][4] = $loader->Price * 4;
+                    $_loaders['ITEMS'][$curID]['NIGHT_PRICES'][6] = $loader->Price * 6;
+                    $_loaders['ITEMS'][$curID]['NIGHT_PRICES'][8] = $loader->Price * 8;
                     continue;
                 }
 
@@ -232,32 +243,33 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
             // подсчёт по пакету
             unset($this->_sessData['loaders']['RESULT_PRICE']);
-            foreach ($data['suitable_kits'] as $kid => $kitItem) {
-                for ($c = 0; $c < count($kitItem->StructLoaders); $c++) {
-                    // $curLoader->Number - кол-во часов работы - loaderTime
-                    // $_loaders['TIME'] - время подачи
-                    // $_loaders['DAY']- утр. время
-                    // $_loaders['NIGHT']- вечер. время
 
-                    $curLoader = $kitItem->StructLoaders[$c];
-                    $loaderTime = $curLoader->Number;
+            $currentKit = current($data['suitable_kits']);
+            for ($c = 0; $c < count($currentKit->StructLoaders); $c++) {
+                // $curLoader->Number - кол-во часов работы - loaderTime
+                // $_loaders['TIME'] - время подачи
+                // $_loaders['DAY']- утр. время
+                // $_loaders['NIGHT']- вечер. время
 
-                    $resPrice = 0;
-                    if ($_loaders[$curCategory]['DAY_PRICES'] && $_loaders[$curCategory]['NIGHT_PRICES']) {
-                        $resPrice = $this->setLoadersPrice(
-                            $loaderTime,
-                            $_loaders[$curCategory]['DAY_PRICES'][1],
-                            $_loaders[$curCategory]['NIGHT_PRICES'][1]
-                        );
-                    }
+                $curLoader = $currentKit->StructLoaders[$c];
+                $loaderTime = $curLoader->Number;
+                $LCID = $curLoader->ID;
 
-                    $_loaders['ITEMS'][$curLoader->Cathegory]['COUNTS']++;
-                    $_loaders['ITEMS'][$curLoader->Cathegory]['HOURS'][] = $curLoader->Number;
-                    $_loaders['ITEMS'][$curLoader->Cathegory]['PRICE'][] = $resPrice;
-                    $_loaders['ITEMS'][$curLoader->Cathegory]['RESULT_HOURS'] += $curLoader->Number;
-                    $_loaders['ITEMS'][$curLoader->Cathegory]['RESULT_PRICE'] += $resPrice;
-                    $this->_sessData['loaders']['RESULT_PRICE'] += $resPrice;
+                $resPrice = 0;
+                if ($_loaders['ITEMS'][$LCID]['DAY_PRICES'] && $_loaders['ITEMS'][$LCID]['NIGHT_PRICES']) {
+                    $resPrice = $this->setLoadersPrice(
+                        $loaderTime,
+                        $_loaders['ITEMS'][$LCID]['DAY_PRICES'][1],
+                        $_loaders['ITEMS'][$LCID]['NIGHT_PRICES'][1]
+                    );
                 }
+
+                $_loaders['ITEMS'][$LCID]['COUNTS']++;
+                $_loaders['ITEMS'][$LCID]['HOURS'][] = $curLoader->Number;
+                $_loaders['ITEMS'][$LCID]['PRICE'][] = $resPrice;
+                $_loaders['ITEMS'][$LCID]['RESULT_HOURS'] += $curLoader->Number;
+                $_loaders['ITEMS'][$LCID]['RESULT_PRICE'] += $resPrice;
+                $this->_sessData['loaders']['RESULT_PRICE'] += $resPrice;
             }
 
         }
@@ -273,7 +285,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
     private function setLoadersPrice($loaderTime, $dayPrice, $nightPrice)
     {
         $resultPrice = 0;
-        $loadersData = &$this->arResult['SAVED_DATA']['loaders'];
+        $loadersData = &$this->arResult;
         if (!$loadersData['TIME']
             || !$loadersData['DAY']
             || !$loadersData['NIGHT']) {
@@ -343,14 +355,14 @@ class CShmelCalculatorComponent extends CBitrixComponent
      * Отбор подходящих пакетов
      *
      */
-    public function selectKit(&$saved_data)
+    public function selectKit()
     {
         $step = $this->arParams['STEP'];
 
-        if (!$saved_data[$step])
+        if (!$this->_sessData[$step])
             return false;
 
-        $currentStepData = $saved_data[$step];
+        $currentStepData = $this->_sessData[$step];
         $KITS = $this->apiInstance->getData('kits');
         $this->carsCategories = $this->apiInstance->getData('carscategories');
 
@@ -358,8 +370,8 @@ class CShmelCalculatorComponent extends CBitrixComponent
         $class = $currentStepData['CLASS'];
         $filling = $currentStepData['FILLING'];
 
-        unset($saved_data['suitable_kits']);
-        unset($saved_data['transport_recomm']);
+        unset($this->_sessData['suitable_kits']);
+        unset($this->_sessData['transport_recomm']);
         for ($i = 0; $i < count($KITS); $i++) {
             $kitId = $KITS[$i]->ID;
             $strData = $KITS[$i]->StructBasicData;
@@ -367,17 +379,17 @@ class CShmelCalculatorComponent extends CBitrixComponent
             if ($strData->NumberOfRooms == $numRooms
                 && $strData->ClassOfRoom == $class
                 && $strData->Filling == $filling
-                && !in_array($kitId, array_keys($saved_data['suitable_kits']))) {
+                && !in_array($kitId, array_keys($this->_sessData['suitable_kits']))) {
 
-                $saved_data['suitable_kits'][$kitId] = $KITS[$i];
-                $this->saveTransport2Loc($saved_data, $KITS[$i]->StructTransports);
+                $this->_sessData['suitable_kits'][$kitId] = $KITS[$i];
+                $this->saveTransport2Loc($this->_sessData, $KITS[$i]->StructTransports);
 
                 break;
             }
         }
 
         // установим цены согласно тарифам ТС-в
-        if (!empty($saved_data['transport_recomm'])) {
+        if (!empty($this->_sessData['transport_recomm'])) {
             $this->setTransportPrices();
         }
     }

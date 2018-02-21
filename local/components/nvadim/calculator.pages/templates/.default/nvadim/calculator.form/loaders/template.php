@@ -13,13 +13,12 @@
 $this->setFrameMode(true);
 
 $currentStep = $arParams['STEP'];
-$data = $arResult['SAVED_DATA'][$currentStep];
 ?>
 
 <div class="move_calc">
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
         <input type="hidden" name="CURRENT_PAGE" value="<?= $currentStep ?>">
-        <input type="hidden" name="RESULT_PRICE" value="<?= $data['RESULT_PRICE'] ?>">
+        <input type="hidden" name="RESULT_PRICE" value="<?= $arResult['RESULT_PRICE'] ?>">
 
         <div class="move_step move_step-active move_step3">
             <div class="move_step3__list">
@@ -34,7 +33,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                         </div>
                     </div>
 
-                    <? foreach ($data['ITEMS'] as $type => $loader) {?>
+                    <? foreach ($arResult['ITEMS'] as $loaderId => $loader) {?>
                     <div class="move_config__content">
                         <div class="default_content">
                             <div class="default_content__left">
@@ -45,7 +44,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                             </div>
                             <div class="default_content__right">
                                 <div class="one_default">
-                                    <p class="one_default__title"><?= $type?>:</p>
+                                    <p class="one_default__title"><?= $loader['NAME']?>:</p>
                                     <div class="one_default__text_box one_default__text_box-flex">
                                         <p class="one_default__text"><?= $loader['COUNTS']?> грузчика</p>
                                     </div>
@@ -70,21 +69,36 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                 <div class="one_default">
                                     <p class="one_default__title one_default__title-big">Выбор маршрута: <span class="one_default__tooltip tooltip" title="srgdsf">?</span></p>
 
-                                    <? foreach ($arResult['select_route'] as $k => $route) {?>
+                                    <? for ($i = 0; $i < count($arResult['select_route']['reference']); $i++) {
+                                        $key = $arResult['select_route']['reference_id'][$i];
+                                        $route = $arResult['select_route']['reference'][$i];
+
+                                        $_selectFields = "id='id1_{$key}' class='form__select' disabled";
+                                        $_selectName = "POINT_VALUE[{$loaderId}][{$key}]";
+                                    ?>
                                         <div class="check_inline__one">
-                                            <input <?= (isset($data['POINT_CHECK']['_'.$k]))?'checked':''?> name="<?= $currentStep?>[POINT_CHECK][_<?= $k?>]" value="<?= $k?>" type="checkbox" class="check_inline__input" id="rigging_one__config<?= $k?>" onchange="checkDisabledLabel(this)" data-check-disabled="id1_<?= $k?>">
-                                            <label for="rigging_one__config3" class="check_inline__label check_address">
+                                            <input <?= (isset($arResult['POINT_CHECK']['_'.$k]))?'checked':''?>
+                                                    name="POINT_CHECK[<?= $loaderId?>][<?= $key?>]"
+                                                    value="<?= $key?>"
+                                                    type="checkbox"
+                                                    class="check_inline__input"
+                                                    id="rigging_one__config<?= $key?>"
+                                                    onchange="checkDisabledLabel(this)"
+                                                    data-check-disabled="id1_<?= $key?>">
+                                            <label for="rigging_one__config<?= $key?>"
+                                                   class="check_inline__label check_address">
                                                 <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox check_address__icon">
                                                     <rect class="checkbox__rect" width="100%" height="100%"></rect>
                                                     <polyline class="checkbox__checked" points="11,20.053 16.964,26.018 30.385,12.598"></polyline>
                                                 </svg>
                                                 <span class="check_address__name"><?= $route?></span>
                                                 <span class="check_address__select">
-                                                    <select class="form__select" name="<?= $currentStep?>[POINT_TYPE][_<?= $k?>]" id="id1_<?= $k?>" <?= (isset($data['POINT_CHECK']['_'.$k]))?'':'disabled'?>>
-                                                        <? foreach ($arResult['select_list_value'] as $key => $val) {?>
-                                                            <option value="<?= $key?>" <?= ($key==$data['POINT_TYPE']['_'.$k])?'selected':''?>><?= $val?></option>
-                                                        <? }?>
-                                                    </select>
+                                                    <?= SelectBoxFromArray(
+                                                        $_selectName,
+                                                        $arResult['select_list_value'],
+                                                        $_REQUEST[$_selectName],
+                                                        '',
+                                                        $_selectFields);?>
                                                 </span>
                                             </label>
                                         </div>
@@ -98,7 +112,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                 <div class="move_config__no_hidden move_config__no_hidden-green">
                     <div class="total_green">
                         <span class="total_green__text">Итого, стоимость работы грузчиков:</span>
-                        <span class="total_green__price"><?= $data['RESULT_PRICE'] ?> ₽</span>
+                        <span class="total_green__price"><?= $arResult['RESULT_PRICE'] ?> ₽</span>
                     </div>
                 </div>
 

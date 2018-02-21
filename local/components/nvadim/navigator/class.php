@@ -84,7 +84,7 @@ class CShmelNavigatorComponent extends CBitrixComponent
 
             switch ($kPage) {
                 case 'loaders':
-
+                    $pageData['PRICE'] = $sess_data['loaders']['RESULT_PRICE'];
                     break;
                 case 'transport':
                     $pageData['PRICE'] = $sess_data['transport']['PRICE'];

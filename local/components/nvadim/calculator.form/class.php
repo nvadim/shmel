@@ -134,7 +134,8 @@ class CShmelCalculatorComponent extends CBitrixComponent
     {
         $data = $this->arResult['SAVED_DATA'];
         $_loaders = &$this->arResult['SAVED_DATA']['loaders'];
-        if(!$_loaders) {
+        if(!$_loaders['ITEMS']) {
+            $_loaders['RESULT_PRICE'] = 0;
             $_loaders['TIME'] = intval($data['route']['TIME']);
             $LOADERS_DATA = $this->apiInstance->getData('loaders');
             foreach ($LOADERS_DATA as $loader) {
@@ -156,13 +157,19 @@ class CShmelCalculatorComponent extends CBitrixComponent
                     continue;
                 }
 
-                if(!$_loaders[$curCategory]['DAY_PRICE'] && $curCondition=='Стоимость 1 часа работы грузчика (по категории)') {
-                    $_loaders[$curCategory]['DAY_PRICE'] = $loader->Price;
+                if(!$_loaders[$curCategory]['DAY_PRICES'] && $curCondition=='Стоимость 1 часа работы грузчика (по категории)') {
+                    $_loaders[$curCategory]['DAY_PRICES'][1] = $loader->Price;
+                    $_loaders[$curCategory]['DAY_PRICES'][4] = $loader->Price*4;
+                    $_loaders[$curCategory]['DAY_PRICES'][6] = $loader->Price*6;
+                    $_loaders[$curCategory]['DAY_PRICES'][8] = $loader->Price*8;
                     continue;
                 }
 
-                if(!$_loaders[$curCategory]['EVENING_PRICE'] && $curCondition=='Стоимость 1 часа работы грузчика (по категории) вечером') {
-                    $_loaders[$curCategory]['EVENING_PRICE'] = $loader->Price;
+                if(!$_loaders[$curCategory]['NIGHT_PRICES'] && $curCondition=='Стоимость 1 часа работы грузчика (по категории) вечером') {
+                    $_loaders[$curCategory]['NIGHT_PRICES'][1] = $loader->Price;
+                    $_loaders[$curCategory]['NIGHT_PRICES'][4] = $loader->Price*4;
+                    $_loaders[$curCategory]['NIGHT_PRICES'][6] = $loader->Price*6;
+                    $_loaders[$curCategory]['NIGHT_PRICES'][8] = $loader->Price*8;
                     continue;
                 }
 
@@ -170,6 +177,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
 
             // подсчёт по пакету
+            unset($this->_sessData['loaders']['RESULT_PRICE']);
             foreach ($data['suitable_kits'] as $kid => $kitItem) {
                 for($c = 0; $c < count($kitItem->StructLoaders); $c++) {
                     // $curLoader->Number - кол-во часов работы - loaderTime
@@ -181,18 +189,20 @@ class CShmelCalculatorComponent extends CBitrixComponent
                     $loaderTime = $curLoader->Number;
 
                     $resPrice = 0;
-                    if($_loaders[$curCategory]['DAY_PRICE'] && $_loaders[$curCategory]['EVENING_PRICE']) {
+                    if($_loaders[$curCategory]['DAY_PRICES'] && $_loaders[$curCategory]['NIGHT_PRICES']) {
                         $resPrice = $this->setLoadersPrice(
                             $loaderTime,
-                            $_loaders[$curCategory]['DAY_PRICE'],
-                            $_loaders[$curCategory]['EVENING_PRICE']
+                            $_loaders[$curCategory]['DAY_PRICES'][1],
+                            $_loaders[$curCategory]['NIGHT_PRICES'][1]
                         );
                     }
+
                     $_loaders['ITEMS'][$curLoader->Cathegory]['COUNTS']++;
                     $_loaders['ITEMS'][$curLoader->Cathegory]['HOURS'][] = $curLoader->Number;
                     $_loaders['ITEMS'][$curLoader->Cathegory]['PRICE'][] = $resPrice;
                     $_loaders['ITEMS'][$curLoader->Cathegory]['RESULT_HOURS'] += $curLoader->Number;
                     $_loaders['ITEMS'][$curLoader->Cathegory]['RESULT_PRICE'] += $resPrice;
+                    $this->_sessData['loaders']['RESULT_PRICE'] += $resPrice;
                 }
             }
 
@@ -204,9 +214,9 @@ class CShmelCalculatorComponent extends CBitrixComponent
      *
      * @param $loaderTime
      * @param $dayPrice
-     * @param $eveningPrice
+     * @param $nightPrice
      */
-    private function setLoadersPrice($loaderTime, $dayPrice, $eveningPrice)
+    private function setLoadersPrice($loaderTime, $dayPrice, $nightPrice)
     {
         $resultPrice = 0;
         $loadersData = &$this->arResult['SAVED_DATA']['loaders'];
@@ -227,19 +237,19 @@ class CShmelCalculatorComponent extends CBitrixComponent
                 $partDayTime = ($loadersData['NIGHT'] - $loadersData['TIME']);
                 $partEvTime = $loaderTime - $partDayTime;
 
-                $resultPrice = $partDayTime * $dayPrice + $partEvTime * $eveningPrice;
+                $resultPrice = $partDayTime * $dayPrice + $partEvTime * $nightPrice;
             }
         } else {// вечер = (24+$loadersData['DAY'])
 
             $evЕThreshold = 24 + $loadersData['DAY'];
             if (($loadersData['TIME'] + $loaderTime) <= $evЕThreshold)
             {
-                $resultPrice = $loaderTime * $eveningPrice;
+                $resultPrice = $loaderTime * $nightPrice;
             } else {
                 $partDayTime = ($loadersData['TIME'] + $loaderTime) - $evЕThreshold;
                 $partEvTime = $loaderTime - $partDayTime;
 
-                $resultPrice = $partDayTime * $dayPrice + $partEvTime * $eveningPrice;
+                $resultPrice = $partDayTime * $dayPrice + $partEvTime * $nightPrice;
             }
         }
 

@@ -24,7 +24,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
 
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
         <input type="hidden" name="CURRENT_PAGE" value="<?= $currentStep?>">
-        <input type="hidden" name="<?= $currentStep?>[PRICE]" value="<?= $data['PRICE']?>">
+        <input type="hidden" name="PRICE" value="<?= $data['PRICE']?>">
 
         <div class="move_step move_step-active move_step3">
             <div class="move_step3__list">
@@ -84,16 +84,18 @@ $data = $arResult['SAVED_DATA'][$currentStep];
 
                                         <?
                                         $_selectField = 'class="form__select"';
-                                        foreach ($arResult['select_route'] as $k => $route) {
-                                            $selectField = $_selectField . ((isset($data['POINT_CHECK']['_'.$k]))?'':' disabled');
-//                                            $sid = "{$currentStep}_point_type_$k";
-                                            $sid = "id1_{$k}";
+                                        foreach ($arResult['select_route']['reference'] as $k => $route) {
+                                            $key = $arResult['select_route']['reference_id'][$k];
+                                            $selectField = $_selectField . ((isset($data['POINT_CHECK'][$key]))?'':' disabled');
+                                            $sid = "id1_{$key}";
                                             ?>
                                             <div class="check_inline__one">
-                                                <input <?= (isset($data['POINT_CHECK']['_' . $k])) ? 'checked' : '' ?>
-                                                        name="<?= $currentStep ?>[POINT_CHECK][_<?= $k ?>]"
-                                                        value="<?= $k ?>" type="checkbox" class="check_inline__input"
-                                                        id="rigging_one__config<?= $k ?>"
+                                                <input <?= (isset($data['POINT_CHECK'][$key])) ? 'checked' : '' ?>
+                                                        name="POINT_CHECK[<?= $key ?>]"
+                                                        value="<?= $key ?>"
+                                                        type="checkbox"
+                                                        class="check_inline__input"
+                                                        id="rigging_one__config<?= $key ?>"
                                                         onchange="checkDisabledLabel(this)"
                                                         data-check-disabled="<?= $sid?>">
                                                 <label class="check_inline__label check_address">
@@ -106,15 +108,17 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                                         <?/*= SelectBoxFromArray(
                                                                 "{$currentStep}[POINT_TYPE][_{$k}]",
                                                                 $arResult['select_list_value'],
-                                                                $data['POINT_TYPE']['_'.$k],
+                                                                $data['POINT_TYPE'][$key],
                                                                 '',
                                                                 $selectField)*/?>
 
-                                                        <select class="form__select" name="<?= $currentStep?>[POINT_TYPE][_<?= $k?>]" id="id1_<?= $k?>" <?= (isset($data['POINT_CHECK']['_'.$k]))?'':'disabled'?>>
-                                                            <? foreach ($arResult['select_list_value']['reference'] as $key => $val) {
-                                                                $s = $arResult['select_list_value']['reference_id'][$key];
+                                                        <select class="form__select"
+                                                                name="POINT_TYPE[<?= $key?>]"
+                                                                id="id1_<?= $key?>" <?= (isset($data['POINT_CHECK'][$key]))?'':'disabled'?>>
+                                                            <? foreach ($arResult['select_list_value']['reference'] as $index => $val) {
+                                                                $s = $arResult['select_list_value']['reference_id'][$index];
                                                                 ?>
-                                                                <option value="<?= $s?>" <?= ($s==$data['POINT_TYPE']['_'.$k])?'selected':''?>><?= $val?></option>
+                                                                <option value="<?= $s?>" <?= ($s==$data['POINT_TYPE'][$index])?'selected':''?>><?= $val?></option>
                                                             <? }?>
                                                         </select>
 

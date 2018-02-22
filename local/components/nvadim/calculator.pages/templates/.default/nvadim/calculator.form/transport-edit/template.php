@@ -55,7 +55,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                 <div class="custom_title_box__right">
                                     <div class="custom_title_box__deactivate">
                                         <div class="switcher">
-                                            <input type="checkbox" class="switcher__checkbox" id="switcher0" name="<?= $currentStep?>[switcher][]" checked onchange="disabledCustomBlock('.custom_content','custom_content-off');">
+                                            <input type="checkbox" class="switcher__checkbox" id="switcher0" name="switcher[]" checked onchange="disabledCustomBlock('.custom_content','custom_content-off');">
                                             <label for="switcher0" class="switcher__container">
                                                 <span class="switcher__text switcher__text-enabled">Отключить транспорт</span>
                                                 <span class="switcher__text switcher__text-disabled">Включить транспорт</span>
@@ -85,7 +85,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                 <div class="default_content__right">
                                     <div class="default_content__times_day times_day">
                                         <div class="times_day__one">
-                                            <input type="radio" class="times_day__radio" name="<?= $currentStep?>[times_day45][]" value="times_day0" id="times_day0" checked>
+                                            <input type="radio" class="times_day__radio" name="times_day45" value="times_day0" id="times_day0" checked>
                                             <label for="times_day0" class="times_day__label">
                                                 <span class="times_day__pic">
                                                     <svg width="27px" height="27px" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg" class="day_pic">
@@ -107,7 +107,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                             </label>
                                         </div>
                                         <div class="times_day__one">
-                                            <input type="radio" class="times_day__radio" name="<?= $currentStep?>[times_day45]" value="times_day1" id="times_day1">
+                                            <input type="radio" class="times_day__radio" name="times_day45" value="times_day1" id="times_day1">
                                             <label for="times_day1" class="times_day__label">
                                                 <span class="times_day__pic">
                                                     <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.64 22.38" class="day_pic">
@@ -126,15 +126,15 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                         <div class="checked">
                                             <div class="checked__list">
                                                 <div class="checked__item">
-                                                    <input type="radio" class="checked__radio" name="<?= $currentStep?>[custom_time1]" value="custom_time1" checked id="custom_time1" data-time-price="<?= $transport['PRICES'][4]?>" onchange="checkCustomTime(this);">
+                                                    <input type="radio" class="checked__radio" name="custom_time1" value="custom_time1" checked id="custom_time1" data-time-price="<?= $transport['PRICES'][4]?>" onchange="checkCustomTime(this);">
                                                     <label for="custom_time1" class="checked__label rooms__label">4</label>
                                                 </div>
                                                 <div class="checked__item">
-                                                    <input type="radio" class="checked__radio" name="<?= $currentStep?>[custom_time1]" value="custom_time2" id="custom_time2" data-time-price="<?= $transport['PRICES'][6]?>" onchange="checkCustomTime(this);">
+                                                    <input type="radio" class="checked__radio" name="custom_time1" value="custom_time2" id="custom_time2" data-time-price="<?= $transport['PRICES'][6]?>" onchange="checkCustomTime(this);">
                                                     <label for="custom_time2" class="checked__label rooms__label">6</label>
                                                 </div>
                                                 <div class="checked__item">
-                                                    <input type="radio" class="checked__radio" name="<?= $currentStep?>[custom_time1]" value="custom_time3" id="custom_time3" data-time-price="<?= $transport['PRICES'][8]?>" onchange="checkCustomTime(this);">
+                                                    <input type="radio" class="checked__radio" name="custom_time1" value="custom_time3" id="custom_time3" data-time-price="<?= $transport['PRICES'][8]?>" onchange="checkCustomTime(this);">
                                                     <label for="custom_time3" class="checked__label rooms__label">8</label>
                                                 </div>
                                             </div>
@@ -152,7 +152,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                                 </p>
                                                 <div class="custom_time_add__input min_input__one_box"><input
                                                             type="text"
-                                                            name="<?= $currentStep?>[additional_time]"
+                                                            name="additional_time"
                                                             class="min_input__input min_input__input-kilogram"
                                                             data-custom-time-price="500" value="1"
                                                             onkeypress="return enterNumber(event);"><span
@@ -173,7 +173,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                             <div class="check_inline__one">
                                                 <input <?= (isset($data['POINT_CHECK']['_'.$k]))?'checked':''?>
                                                         type="checkbox" class="check_inline__input"
-                                                        name="<?= $currentStep?>[POINT_CHECK][_<?= $k?>]"
+                                                        name="POINT_CHECK[_<?= $k?>]"
                                                         value="<?= $k?>"
                                                         id="rigging_one__config<?= $k?>"
                                                         onchange="checkDisabledLabel(this)"
@@ -186,7 +186,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                                     <span class="check_address__name"><?= $route?></span>
                                                     <span class="check_address__select">
                                                     <select class="form__select"
-                                                            name="<?= $currentStep?>[POINT_TYPE][_<?= $k?>]"
+                                                            name="POINT_TYPE[_<?= $k?>]"
                                                             id="id1_<?= $k ?>"
                                                             <?= (isset($data['POINT_CHECK']['_' . $k])) ? '' : 'disabled' ?>>
 

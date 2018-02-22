@@ -1,7 +1,7 @@
 <?php
 // редирект на след. шаги
 // в случае успешной валидации данных
-switch ($step) {
+switch ($this->_step) {
 case 'route':
     $nextPage = 'depart';
     $this->calcRegionTime();
@@ -12,7 +12,7 @@ case 'intermediate':
 case 'dest':
     $num = $this->arParams['VARIABLES']['intermediate_num'];
 
-    if ($step=='dest') {
+    if ($this->_step=='dest') {
         $nextPage = 'transport';
     } elseif (count($data[$this->stPage]['FROM']) > 1 && !$num) {
         $nextPage = 'intrm-1';

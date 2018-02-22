@@ -27,7 +27,7 @@ $this->setFrameMode(true);
                             <p class="move_config__spoiler_title">Упаковка <span class="move_config__spoiler_gray">— Наши рекомендации:</span></p>
                         </div>
                         <div class="move_config__right">
-                            <a class="btn btn-white" href="#">Откорректировать вручную</a>
+                            <a class="btn btn-white" href="<?= $arParams['SEF_FOLDER'] . 'packaging-edit/'?>">Откорректировать вручную</a>
                         </div>
                     </div>
                     <div class="move_config__content">
@@ -67,15 +67,17 @@ $this->setFrameMode(true);
                                 <hr class="separator">
                                 <div class="one_default">
                                     <? $_selectField = 'class="check_address_rigging__select form__select"';?>
-                                    <div class="check_inline__one d-check_inline__one">
+                                    <label for="check_address" class="one_default__title one_default__title-big">Куда
+                                        привезти упаковку: <span class="one_default__tooltip tooltip"
+                                                                 title="srgdsf">?</span></label>
+                                    <div class="check_inline__one">
                                         <?= SelectBoxFromArray(
                                             "check_address",
                                             $arResult['select_route'],
                                             $_REQUEST["check_address"],
-                                            'Куда привезти упаковку?',
+                                            '',
                                             $_selectField);?>
                                     </div>
-                                    <label class="one_default__title one_default__title-big"><span class="one_default__tooltip tooltip" title="srgdsf">?</span></label>
                                 </div>
                             </div>
                         </div>
@@ -89,8 +91,8 @@ $this->setFrameMode(true);
                 </div>
             </div>
             <div class="move_step__buttons move_step1__buttons">
-                <button class="move_step__btn btn btn-white" type="button">Предыдущий шаг</button>
-                <button class="move_step__btn btn" type="button">Далее</button>
+                <a class="move_step__btn btn btn-white" href="<?= $arResult['prev_step'] ?>">Предыдущий шаг</a>
+                <input class="move_step__btn btn" type="submit" value="Далее" name="submit_next">
             </div>
         </div>
     </form>

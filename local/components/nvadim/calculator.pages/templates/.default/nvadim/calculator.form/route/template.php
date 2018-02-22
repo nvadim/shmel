@@ -31,7 +31,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                             <input type="radio"
                                 <?= ($arResult['move_type']=='apartment')?'checked':''?>
                                    class="checked__radio service__radio"
-                                   name="<?= $arParams['STEP']?>[MOVE_TYPE]"
+                                   name="MOVE_TYPE"
                                    value="apartment"
                                    id="service1">
                             <label for="service1"
@@ -61,7 +61,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                             <input type="radio"
                                 <?= ($arResult['move_type']=='office')?'checked':''?>
                                    class="checked__radio service__radio"
-                                   name="<?= $arParams['STEP']?>[MOVE_TYPE]"
+                                   name="MOVE_TYPE"
                                    value="office"
                                    id="service2">
                             <label for="service2"
@@ -98,7 +98,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                             <input type="radio"
                                 <?= ($arResult['move_type']=='village')?'checked':''?>
                                    class="checked__radio service__radio"
-                                   name="<?= $arParams['STEP']?>[MOVE_TYPE]"
+                                   name="MOVE_TYPE"
                                    value="village"
                                    id="service3">
                             <label for="service3"
@@ -145,12 +145,12 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
             <div class="move_step2__date">
                 <span class="move_step2__date_text">Время подачи:</span>
                 <input type="text"
-                       name="<?= $arParams['STEP']?>[DATE]"
+                       name="DATE"
                        value="<?= ($data['DATE'])? $data['DATE']: ''?>"
                        class="move_step2__date_input set_date input_date"
                        placeholder="дд мес гггг"/>
                 <input type="text"
-                       name="<?= $arParams['STEP']?>[TIME]"
+                       name="TIME"
                        value="<?= ($data['TIME'])? $data['TIME']: ''?>"
                        class="move_step2__date_input move_step2__date_input-time set_time input_time j-input_time"
                        placeholder="чч:мм"/>
@@ -166,7 +166,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                             <div class="form__element_box mapping__input">
                                 <input type="text" id="rout_first"
                                        class="form__element form__element-input route_item__map"
-                                       name="<?= $arParams['STEP']?>[FROM][]"
+                                       name="FROM[]"
                                        value="<?= ($data['FROM'][0]) ? $data['FROM'][0] : '' ?>"
                                        required=""
                                        placeholder="Введите адрес">
@@ -183,7 +183,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                                             class="mapping__point_box"><span
                                                 class="mapping__point"><?= $index+1?></span></span>
                                     <div class="form__element_box mapping__input">
-                                        <input name="<?= $arParams['STEP']?>[FROM][]" type="text"
+                                        <input name="FROM[]" type="text"
                                                class="form__element form__element-input route_item__map"
                                                value="<?= $item?>" autocomplete="off">
                                         <button class="mapping__delete rout__del"
@@ -202,7 +202,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                             <div class="form__element_box mapping__input">
                                 <input type="text" id="rout_last"
                                        class="form__element form__element-input route_item__map"
-                                       name="<?= $arParams['STEP']?>[TO]"
+                                       name="TO"
                                        value="<?= ($data['TO']) ? $data['TO']: '' ?>"
                                        required=""
                                        placeholder="Введите адрес">
@@ -235,7 +235,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                                        class="form__label form__label-left">Имя</label>
                                 <div class="form__element_box">
                                     <input type="text"
-                                           name="<?= $arParams['STEP']?>[CONTACT_NAME]"
+                                           name="CONTACT_NAME"
                                            value="<?= ($data['CONTACT_NAME'])? $data['CONTACT_NAME']: ''?>"
                                            class="form__element form__element-input"
                                            required="">
@@ -246,7 +246,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                                        class="form__label form__label-left">Телефон</label>
                                 <div class="form__element_box">
                                     <input type="tel"
-                                           name="<?= $arParams['STEP']?>[CONTACT_PHONE]"
+                                           name="CONTACT_PHONE"
                                            value="<?= ($data['CONTACT_PHONE'])? $data['CONTACT_PHONE']: ''?>"
                                            class="form__element form__element-input"
                                            required="">
@@ -260,7 +260,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                                 <div class="form__element_box">
                         <textarea
                             class="form__element form__element-input"
-                            name="<?= $arParams['STEP']?>[CONTACT_COMMENT]"
+                            name="CONTACT_COMMENT"
                             cols="30"
                             rows="5"><?= ($data['CONTACT_COMMENT'])? $data['CONTACT_COMMENT']: ''?></textarea>
                                 </div>
@@ -272,7 +272,7 @@ $data = $arResult['SAVED_DATA'][$arParams['STEP']];
                     <div class="check_inline__one">
                         <input type="checkbox"
                                class="check_inline__input"
-                               name="<?= $arParams['STEP']?>[USE_CONTACT_FOR_ALL]"
+                               name="USE_CONTACT_FOR_ALL"
                                value="Y"
                                id="radio_0" <?= ($data['USE_CONTACT_FOR_ALL'] || !isset($data['USE_CONTACT_FOR_ALL']))? 'checked': ''?>>
                         <label for="radio_0"

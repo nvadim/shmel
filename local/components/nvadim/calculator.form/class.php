@@ -13,6 +13,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
         '000000002' => 'Только грузчик'
     ];
 
+    private $_step = 'route';
     private $_sessData = '';
     private $_savedData = [];
     private $apiInstance = null;
@@ -38,7 +39,9 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
 
         $this->_sessData = &$_SESSION[$sessCode];
-        $this->_savedData = $this->arResult['SAVED_DATA'] = array_merge($this->_sessData, (is_array($_POST)) ? $_POST : []);
+        $this->_sessData[$this->_step]
+            = array_merge($this->_sessData[$this->_step], (is_array($_POST)) ? $_POST : []);
+        $this->_savedData = $this->arResult['SAVED_DATA'] = $this->_sessData;
     }
 
     /**
@@ -48,30 +51,28 @@ class CShmelCalculatorComponent extends CBitrixComponent
      */
     public function save($postData = array())
     {
-        $step = $this->arParams['STEP'];
-
-        if(!$this->_sessData[$step])
-            $this->_sessData[$step] = [];
+        if(!$this->_sessData[$this->_step])
+            $this->_sessData[$this->_step] = [];
 
         $sessionMF = &$this->_sessData;
-        $sessionMF[$step] = array_merge($sessionMF[$step], $postData);
-
-        foreach ($sessionMF[$step] as $sKey => $sess_item) {
+        $sessionMF[$this->_step] = array_merge($sessionMF[$this->_step], $postData);
+        foreach ($sessionMF[$this->_step] as $sKey => $sess_item) {
             if (!isset($postData[$sKey])) {
-                unset($sessionMF[$step][$sKey]);
+                unset($sessionMF[$this->_step][$sKey]);
             }
         }
 
         // пакет подбирается только для точки А
-        if ($step == 'depart') {
+        if ($this->_step == 'depart') {
             $this->selectKit();
         }
-        if ($step == 'route' && $sessionMF['suitable_kits']) {
+
+        if ($this->_step == 'route' && $sessionMF['suitable_kits']) {
             $this->setTransportPrices();
         }
 
         if (!in_array($this->arParams['STEP'], $sessionMF['PAGES_SAVED'])) {
-            $sessionMF['PAGES_SAVED'][] = $step;
+            $sessionMF['PAGES_SAVED'][] = $this->_step;
         }
 
         return $sessionMF;
@@ -85,18 +86,19 @@ class CShmelCalculatorComponent extends CBitrixComponent
      */
     public function jumpToPage()
     {
+        $this->_step = $this->arParams['STEP'];
+
         $nextPageTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
         $nextPage = '';
 
         $this->init();
 
         $data = $this->_savedData;
-        $step = $this->arParams['STEP'];
-        if (strpos($step, 'intrm') !== false) {
-            $step = 'intermediate';
+        if (strpos($this->_step, 'intrm') !== false) {
+            $this->_step = 'intermediate';
         }
 
-        if (empty($data[$this->stPage]['FROM']) && $step != $this->stPage) {
+        if (empty($data[$this->stPage]['FROM']) && $this->_step != $this->stPage) {
             $urlToRedirect = str_replace('#PAGE#', $this->stPage, $nextPageTemplate);
             LocalRedirect($urlToRedirect, true);
         }
@@ -108,7 +110,6 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
 
         include("def_next_page/{$this->arParams['SECTION']}.php");
-
         if ($nextPage) {
             $this->save($_POST);
             $urlToRedirect = str_replace('#PAGE#', $nextPage, $nextPageTemplate);
@@ -123,9 +124,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
      */
     private function preparePage()
     {
-        $step = $this->arParams['STEP'];
-
-        if ($step != 'route') {
+        if ($this->_step != 'route') {
             // список адресов
             for ($i = 0; $i < count($this->_savedData['route']['FROM']); $i++) {
                 $this->arResult['select_route']["reference"][] = $this->_savedData['route']['FROM'][$i];
@@ -135,7 +134,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $this->arResult['select_route']["reference_id"][] = 'to';
         }
 
-        switch ($step) {
+        switch ($this->_step) {
             case 'loaders':
             case 'loaders-edit':
                 $this->pageLoaders();
@@ -324,7 +323,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
     public function checkReqFields()
     {
         $isValid = false;
-        $step = $this->arParams['STEP'];
+        $step = $this->_step;
         if (strpos($step, 'intrm') !== false) {
             $step = 'intermediate';
         }
@@ -357,12 +356,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
      */
     public function selectKit()
     {
-        $step = $this->arParams['STEP'];
-
-        if (!$this->_sessData[$step])
+        if (!$this->_sessData[$this->_step])
             return false;
 
-        $currentStepData = $this->_sessData[$step];
+        $currentStepData = $this->_sessData[$this->_step];
         $KITS = $this->apiInstance->getData('kits');
         $this->carsCategories = $this->apiInstance->getData('carscategories');
 

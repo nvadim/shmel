@@ -11,14 +11,11 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
-
-$currentStep = $arParams['STEP'];
-$data = $arResult['SAVED_DATA'][$currentStep];
 ?>
 
 <div class="move_calc">
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
-        <input type="hidden" name="CURRENT_PAGE" value="<?= $currentStep?>">
+        <input type="hidden" name="CURRENT_PAGE" value="<?= $arParams['STEP']?>">
 
         <div class="move_step move_step-active move_step3s">
             <div class="move_step3__list">
@@ -50,37 +47,50 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                         </div>
                                         <div class="packaging__tt packaging__d">&nbsp;</div>
                                     </div>
-                                    <div class="packaging__item packaging__item-line">
-                                        <div class="packaging__tt packaging__n">
-                                            <div class="packaging__goods_info">
-                                                <div class="packaging__pic"><img src="<?= FRONEND_BUILD_PATH?>img/pic.jpg" alt="" class="packaging__img"></div>
-                                                <p class="packaging__name">Короб универсальный</p>
+
+                                    <? foreach ($arResult['ITEMS'] as $item) { ?>
+                                        <div class="packaging__item packaging__item-line">
+                                            <div class="packaging__tt packaging__n">
+                                                <div class="packaging__goods_info">
+                                                    <? if($item['PICTURE']) {?>
+                                                        <div class="packaging__pic"><img
+                                                                    src="<?= FRONEND_BUILD_PATH ?>img/pic.jpg" alt=""
+                                                                    class="packaging__img"></div>
+                                                    <? } ?>
+                                                    <p class="packaging__name"><?= $item['NAME']?></p>
+                                                </div>
+                                                <select name="check_address" id="check_address" class="check_address_rigging__select form__select">
+                                                    <option value="">Москва, ул. Яблочкова д.18 к.3</option>
+                                                    <option value="">Москва, Бумажный проезд 14 с1</option>
+                                                </select>
+                                                <?= SelectBoxFromArray(
+                                                    "check_address",
+                                                    $arResult['select_route'],
+                                                    $_REQUEST["check_address"],
+                                                    'Куда привезти упаковку?',
+                                                    $_selectField);?>
                                             </div>
-                                            <select name="check_address" id="check_address" class="check_address_rigging__select form__select">
-                                                <option value="">Москва, ул. Яблочкова д.18 к.3</option>
-                                                <option value="">Москва, Бумажный проезд 14 с1</option>
-                                            </select>
-                                        </div>
-                                        <div class="packaging__tt packaging__c">
-                                            <p class="packaging__hidden_title">Кол-во:</p>
-                                            <div class="numGoods">
-                                                <span class="numGoods__btn numGoods__minus">-</span>
-                                                <input type="text" value="1" name="ORDER_PROP_20" class="numGoods__input">
-                                                <span class="numGoods__btn numGoods__plus">+</span>
+                                            <div class="packaging__tt packaging__c">
+                                                <p class="packaging__hidden_title">Кол-во:</p>
+                                                <div class="numGoods">
+                                                    <span class="numGoods__btn numGoods__minus">-</span>
+                                                    <input type="text" value="1" name="ORDER_PROP_20" class="numGoods__input">
+                                                    <span class="numGoods__btn numGoods__plus">+</span>
+                                                </div>
+                                            </div>
+                                            <div class="packaging__tt packaging__o">
+                                                <p class="packaging__hidden_title">Цена за 1 ед.:</p>
+                                                <p class="packaging__price_one">99999 ₽</p>
+                                            </div>
+                                            <div class="packaging__tt packaging__p">
+                                                <p class="packaging__hidden_title">Сумма:</p>
+                                                <p class="packaging__price">99999 ₽</p>
+                                            </div>
+                                            <div class="packaging__tt packaging__d">
+                                                <button class="custom_title_box__delete" type="button" onclick="deleteNode('.packaging__item');">Удалить</button>
                                             </div>
                                         </div>
-                                        <div class="packaging__tt packaging__o">
-                                            <p class="packaging__hidden_title">Цена за 1 ед.:</p>
-                                            <p class="packaging__price_one">99999 ₽</p>
-                                        </div>
-                                        <div class="packaging__tt packaging__p">
-                                            <p class="packaging__hidden_title">Сумма:</p>
-                                            <p class="packaging__price">99999 ₽</p>
-                                        </div>
-                                        <div class="packaging__tt packaging__d">
-                                            <button class="custom_title_box__delete" type="button" onclick="deleteNode('.packaging__item');">Удалить</button>
-                                        </div>
-                                    </div>
+                                    <? } ?>
                                     <div class="packaging__item packaging__item-line">
                                         <div class="packaging__tt packaging__n">
                                             <div class="packaging__goods_info">
@@ -112,6 +122,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                             <button class="custom_title_box__delete" type="button" onclick="deleteNode('.packaging__item');">Удалить</button>
                                         </div>
                                     </div>
+
                                     <div class="packaging__item packaging__item-line">
                                         <div class="packaging__tt packaging__n">
                                             <div class="packaging__goods_info">
@@ -156,7 +167,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                     </div>
                 </div>
                 <div class="move_step__buttons move_step1__buttons">
-                    <button class="move_step__btn btn btn-white" type="button">Предыдущий шаг</button>
+                    <a class="move_step__btn btn btn-white" href="<?= $arResult['prev_step'] ?>">Предыдущий шаг</a>
                     <button class="move_step__btn btn btn-white" type="button">Удалить упаковку из заказа</button>
                     <input class="move_step__btn btn" type="submit" value="Далее" name="submit_next">
                 </div>

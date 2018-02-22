@@ -1,13 +1,6 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Переезды");
-
-// выпадающий список выгрузки/загрузки
-ShmelTools\Options::getInstance()->setProperty('selectList', [
-    'load' => 'Загрузка',
-    'upload' => 'Выгрузка',
-    'both_load' => 'Загрузка/Выгрузка',
-]);
 ?>
 <div class="main__content">
     <?

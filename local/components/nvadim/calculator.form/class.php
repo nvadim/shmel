@@ -153,6 +153,10 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
 
         switch ($this->_step) {
+            case 'transport':
+            case 'transport-edit':
+                $this->pageTransports();
+                break;
             case 'loaders':
             case 'loaders-edit':
                 $this->pageLoaders();
@@ -162,6 +166,14 @@ class CShmelCalculatorComponent extends CBitrixComponent
                 $this->pagePackaging();
                 break;
         }
+    }
+
+    /**
+     * СТраница транспорта
+     */
+    private function pageTransports()
+    {
+
     }
 
     /**

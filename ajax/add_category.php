@@ -62,23 +62,23 @@ $curTransport = $carCategories[$_REQUEST['id']];
                 <div class="times_day__one">
                     <input type="radio" class="times_day__radio" name="times_day45" value="times_day0" id="times_day0" checked>
                     <label for="times_day0" class="times_day__label">
-                                            <span class="times_day__pic">
-                                                <svg width="27px" height="27px" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg" class="day_pic">
-                                                    <path class="day_pic__path" d="M18.6058374,12.4074759 C18.6058374,15.8305316 15.83073,18.6060358 12.4072775,18.6060358 C8.98382502,18.6060358 6.2087176,15.8305316 6.2087176,12.4074759 C6.2087176,8.98402341 8.98382502,6.20891599 12.4072775,6.20891599 C15.83073,6.20891599 18.6058374,8.98402341 18.6058374,12.4074759 Z" id="Stroke-1"></path>
-                                                    <path class="day_pic__path" d="M12.4074362,21.4323681 L12.4074362,24.814555" id="Stroke-3"></path>
-                                                    <path class="day_pic__path" d="M12.4074362,0 L12.4074362,3.38258375" id="Stroke-5"></path>
-                                                    <path class="day_pic__path" d="M3.38254407,12.4074759 L-3.96784017e-05,12.4074759" id="Stroke-7"></path>
-                                                    <path class="day_pic__path" d="M24.8149121,12.4074759 L21.4323284,12.4074759" id="Stroke-10"></path>
-                                                    <path class="day_pic__path" d="M6.02576049,18.7889533 L3.63394643,21.1807673" id="Stroke-13"></path>
-                                                    <path class="day_pic__path" d="M21.180688,3.63402578 L18.7888739,6.02583984" id="Stroke-15"></path>
-                                                    <path class="day_pic__path" d="M6.02576049,6.02580016 L3.63394643,3.6339861" id="Stroke-17"></path>
-                                                    <path class="day_pic__path" d="M21.180688,21.180688 L18.7888739,18.7888739" id="Stroke-19"></path>
-                                                </svg>
-                                            </span>
+                        <span class="times_day__pic">
+                            <svg width="27px" height="27px" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg" class="day_pic">
+                                <path class="day_pic__path" d="M18.6058374,12.4074759 C18.6058374,15.8305316 15.83073,18.6060358 12.4072775,18.6060358 C8.98382502,18.6060358 6.2087176,15.8305316 6.2087176,12.4074759 C6.2087176,8.98402341 8.98382502,6.20891599 12.4072775,6.20891599 C15.83073,6.20891599 18.6058374,8.98402341 18.6058374,12.4074759 Z" id="Stroke-1"></path>
+                                <path class="day_pic__path" d="M12.4074362,21.4323681 L12.4074362,24.814555" id="Stroke-3"></path>
+                                <path class="day_pic__path" d="M12.4074362,0 L12.4074362,3.38258375" id="Stroke-5"></path>
+                                <path class="day_pic__path" d="M3.38254407,12.4074759 L-3.96784017e-05,12.4074759" id="Stroke-7"></path>
+                                <path class="day_pic__path" d="M24.8149121,12.4074759 L21.4323284,12.4074759" id="Stroke-10"></path>
+                                <path class="day_pic__path" d="M6.02576049,18.7889533 L3.63394643,21.1807673" id="Stroke-13"></path>
+                                <path class="day_pic__path" d="M21.180688,3.63402578 L18.7888739,6.02583984" id="Stroke-15"></path>
+                                <path class="day_pic__path" d="M6.02576049,6.02580016 L3.63394643,3.6339861" id="Stroke-17"></path>
+                                <path class="day_pic__path" d="M21.180688,21.180688 L18.7888739,18.7888739" id="Stroke-19"></path>
+                            </svg>
+                        </span>
                         <span class="times_day__text">
-                                                <span class="times_day__text_one">Дневное время</span>
-                                                <span class="times_day__text_one times_day__text_one-small">9:00–16:00</span>
-                                            </span>
+                            <span class="times_day__text_one">Дневное время</span>
+                            <span class="times_day__text_one times_day__text_one-small">8:00–20:00</span>
+                        </span>
                     </label>
                 </div>
                 <div class="times_day__one">
@@ -91,7 +91,7 @@ $curTransport = $carCategories[$_REQUEST['id']];
                                             </span>
                         <span class="times_day__text">
                                                 <span class="times_day__text_one">Ночное время</span>
-                                                <span class="times_day__text_one times_day__text_one-small">16:00–9:00</span>
+                                                <span class="times_day__text_one times_day__text_one-small">20:00–8:00</span>
                                             </span>
                     </label>
                 </div>

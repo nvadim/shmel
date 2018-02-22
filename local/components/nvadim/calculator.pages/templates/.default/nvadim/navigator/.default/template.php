@@ -20,7 +20,7 @@ $this->setFrameMode(true);
         <? foreach ($arResult['pages'] as $key => $page) {?>
             <div class="navigator__item<?= ($page['IS_CURRENT'])? ' navigator__item-active':''?>">
                 <span class="navigator__icon"><i class="navigator__i"></i></span>
-                <a href="<?= $page['URL']?>" class="navigator__link"><?= $page['TEXT']?> <span class="navigator__price"><?= ($key!='route' && $page['PRICE']!=0)? "{$page['PRICE']} ₽": ''?></span></a>
+                <a href="<?= $page['URL']?>" class="navigator__link"><?= $page['TEXT']?> <span class="navigator__price"><?= ($key!='route' /*&& $page['PRICE']!=0*/)? "{$page['PRICE']} ₽": ''?></span></a>
             </div>
         <? }?>
     </div>

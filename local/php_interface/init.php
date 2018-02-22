@@ -63,3 +63,10 @@ ShmelTools\Options::getInstance()->setProperty('catTransport', [
     '000000006' => ['img' => '/local/assets/src/img/6cat.svg', 'pass' => 0, 'name' => '6-я категория', 'weight' => 10, 'volume' => 43],
     '000000007' => ['img' => '/local/assets/src/img/7cat.svg', 'pass' => 0, 'name' => '7-я категория', 'weight' => 20, 'volume' => 90],
 ]);
+
+// выпадающий список выгрузки/загрузки
+ShmelTools\Options::getInstance()->setProperty('selectList', [
+    'load' => 'Загрузка',
+    'upload' => 'Выгрузка',
+    'both_load' => 'Загрузка/Выгрузка',
+]);

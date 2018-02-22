@@ -30,8 +30,8 @@ $data = $arResult['SAVED_DATA'][$currentStep];
             <div class="move_step3__list">
 
                 <?
-                foreach ($arResult['SAVED_DATA']['transport_recomm'] as $id => $transport) {
-                    $curTransport = $arResult['categoriesTransport'][$id];
+                foreach ($arResult['SAVED_DATA']['transport_recomm'] as $tid => $transport) {
+                    $curTransport = $arResult['categoriesTransport'][$tid];
                     ?>
                     <div class="move_step3__item move_config">
                         <div class="move_config__head">
@@ -83,45 +83,38 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                         <p class="one_default__title one_default__title-big">Выбор маршрута: <span class="one_default__tooltip tooltip" title="srgdsf">?</span></p>
 
                                         <?
-                                        $_selectField = 'class="form__select"';
                                         foreach ($arResult['select_route']['reference'] as $k => $route) {
-                                            $key = $arResult['select_route']['reference_id'][$k];
-                                            $selectField = $_selectField . ((isset($data['POINT_CHECK'][$key]))?'':' disabled');
-                                            $sid = "id1_{$key}";
+                                            $keyRoute = $arResult['select_route']['reference_id'][$k];
+                                            $_selectName = "POINT_VALUE[{$tid}][{$keyRoute}]";
+
+                                            $sid = "id1_{$keyRoute}";
+                                            $selectField = 'class="form__select"'
+                                                . ((isset($data['POINT_CHECK'][$tid][$keyRoute]))?'':' disabled')
+                                                . " id='{$sid}'";
                                             ?>
                                             <div class="check_inline__one">
-                                                <input <?= (isset($data['POINT_CHECK'][$key])) ? 'checked' : '' ?>
-                                                        name="POINT_CHECK[<?= $key ?>]"
-                                                        value="<?= $key ?>"
+                                                <input <?= (isset($data['POINT_CHECK'][$keyRoute])) ? 'checked' : '' ?>
+                                                        name="POINT_CHECK[<?= $tid?>][<?= $keyRoute ?>]"
+                                                        value="<?= $keyRoute ?>"
                                                         type="checkbox"
                                                         class="check_inline__input"
-                                                        id="rigging_one__config<?= $key ?>"
+                                                        id="rigging_one__config<?= $keyRoute ?>"
                                                         onchange="checkDisabledLabel(this)"
                                                         data-check-disabled="<?= $sid?>">
-                                                <label class="check_inline__label check_address">
+                                                <label for="rigging_one__config<?= $keyRoute?>"
+                                                        class="check_inline__label check_address">
                                                     <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox check_address__icon">
                                                         <rect class="checkbox__rect" width="100%" height="100%"></rect>
                                                         <polyline class="checkbox__checked" points="11,20.053 16.964,26.018 30.385,12.598"></polyline>
                                                     </svg>
                                                     <span class="check_address__name"><?= $route?></span>
                                                     <span class="check_address__select">
-                                                        <?/*= SelectBoxFromArray(
-                                                                "{$currentStep}[POINT_TYPE][_{$k}]",
-                                                                $arResult['select_list_value'],
-                                                                $data['POINT_TYPE'][$key],
-                                                                '',
-                                                                $selectField)*/?>
-
-                                                        <select class="form__select"
-                                                                name="POINT_TYPE[<?= $key?>]"
-                                                                id="id1_<?= $key?>" <?= (isset($data['POINT_CHECK'][$key]))?'':'disabled'?>>
-                                                            <? foreach ($arResult['select_list_value']['reference'] as $index => $val) {
-                                                                $s = $arResult['select_list_value']['reference_id'][$index];
-                                                                ?>
-                                                                <option value="<?= $s?>" <?= ($s==$data['POINT_TYPE'][$index])?'selected':''?>><?= $val?></option>
-                                                            <? }?>
-                                                        </select>
-
+                                                        <?= SelectBoxFromArray(
+                                                            $_selectName,
+                                                            $arResult['select_list_value'],
+                                                            '',
+                                                            '',
+                                                            $selectField);?>
                                                     </span>
                                                 </label>
                                             </div>

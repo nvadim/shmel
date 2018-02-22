@@ -96,7 +96,7 @@ $currentStep = $arParams['STEP'];
                                                     <?= SelectBoxFromArray(
                                                         $_selectName,
                                                         $arResult['select_list_value'],
-                                                        $_REQUEST[$_selectName],
+                                                        '',
                                                         '',
                                                         $_selectFields);?>
                                                 </span>

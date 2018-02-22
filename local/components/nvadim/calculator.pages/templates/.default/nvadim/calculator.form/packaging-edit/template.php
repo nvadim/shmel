@@ -11,6 +11,8 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
+
+$resultPrice = 0;
 ?>
 
 <div class="move_calc">
@@ -48,7 +50,9 @@ $this->setFrameMode(true);
                                         <div class="packaging__tt packaging__d">&nbsp;</div>
                                     </div>
 
-                                    <? foreach ($arResult['ITEMS'] as $item) { ?>
+                                    <?
+                                    $_selectField = 'class="check_address_rigging__select form__select" style="width: 100%;"';
+                                    foreach ($arResult['ITEMS'] as $item) { ?>
                                         <div class="packaging__item packaging__item-line">
                                             <div class="packaging__tt packaging__n">
                                                 <div class="packaging__goods_info">
@@ -59,110 +63,46 @@ $this->setFrameMode(true);
                                                     <? } ?>
                                                     <p class="packaging__name"><?= $item['NAME']?></p>
                                                 </div>
-                                                <select name="check_address" id="check_address" class="check_address_rigging__select form__select">
-                                                    <option value="">Москва, ул. Яблочкова д.18 к.3</option>
-                                                    <option value="">Москва, Бумажный проезд 14 с1</option>
-                                                </select>
+
                                                 <?= SelectBoxFromArray(
                                                     "check_address",
                                                     $arResult['select_route'],
                                                     $_REQUEST["check_address"],
-                                                    'Куда привезти упаковку?',
+                                                    '',
                                                     $_selectField);?>
                                             </div>
                                             <div class="packaging__tt packaging__c">
                                                 <p class="packaging__hidden_title">Кол-во:</p>
                                                 <div class="numGoods">
                                                     <span class="numGoods__btn numGoods__minus">-</span>
-                                                    <input type="text" value="1" name="ORDER_PROP_20" class="numGoods__input">
+                                                    <input type="text" value="<?= $item['NUM']?>" name="ORDER_PROP_20" class="numGoods__input">
                                                     <span class="numGoods__btn numGoods__plus">+</span>
                                                 </div>
                                             </div>
                                             <div class="packaging__tt packaging__o">
                                                 <p class="packaging__hidden_title">Цена за 1 ед.:</p>
-                                                <p class="packaging__price_one">99999 ₽</p>
+                                                <p class="packaging__price_one"><?= SaleFormatCurrencyDev($item['PRICE'])?> ₽</p>
                                             </div>
                                             <div class="packaging__tt packaging__p">
                                                 <p class="packaging__hidden_title">Сумма:</p>
-                                                <p class="packaging__price">99999 ₽</p>
+                                                <p class="packaging__price"><?= SaleFormatCurrencyDev($item['RESULT_PRICE'])?> ₽</p>
                                             </div>
                                             <div class="packaging__tt packaging__d">
                                                 <button class="custom_title_box__delete" type="button" onclick="deleteNode('.packaging__item');">Удалить</button>
                                             </div>
                                         </div>
-                                    <? } ?>
-                                    <div class="packaging__item packaging__item-line">
-                                        <div class="packaging__tt packaging__n">
-                                            <div class="packaging__goods_info">
-                                                <div class="packaging__pic"><img src="<?= FRONEND_BUILD_PATH?>img/pic.jpg" alt="" class="packaging__img"></div>
-                                                <p class="packaging__name">Короб универсальный</p>
-                                            </div>
-                                            <select name="check_address2" id="check_address2" class="check_address_rigging__select form__select">
-                                                <option value="">Москва, ул. Яблочкова д.18 к.3</option>
-                                                <option value="">Москва, Бумажный проезд 14 с1</option>
-                                            </select>
-                                        </div>
-                                        <div class="packaging__tt packaging__c">
-                                            <p class="packaging__hidden_title">Кол-во:</p>
-                                            <div class="numGoods">
-                                                <span class="numGoods__btn numGoods__minus">-</span>
-                                                <input type="text" value="1" name="ORDER_PROP_20" class="numGoods__input">
-                                                <span class="numGoods__btn numGoods__plus">+</span>
-                                            </div>
-                                        </div>
-                                        <div class="packaging__tt packaging__o">
-                                            <p class="packaging__hidden_title">Цена за 1 ед.:</p>
-                                            <p class="packaging__price_one">99999 ₽</p>
-                                        </div>
-                                        <div class="packaging__tt packaging__p">
-                                            <p class="packaging__hidden_title">Сумма:</p>
-                                            <p class="packaging__price">99999 ₽</p>
-                                        </div>
-                                        <div class="packaging__tt packaging__d">
-                                            <button class="custom_title_box__delete" type="button" onclick="deleteNode('.packaging__item');">Удалить</button>
-                                        </div>
-                                    </div>
-
-                                    <div class="packaging__item packaging__item-line">
-                                        <div class="packaging__tt packaging__n">
-                                            <div class="packaging__goods_info">
-                                                <div class="packaging__pic"><img src="<?= FRONEND_BUILD_PATH?>img/pic.jpg" alt="" class="packaging__img"></div>
-                                                <p class="packaging__name">Короб универсальный</p>
-                                            </div>
-                                            <select name="check_address3" id="check_address3" class="check_address_rigging__select form__select">
-                                                <option value="">Москва, ул. Яблочкова д.18 к.3</option>
-                                                <option value="">Москва, Бумажный проезд 14 с1</option>
-                                            </select>
-                                        </div>
-                                        <div class="packaging__tt packaging__c">
-                                            <p class="packaging__hidden_title">Кол-во:</p>
-                                            <div class="numGoods">
-                                                <span class="numGoods__btn numGoods__minus">-</span>
-                                                <input type="text" value="1" name="ORDER_PROP_20" class="numGoods__input">
-                                                <span class="numGoods__btn numGoods__plus">+</span>
-                                            </div>
-                                        </div>
-                                        <div class="packaging__tt packaging__o">
-                                            <p class="packaging__hidden_title">Цена за 1 ед.:</p>
-                                            <p class="packaging__price_one">99999 ₽</p>
-                                        </div>
-                                        <div class="packaging__tt packaging__p">
-                                            <p class="packaging__hidden_title">Сумма:</p>
-                                            <p class="packaging__price">99999 ₽</p>
-                                        </div>
-                                        <div class="packaging__tt packaging__d">
-                                            <button class="custom_title_box__delete" type="button" onclick="deleteNode('.packaging__item');">Удалить</button>
-                                        </div>
-                                    </div>
+                                    <?
+                                        $resultPrice += $item['RESULT_PRICE'];
+                                    } ?>
 
                                     <div class="packaging__item">
-                                        <p class="packaging__total">Итого: <span>4 635 ₽</span></p>
+                                        <p class="packaging__total">Итого: <span><?= SaleFormatCurrencyDev($resultPrice)?> ₽</span></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="stevedores">
-                            <button class="stevedores_btn btn" data-modal="#catalog" data-url="/catalog.html">+ Добавить упаковку и другие товары для переезда</button>
+                            <button class="stevedores_btn btn">+ Добавить упаковку и другие товары для переезда</button>
                         </div>
                     </div>
                 </div>

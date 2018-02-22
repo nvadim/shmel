@@ -5,6 +5,9 @@ class CShmelCalculatorComponent extends CBitrixComponent
 {
     public $nextPageTemplate = '';
     public $stPage = 'route';
+    public $trEPage = 'transport-edit';
+    public $lEPage = 'loaders-edit';
+    public $pEPage = 'packaging-edit';
     public $arDayTime = ['день', 'дневное', 'днём', 'днем'];
     public $arNightTime = ['ночь', 'ночное', 'вечер', 'вечером'];
 
@@ -100,6 +103,21 @@ class CShmelCalculatorComponent extends CBitrixComponent
 
         if (empty($data[$this->stPage]['FROM']) && $this->_step != $this->stPage) {
             $urlToRedirect = str_replace('#PAGE#', $this->stPage, $nextPageTemplate);
+            LocalRedirect($urlToRedirect, true);
+        }
+
+        if($this->_step=='transport' && !empty($data[$this->trEPage])) {
+            $urlToRedirect = str_replace('#PAGE#', $this->trEPage, $nextPageTemplate);
+            LocalRedirect($urlToRedirect, true);
+        }
+
+        if($this->_step=='loaders' && !empty($data[$this->lEPage])) {
+            $urlToRedirect = str_replace('#PAGE#', $this->lEPage, $nextPageTemplate);
+            LocalRedirect($urlToRedirect, true);
+        }
+
+        if($this->_step=='packaging' && !empty($data[$this->pEPage])) {
+            $urlToRedirect = str_replace('#PAGE#', $this->pEPage, $nextPageTemplate);
             LocalRedirect($urlToRedirect, true);
         }
 

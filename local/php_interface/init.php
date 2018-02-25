@@ -56,12 +56,12 @@ function SaleFormatCurrencyDev($price)
 // категории транспорта
 // стат. значения картинок, параметров
 ShmelTools\Options::getInstance()->setProperty('catTransport', [
-    '000000001' => ['img' => '/local/assets/src/img/1cat.svg', 'pass' => 1, 'name' => '1-я категория', 'weight' => 1.5, 'volume' => 9],
-    '000000002' => ['img' => '/local/assets/src/img/2cat.svg', 'pass' => 1, 'name' => '2-я категория', 'weight' => 1.5, 'volume' => 16],
-    '000000003' => ['img' => '/local/assets/src/img/3cat.svg', 'pass' => 1, 'name' => '3-я категория', 'weight' => 3, 'volume' => 18],
-    '000000005' => ['img' => '/local/assets/src/img/5cat.svg', 'pass' => 0, 'name' => '5-я категория', 'weight' => 5, 'volume' => 36],
-    '000000006' => ['img' => '/local/assets/src/img/6cat.svg', 'pass' => 0, 'name' => '6-я категория', 'weight' => 10, 'volume' => 43],
-    '000000007' => ['img' => '/local/assets/src/img/7cat.svg', 'pass' => 0, 'name' => '7-я категория', 'weight' => 20, 'volume' => 90],
+    '000000001' => ['id' => '000000001', 'img' => '/local/assets/src/img/1cat.svg', 'pass' => 1, 'name' => '1-я категория', 'weight' => 1.5, 'volume' => 9],
+    '000000002' => ['id' => '000000002', 'img' => '/local/assets/src/img/2cat.svg', 'pass' => 1, 'name' => '2-я категория', 'weight' => 1.5, 'volume' => 16],
+    '000000003' => ['id' => '000000003', 'img' => '/local/assets/src/img/3cat.svg', 'pass' => 1, 'name' => '3-я категория', 'weight' => 3, 'volume' => 18],
+    '000000005' => ['id' => '000000005', 'img' => '/local/assets/src/img/5cat.svg', 'pass' => 0, 'name' => '5-я категория', 'weight' => 5, 'volume' => 36],
+    '000000006' => ['id' => '000000006', 'img' => '/local/assets/src/img/6cat.svg', 'pass' => 0, 'name' => '6-я категория', 'weight' => 10, 'volume' => 43],
+    '000000007' => ['id' => '000000007', 'img' => '/local/assets/src/img/7cat.svg', 'pass' => 0, 'name' => '7-я категория', 'weight' => 20, 'volume' => 90],
 ]);
 
 // выпадающий список выгрузки/загрузки
@@ -70,3 +70,5 @@ ShmelTools\Options::getInstance()->setProperty('selectList', [
     'upload' => 'Выгрузка',
     'both_load' => 'Загрузка/Выгрузка',
 ]);
+
+

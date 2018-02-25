@@ -29,10 +29,7 @@ $data = $arResult['SAVED_DATA'][$currentStep];
         <div class="move_step move_step-active move_step3">
             <div class="move_step3__list">
 
-                <?
-                foreach ($arResult['SAVED_DATA']['transport_recomm'] as $tid => $transport) {
-                    $curTransport = $arResult['categoriesTransport'][$tid];
-                    ?>
+
                     <div class="move_step3__item move_config">
                         <div class="move_config__head">
                             <div class="move_config__left">
@@ -42,6 +39,11 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                 <a class="btn btn-white" href="<?= $arParams['SEF_FOLDER'] . 'transport-edit/'?>">Откорректировать вручную</a>
                             </div>
                         </div>
+                        <?
+                        foreach ($arResult['ITEMS'] as $index => $transport) {
+                            $tid = $transport['ID'];
+                            $curTransport = $arResult['categoriesTransport'][$tid];
+                        ?>
                         <div class="move_config__content">
                             <div class="default_content">
                                 <div class="default_content__left">
@@ -71,13 +73,17 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                             <span class="one_default__tooltip tooltip" title="srgdsf">?</span>
                                         </div>
                                     </div>
-                                    <!--<div class="one_default">
-                                        <p class="one_default__title">Дополнительное время:</p>
-                                        <div class="one_default__text_box one_default__text_box-flex">
-                                            <p class="one_default__text">2 часа – 2000 ₽</p>
-                                            <span class="one_default__tooltip tooltip" title="srgdsf">?</span>
+                                    <? if($transport['ADDITIONAL_TIME']) {
+                                        $adTime = $transport['ADDITIONAL_TIME'];
+                                        ?>
+                                        <div class="one_default">
+                                            <p class="one_default__title">Дополнительное время:</p>
+                                            <div class="one_default__text_box one_default__text_box-flex">
+                                                <p class="one_default__text"><?= $adTime?> часа – <?= SaleFormatCurrencyDev($transport['ADD_RESULT_PRICE'])?> ₽</p>
+                                                <span class="one_default__tooltip tooltip" title="srgdsf">?</span>
+                                            </div>
                                         </div>
-                                    </div>-->
+                                    <? }?>
                                     <hr class="separator">
                                     <div class="one_default">
                                         <p class="one_default__title one_default__title-big">Выбор маршрута: <span class="one_default__tooltip tooltip" title="srgdsf">?</span></p>
@@ -124,8 +130,9 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                 </div>
                             </div>
                         </div>
+                        <? } ?>
                     </div>
-                <? } ?>
+
 
                 <div class="move_config__no_hidden move_config__no_hidden-green">
                     <div class="total_green">

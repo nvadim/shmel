@@ -41,7 +41,6 @@ if (!$arParams["CACHE_FILTER"] && count($arrFilter) > 0)
  *************************************************************************/
 
 $this->jumpToPage();
-
 if ($this->StartResultCache(false, array($arParams['SESS_ID'], $arResult, ($arParams["CACHE_GROUPS"] === "N" ? false : $USER->GetGroups())))) {
     $this->IncludeComponentTemplate();
 }

@@ -13,6 +13,8 @@
 $this->setFrameMode(true);
 
 $currentStep = $arParams['STEP'];
+//$sessData = $this->sessDa
+
 $data = $arResult['SAVED_DATA'][$currentStep];
 $dataTransport = $arResult['SAVED_DATA']['transport'];
 ?>
@@ -41,10 +43,13 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                     <div class="move_config__content j-cars-container">
 <!--cars blocks-->
                         <?
-                        foreach ($arResult['SAVED_DATA']['transport_recomm'] as $tid => $transport) {
+                        foreach ($arResult['ITEMS'] as $key => $transport) {
                             $c++;
-                            $curTransport = $arResult['categoriesTransport'][$tid];
+                            $tid = $transport['ID'];
+                            $curTransport = $arResult['categories'][$tid];
                         ?>
+                            <input type="hidden" name="transport_key[]" value="<?= $c?>">
+                            <input type="hidden" name="transport_category[<?= $c?>]" value="<?= $tid?>">
 
                         <div class="custom_content">
                             <div class="custom_content__title_box custom_title_box">
@@ -55,8 +60,13 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                 <div class="custom_title_box__right">
                                     <div class="custom_title_box__deactivate">
                                         <div class="switcher">
-                                            <input type="checkbox" class="switcher__checkbox" id="switcher0" name="switcher[]" checked onchange="disabledCustomBlock('.custom_content','custom_content-off');">
-                                            <label for="switcher0" class="switcher__container">
+                                            <input type="checkbox"
+                                                   class="switcher__checkbox"
+                                                   id="switcher<?= $c?>"
+                                                   name="switcher[<?= $c?>]"
+                                                   checked
+                                                   onchange="disabledCustomBlock('.custom_content','custom_content-off');">
+                                            <label for="switcher<?= $c?>" class="switcher__container">
                                                 <span class="switcher__text switcher__text-enabled">Отключить транспорт</span>
                                                 <span class="switcher__text switcher__text-disabled">Включить транспорт</span>
                                                 <span class="switcher__button">
@@ -87,10 +97,10 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                         <div class="times_day__one">
                                             <input type="radio"
                                                    class="times_day__radio"
-                                                   name="day"
-                                                   value="time_region"
-                                                   id="<?= $tid?>day" checked>
-                                            <label for="<?= $tid?>day" class="times_day__label">
+                                                   name="time_region[<?= $c?>]"
+                                                   value="day"
+                                                   id="day<?= $tid . $c?>" checked>
+                                            <label for="day<?= $tid  . $c?>" class="times_day__label">
                                                 <span class="times_day__pic">
                                                     <svg width="27px" height="27px" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg" class="day_pic">
                                                         <path class="day_pic__path" d="M18.6058374,12.4074759 C18.6058374,15.8305316 15.83073,18.6060358 12.4072775,18.6060358 C8.98382502,18.6060358 6.2087176,15.8305316 6.2087176,12.4074759 C6.2087176,8.98402341 8.98382502,6.20891599 12.4072775,6.20891599 C15.83073,6.20891599 18.6058374,8.98402341 18.6058374,12.4074759 Z" id="Stroke-1"></path>
@@ -106,17 +116,17 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                                 </span>
                                                 <span class="times_day__text">
                                                     <span class="times_day__text_one">Дневное время</span>
-                                                    <span class="times_day__text_one times_day__text_one-small">8:00–20:00</span>
+                                                    <span class="times_day__text_one times_day__text_one-small"><?= "8:00–{$arResult['NIGHT_TIME']}:00"?></span>
                                                 </span>
                                             </label>
                                         </div>
                                         <div class="times_day__one">
                                             <input type="radio"
                                                    class="times_day__radio"
-                                                   name="time_region[<?= $tid?>]"
+                                                   name="time_region[<?= $c?>]"
                                                    value="night"
-                                                   id="<?= $tid?>night">
-                                            <label for="<?= $tid?>night" class="times_day__label">
+                                                   id="night<?= $tid . $c?>">
+                                            <label for="night<?= $tid . $c?>" class="times_day__label">
                                                 <span class="times_day__pic">
                                                     <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.64 22.38" class="day_pic">
                                                         <path class="day_pic__path" d="M15.25,17.11A10.18,10.18,0,0,1,7,1,10.75,10.75,0,1,0,21.64,14.86,10.14,10.14,0,0,1,15.25,17.11Z"/>
@@ -124,7 +134,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                                 </span>
                                                 <span class="times_day__text">
                                                     <span class="times_day__text_one">Ночное время</span>
-                                                    <span class="times_day__text_one times_day__text_one-small">20:00–8:00</span>
+                                                    <span class="times_day__text_one times_day__text_one-small"><?= "{$arResult['NIGHT_TIME']}:00–8:00"?></span>
                                                 </span>
                                             </label>
                                         </div>
@@ -133,37 +143,20 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                         <p class="custom_time__title">Основное время аренды:*</p>
                                         <div class="checked">
                                             <div class="checked__list">
-                                                <div class="checked__item">
-                                                    <input type="radio"
-                                                           class="checked__radio"
-                                                           name="quantity_time[<?= $tid?>]"
-                                                           value="4"
-                                                           checked
-                                                           id="quantity_time[<?= $tid?>]"
-                                                           data-time-price="<?= $transport['PRICES'][4]?>"
-                                                           onchange="checkCustomTime(this);">
-                                                    <label for="quantity_time[<?= $tid?>]" class="checked__label rooms__label">4</label>
-                                                </div>
-                                                <div class="checked__item">
-                                                    <input type="radio"
-                                                           class="checked__radio"
-                                                           name="quantity_time[<?= $tid?>]"
-                                                           value="6"
-                                                           id="quantity_time[<?= $tid?>]"
-                                                           data-time-price="<?= $transport['PRICES'][6] ?>"
-                                                           onchange="checkCustomTime(this);">
-                                                    <label for="quantity_time[<?= $tid?>]" class="checked__label rooms__label">6</label>
-                                                </div>
-                                                <div class="checked__item">
-                                                    <input type="radio"
-                                                           class="checked__radio"
-                                                           name="quantity_time[<?= $tid?>]"
-                                                           value="8"
-                                                           id="quantity_time[<?= $tid?>]"
-                                                           data-time-price="<?= $transport['PRICES'][8]?>"
-                                                           onchange="checkCustomTime(this);">
-                                                    <label for="quantity_time[<?= $tid?>]" class="checked__label rooms__label">8</label>
-                                                </div>
+                                                <? foreach ([4,6,8] as $h) { ?>
+                                                    <div class="checked__item">
+                                                        <input type="radio"
+                                                               class="checked__radio"
+                                                               name="quantity_time[<?= $c?>]"
+                                                               value="<?= $h?>"
+                                                               <?= ($transport['WORK_HOURS'] == $h)?'checked':''?>
+                                                               id="<?= "quantity_time_{$tid}{$c}_{$h}"?>"
+                                                               data-time-price="<?= $transport['PRICES'][$h]?>"
+                                                               onchange="checkCustomTime(this);">
+                                                        <label for="<?= "quantity_time_{$tid}{$c}_{$h}"?>"
+                                                               class="checked__label rooms__label"><?= $h?></label>
+                                                    </div>
+                                                <? }?>
                                             </div>
                                         </div>
                                         <p class="custom_time__title">
@@ -179,10 +172,10 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                                 </p>
                                                 <div class="custom_time_add__input min_input__one_box"><input
                                                             type="text"
-                                                            name="additional_time[<?= $tid?>]"
+                                                            name="additional_time[<?= $c?>]"
                                                             class="min_input__input min_input__input-kilogram"
                                                             data-custom-time-price="500"
-                                                            value="0"
+                                                            value="<?= ($transport['ADDITIONAL_TIME'])?$transport['ADDITIONAL_TIME']:'0'?>"
                                                             onkeypress="return enterNumber(event);"><span
                                                             class="min_input__one_before">ч</span></div>
                                                 <div class="custom_time_add__plus">
@@ -196,21 +189,21 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                     <div class="one_default">
                                         <p class="one_default__title">Выбор маршрута: <span class="one_default__tooltip tooltip" title="srgdsf">?</span></p>
 
-
                                         <? foreach ($arResult['select_route']["reference"] as $k => $route) {
                                             $keyRoute = $arResult['select_route']["reference_id"][$k];
 
-                                            $_selectFields = "id='id1_{$keyRoute}_{$tid}' class='form__select' disabled";
-                                            $_selectName = "POINT_VALUE[{$tid}][{$keyRoute}]";
+                                            $selectListId = "id1_{$keyRoute}_{$tid}{$c}";
+                                            $_selectFields = "id='{$selectListId}' class='form__select' disabled";
+                                            $_selectName = "POINT_VALUE[{$c}][{$keyRoute}]";
                                             ?>
                                             <div class="check_inline__one">
-                                                <input <?= (isset($data['POINT_CHECK'][$keyRoute]))?'checked':''?>
+                                                <input <?= (isset($data['POINT_CHECK'][$c][$keyRoute]))?'checked':''?>
                                                         type="checkbox" class="check_inline__input"
-                                                        name="POINT_CHECK[<?= $keyRoute?>]"
+                                                        name="POINT_CHECK[<?= $c?>][<?= $keyRoute?>]"
                                                         value="<?= $keyRoute?>"
                                                         id="rigging_one__config<?= $keyRoute?>"
                                                         onchange="checkDisabledLabel(this)"
-                                                        data-check-disabled="id1_<?= $keyRoute?>">
+                                                        data-check-disabled="<?= $selectListId?>">
                                                 <label for="rigging_one__config<?= $keyRoute?>"
                                                        class="check_inline__label check_address">
                                                     <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox check_address__icon">
@@ -243,7 +236,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                             <div class="choice_transport__content">
                                 <div class="choice_transport__list j-transport_list">
 <!--add categories cars-->
-                                    <? foreach ($arResult['categoriesTransport'] as $catId => $category) {?>
+                                    <? foreach ($arResult['categories'] as $catId => $category) {?>
                                         <div class="choice_transport__item choice_item">
                                             <div class="choice_item__pic"><img src="<?= $category['img']?>" alt="" class="choice_item__img"></div>
                                             <div class="choice_item__info">
@@ -260,7 +253,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                             <div class="choice_item__prices">
                                                 <div class="choice_item__day">
                                                     <div class="choice_item__day_pic">
-                                                        <svg width="20px" height="20px" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg" class="day_pic">
+                                                        <!--<svg width="20px" height="20px" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg" class="day_pic">
                                                             <path class="day_pic__path" d="M18.6058374,12.4074759 C18.6058374,15.8305316 15.83073,18.6060358 12.4072775,18.6060358 C8.98382502,18.6060358 6.2087176,15.8305316 6.2087176,12.4074759 C6.2087176,8.98402341 8.98382502,6.20891599 12.4072775,6.20891599 C15.83073,6.20891599 18.6058374,8.98402341 18.6058374,12.4074759 Z" id="Stroke-1"></path>
                                                             <path class="day_pic__path" d="M12.4074362,21.4323681 L12.4074362,24.814555" id="Stroke-3"></path>
                                                             <path class="day_pic__path" d="M12.4074362,0 L12.4074362,3.38258375" id="Stroke-5"></path>
@@ -270,16 +263,16 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                                             <path class="day_pic__path" d="M21.180688,3.63402578 L18.7888739,6.02583984" id="Stroke-15"></path>
                                                             <path class="day_pic__path" d="M6.02576049,6.02580016 L3.63394643,3.6339861" id="Stroke-17"></path>
                                                             <path class="day_pic__path" d="M21.180688,21.180688 L18.7888739,18.7888739" id="Stroke-19"></path>
-                                                        </svg>
+                                                        </svg>-->
                                                     </div>
-                                                    <div class="choice_item__day_text">2950 ₽/час</div>
+                                                    <div class="choice_item__day_text"><?= $category['PRICE']?> ₽/час</div>
                                                 </div>
-                                                <div class="choice_item__night">
-                                                    <!--<div class="choice_item__day_pic">
+                                                <!--<div class="choice_item__night">
+                                                    <div class="choice_item__day_pic">
                                                         <svg width="14" height="13" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.64 22.38" class="day_pic">
                                                             <path class="day_pic__path" d="M15.25,17.11A10.18,10.18,0,0,1,7,1,10.75,10.75,0,1,0,21.64,14.86,10.14,10.14,0,0,1,15.25,17.11Z"/>
                                                         </svg>
-                                                    </div>-->
+                                                    </div>
                                                     <div class="choice_item__day_pic">
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="14" class="day_pic">
                                                             <path class="day_pic__path" d="M12.5,0C5.6,0,0,5.6,0,12.5S5.6,25,12.5,25S25,19.4,25,12.5S19.4,0,12.5,0z M12.5,24C6.1,24,1,18.9,1,12.5S6.1,1,12.5,1 S24,6.1,24,12.5S18.9,24,12.5,24z"></path>
@@ -288,7 +281,7 @@ $dataTransport = $arResult['SAVED_DATA']['transport'];
                                                         </svg>
                                                     </div>
                                                     <div class="choice_item__day_text">1000 доп. час</div>
-                                                </div>
+                                                </div>-->
                                             </div>
 
                                             <div class="choice_item__pass">

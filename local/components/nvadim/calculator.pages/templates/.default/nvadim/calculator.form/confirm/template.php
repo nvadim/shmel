@@ -13,7 +13,7 @@
 $this->setFrameMode(true);
 
 $currentStep = $arParams['STEP'];
-$data = $arResult['SAVED_DATA'][$currentStep];
+$data = $arResult['SAVED_DATA'];
 ?>
 <div class="move_calc">
     <form action="<?=$APPLICATION->GetCurPageParam() ?>" name="calc_form" method="POST" class="move_calc__form">
@@ -38,8 +38,8 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                             </div>
                         </div>
                         <div class="personal_default_data" data-personal-hidden="id100">
-                            <p class="personal_default_data__one">Иван Борисович</p>
-                            <p class="personal_default_data__one">+7 (242) 222-22-22</p>
+                            <p class="personal_default_data__one"><?= $data['route']['CONTACT_NAME']?></p>
+                            <p class="personal_default_data__one"><?= $data['route']['CONTACT_PHONE']?></p>
                         </div>
                         <div class="additionally__one rigging__hidden" data-check-input="id100">
                             <div class="additionally__content">
@@ -48,13 +48,13 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                                         <div class="form__one form__one-w50">
                                             <label for="id14" class="form__label form__label-left">Имя</label>
                                             <div class="form__element_box">
-                                                <input type="text" id="id14" value="" class="form__element form__element-input" required="">
+                                                <input type="text" id="id14" value="" class="form__element form__element-input">
                                             </div>
                                         </div>
                                         <div class="form__one form__one-w50">
                                             <label for="id24" class="form__label form__label-left">Телефон</label>
                                             <div class="form__element_box">
-                                                <input type="tel" id="id24" value="" class="form__element form__element-input" required="">
+                                                <input type="tel" id="id24" value="" class="form__element form__element-input">
                                             </div>
                                         </div>
                                     </div>
@@ -186,16 +186,16 @@ $data = $arResult['SAVED_DATA'][$currentStep];
                     <div class="choice_payment">
                         <div class="choice_payment__item">
                             <p class="choice_payment__desc">Рекомендованный переезд:</p>
-                            <p class="choice_payment__price">29 985 ₽</p>
+                            <p class="choice_payment__price"><?= SaleFormatCurrencyDev($data['RESULT_PRICE'])?> ₽</p>
                             <div class="choice_payment__button">
-                                <button class="btn choice_payment__btn" name="type_order" type="submit" value="recomended">Выбрать рекомендованный переезд</button>
+                                <button class="btn choice_payment__btn" name="submit_next" type="submit" value="recomended">Выбрать рекомендованный переезд</button>
                             </div>
                         </div>
                         <div class="choice_payment__item">
                             <p class="choice_payment__desc">Ваша настроенная стоимость переезда:</p>
-                            <p class="choice_payment__price">39 985 ₽</p>
+                            <p class="choice_payment__price"><?= SaleFormatCurrencyDev($data['RESULT_PRICE'])?> ₽</p>
                             <div class="choice_payment__button">
-                                <button class="btn choice_payment__btn" name="type_order" type="submit" value="custom">Выбрать ваш настроенный переезд</button>
+                                <button class="btn choice_payment__btn" name="submit_next" type="submit" value="custom">Выбрать ваш настроенный переезд</button>
                             </div>
                         </div>
                     </div>

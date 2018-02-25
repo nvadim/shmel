@@ -33,7 +33,7 @@ $currentStep = $arParams['STEP'];
                         </div>
                     </div>
 
-                    <? foreach ($arResult['ITEMS'] as $loaderId => $loader) {?>
+                    <? foreach ($arResult['ITEMS'] as $keyLoader => $loader) {?>
                     <div class="move_config__content">
                         <div class="default_content">
                             <div class="default_content__left">
@@ -56,7 +56,7 @@ $currentStep = $arParams['STEP'];
                                         <span class="one_default__tooltip tooltip" title="srgdsf">?</span>
                                     </div>
                                 </div>
-                                <? if($loader['ADDITIONAL']) { ?>
+                                <? if($loader['ADDITIONAL_TIME']) { ?>
                                     <div class="one_default">
                                         <p class="one_default__title">Дополнительное время:</p>
                                         <div class="one_default__text_box one_default__text_box-flex">
@@ -70,22 +70,23 @@ $currentStep = $arParams['STEP'];
                                     <p class="one_default__title one_default__title-big">Выбор маршрута: <span class="one_default__tooltip tooltip" title="srgdsf">?</span></p>
 
                                     <? for ($i = 0; $i < count($arResult['select_route']['reference']); $i++) {
-                                        $key = $arResult['select_route']['reference_id'][$i];
+                                        $keyRoute = $arResult['select_route']['reference_id'][$i];
                                         $route = $arResult['select_route']['reference'][$i];
 
-                                        $_selectFields = "id='id1_{$key}' class='form__select' disabled";
-                                        $_selectName = "POINT_VALUE[{$loaderId}][{$key}]";
+                                        $sid = "id1_{$keyLoader}{$keyRoute}";
+                                        $_selectFields = "id='{$sid}' class='form__select' disabled";
+                                        $_selectName = "POINT_VALUE[{$keyLoader}][{$keyRoute}]";
                                     ?>
                                         <div class="check_inline__one">
                                             <input <?= (isset($arResult['POINT_CHECK']['_'.$k]))?'checked':''?>
-                                                    name="POINT_CHECK[<?= $loaderId?>][<?= $key?>]"
-                                                    value="<?= $key?>"
+                                                    name="POINT_CHECK[<?= $keyLoader?>][<?= $keyRoute?>]"
+                                                    value="<?= $keyRoute?>"
                                                     type="checkbox"
                                                     class="check_inline__input"
-                                                    id="rigging_one__config<?= $key?>"
+                                                    id="rigging_one__config<?= $keyLoader.$keyRoute?>"
                                                     onchange="checkDisabledLabel(this)"
-                                                    data-check-disabled="id1_<?= $key?>">
-                                            <label for="rigging_one__config<?= $key?>"
+                                                    data-check-disabled="<?= $sid?>">
+                                            <label for="rigging_one__config<?= $keyLoader.$keyRoute?>"
                                                    class="check_inline__label check_address">
                                                 <svg width="24px" height="24px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="check_inline__icon checkbox check_address__icon">
                                                     <rect class="checkbox__rect" width="100%" height="100%"></rect>

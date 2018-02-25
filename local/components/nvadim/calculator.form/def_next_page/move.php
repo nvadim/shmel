@@ -31,12 +31,13 @@ case 'transport-edit':
 
 case 'loaders':
 case 'loaders-edit':
+
     $nextPage = 'packaging';
     break;
 
 case 'packaging':
 case 'packaging-edit':
-    $nextPage = 'rigging';
+    $nextPage = ($this->_sessData['RIGGING_PAGE'])? 'rigging':'confirm';
     break;
 case 'rigging':
     $nextPage = 'confirm';

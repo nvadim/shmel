@@ -42,6 +42,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
         }
 
         $this->_sessData = &$_SESSION[$sessCode];
+
         if($this->_step!='transport-edit') {
             $this->_sessData[$this->_step]
                 = array_merge($this->_sessData[$this->_step], (is_array($_POST)) ? $_POST : []);
@@ -62,18 +63,31 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $this->_sessData[$step] = [];
 
         $sessionMF = &$this->_sessData;
+
         switch($step) {
             case 'transport-edit':
                 $this->customizeTransport();
+                $step2Save = 'transport';
                 break;
             case 'loaders-edit':
-
+                $step2Save = 'loaders';
+                break;
+            case 'packaging-edit':
+                $step2Save = 'packaging';
                 break;
             default:
-                $sessionMF[$step] = array_merge($sessionMF[$step], $postData);
+                if(in_array($step, ['depart', 'dest', 'intermediate'])
+                    && !empty($postData['RIGGINGS'])) {
 
+                    $sessionMF['RIGGING_PAGE'] = 1;
+                }
+                $step2Save = $step;
+                $sessionMF[$step] = array_merge($sessionMF[$step], $postData);
         }
 
+        if (!in_array($step2Save, $sessionMF['PAGES_SAVED'])) {
+            $sessionMF['PAGES_SAVED'][] = $step2Save;
+        }
 //        foreach ($sessionMF[$step] as $sKey => $sess_item) {
 //            if (!isset($postData[$sKey])) {
 //                unset($sessionMF[$step][$sKey]);
@@ -88,24 +102,6 @@ class CShmelCalculatorComponent extends CBitrixComponent
         if ($this->_step == 'route'
             && $sessionMF['suitable_kits']) {
             $this->setTransportPrices();
-        }
-
-
-        switch($this->_step) {
-            case 'transport-edit':
-                $step = 'transport';
-                break;
-            case 'loaders-edit':
-                $step = 'loaders';
-                break;
-            case 'packaging-edit':
-                $step = 'packaging';
-                break;
-            default:
-                $step = $this->_step;
-        }
-        if (!in_array($step, $sessionMF['PAGES_SAVED'])) {
-            $sessionMF['PAGES_SAVED'][] = $step;
         }
 
         return $sessionMF;
@@ -344,7 +340,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
                 // $_loaders['DAY']- утр. время
                 // $_loaders['NIGHT']- вечер. время
 
-                $curLoader = $currentKit->StructLoaders[$c];
+                $curLoader = (is_array($currentKit->StructLoaders))?$currentKit->StructLoaders[$c]:$currentKit->StructLoaders;
                 $loaderTime = $curLoader->Number;
                 $LCID = $curLoader->ID;
 
@@ -599,8 +595,6 @@ class CShmelCalculatorComponent extends CBitrixComponent
                 }
             }
         }
-        d($sessionMF);
-        d($this->_sessData);
     }
 
 

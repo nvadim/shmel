@@ -67,6 +67,7 @@ $APPLICATION->SetTitle("Переезды");
                 'packaging' => [
                     'POINT_CHECK' => 'Выберите маршрут для упаковки'
                 ],
+                'confirm' => [],
             )
         ),
         false

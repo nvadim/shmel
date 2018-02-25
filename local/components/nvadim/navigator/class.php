@@ -25,7 +25,7 @@ class CShmelNavigatorComponent extends CBitrixComponent
 
     function preparePages($pages = false)
     {
-        $sess_data = $_SESSION[$this->arParams['SESSION_FORM_CODE']];
+        $this->sess_data = &$_SESSION[$this->arParams['SESSION_FORM_CODE']];
         $pageUrlTemplate = "{$this->arParams['SEF_FOLDER']}#PAGE#/";
 
         $items = $this->arPages;
@@ -59,13 +59,13 @@ class CShmelNavigatorComponent extends CBitrixComponent
             ];
             $this->arResult['pages'][$page] = $dataPage;
 
-            if (!in_array($page, $sess_data['PAGES_SAVED'])) {
+            if (!in_array($page, $this->sess_data['PAGES_SAVED'])) {
                 $this->isBreak = true;
                 break;
             }
 
             if (!$pages && $iPage == 'depart') {
-                $this->preparePages($sess_data['route']['FROM']);
+                $this->preparePages($this->sess_data['route']['FROM']);
             }
         }
 
@@ -75,7 +75,6 @@ class CShmelNavigatorComponent extends CBitrixComponent
 
     public function setPrice()
     {
-        $sess_data = $_SESSION[$this->arParams['SESSION_FORM_CODE']];
         $services = ShmelAPI\ApiWrapper::getInstance()->getData('services');
 
         foreach($this->arResult['pages'] as $kPage => &$pageData) {
@@ -84,10 +83,10 @@ class CShmelNavigatorComponent extends CBitrixComponent
 
             switch ($kPage) {
                 case 'loaders':
-                    $pageData['PRICE'] = $sess_data['loaders']['RESULT_PRICE'];
+                    $pageData['PRICE'] = $this->sess_data['loaders']['RESULT_PRICE'];
                     break;
                 case 'transport':
-                    $pageData['PRICE'] = $sess_data['transport']['PRICE'];
+                    $pageData['PRICE'] = $this->sess_data['transport']['PRICE'];
                     break;
                 case 'rigging':
 
@@ -97,13 +96,13 @@ class CShmelNavigatorComponent extends CBitrixComponent
                     break;
                 default:
                     //расчёт услуг
-                    if(!$sess_data[$kPage]['SERVICES']) {
+                    if(!$this->sess_data[$kPage]['SERVICES']) {
                         continue;
                     }
 
                     for ($i = 0; $i < count($services); $i++) {
                         $sid = $services[$i]->ID;
-                        if (in_array($sid, $sess_data[$kPage]['SERVICES'])) {
+                        if (in_array($sid, $this->sess_data[$kPage]['SERVICES'])) {
                             $pageData['PRICE'] += $services[$i]->Price;
                         }
                     }
@@ -114,6 +113,8 @@ class CShmelNavigatorComponent extends CBitrixComponent
             $this->arResult['PRICE_RECOM'] += $pageData['PRICE'];
             $this->arResult['PRICE_RESULT'] += $pageData['PRICE'];
         }
+
+        $this->sess_data['RESULT_PRICE'] = $this->arResult['PRICE_RESULT'];
 
     }
 }

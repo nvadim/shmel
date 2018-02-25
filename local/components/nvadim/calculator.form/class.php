@@ -90,7 +90,7 @@ class CShmelCalculatorComponent extends CBitrixComponent
             $this->setTransportPrices();
         }
 
-        $step = '';
+
         switch($this->_step) {
             case 'transport-edit':
                 $step = 'transport';
@@ -101,6 +101,8 @@ class CShmelCalculatorComponent extends CBitrixComponent
             case 'packaging-edit':
                 $step = 'packaging';
                 break;
+            default:
+                $step = $this->_step;
         }
         if (!in_array($step, $sessionMF['PAGES_SAVED'])) {
             $sessionMF['PAGES_SAVED'][] = $step;
